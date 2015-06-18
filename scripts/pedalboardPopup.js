@@ -1,21 +1,22 @@
-define(["_Popup", "addPedalPopup"], function (_Popup, addPedalPopup) {
+define(["_Popup", "addPedalPopup", "customOptionsMenu", "jquery"], function (_Popup, addPedalPopup, customOptionsMenu, $) {
 		var methods = {};
 		
-		//Default value, user overrideable
+		/*Default value, user overrideable*/
 		methods.toAppendTo = document.body; 
 		
-		//Make sure the window nextNewPedalBoardIdoardId value is setup
+		/*Make sure the window nextNewPedalBoardIdoardId value is setup*/
 		if (window && !window.nextNewPedalBoardId)
 			 window.nextNewPedalBoardId = 1;
 		
-		//Params:
-		//  @title: The inital title for the pedal board
-		//  @addPedalCallback: (the visual/dom pedal board is automatically updated)
-		//			 Params: @pedal: the new pedal object
-		//  @deletePedalCallback: (the visual/dom pedal board is automatically updated)
-		//			 Params: @pedal: the deleted pedal object
+		/*Params:
+		 *  @title: The inital title for the pedal board
+		 *  @addPedalCallback: (the visual/dom pedal board is automatically updated)
+		 *			 Params: @pedal: the new pedal object
+		 *  @deletePedalCallback: (the visual/dom pedal board is automatically updated)
+		 *			 Params: @pedal: the deleted pedal object
+		 */
 		methods.create =  function (title, addPedalCallback, deletePedalCallback) {
-			 var content = $("<div>");
+			 var content = $("<div>", { "class": "pedal-board" });
 		
 			 var addButton = $('<svg class="float-right menu-icon" version="1.1" x="0px" y="0px" viewBox="0 0 70.627 62.27" enable-background="new 0 0 70.627 62.27" xml:space="preserve">' + 
 			 		  "<g>" +
@@ -36,7 +37,7 @@ define(["_Popup", "addPedalPopup"], function (_Popup, addPedalPopup) {
 						init: init
 			 });
 			 
-			 //Make the pedals sortable
+			 /*Make the pedals sortable*/
 			 content.sortable();
 			 
 			 var addPedal = function (pedal) {
@@ -44,7 +45,7 @@ define(["_Popup", "addPedalPopup"], function (_Popup, addPedalPopup) {
 					 			.appendTo(content)
 					 			.text("$" + pedal.price + " - " + pedal.fullName);
 					 
-			 		 //Call back!
+			 		 /*Call back!*/
 					 if (addPedalCallback)
 			 		 		addPedalCallback(pedal);
 			 };
@@ -57,7 +58,7 @@ define(["_Popup", "addPedalPopup"], function (_Popup, addPedalPopup) {
   			 	popup.el.appendTo(methods.toAppendTo);
 			 }
 							 
-			 //return the popup
+			 /*return the popup*/
 			 return popup;
 		};
 		

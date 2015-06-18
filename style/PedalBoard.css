@@ -10,15 +10,22 @@
     margin: 5px auto;		
     border: 1px solid black;
 		position: absolute;
+    z-index: 91;
 }
 
-.ui-draggable-handle {
-    cursor: pointer;
+.pedal-board {
+		min-height: 150px;
+		min-width: 300px;
+}
+
+.full-width {
+		width: 100%;
 }
 
 .menu-icon {
    height: 11px;
    padding-left: 4px;
+	 cursor: pointer;
 }
 
 .renameable {
@@ -168,10 +175,6 @@ button:active {
 		border: 1px solid black;
 }
 
-.ui-front {
-		z-index; 1000;
-}
-
 body {
 		font-family: Helvetica,Tahoma,Sans-Serif;
     font-size: 11px;
@@ -184,37 +187,19 @@ body {
 		min-width: 33px;
 }
 
-.ui-autocomplete {
-    list-style: none;
-		background-color: white;
-		color: #444;
-		border: 1px solid #aaa;
-		width: 250px;
-		max-height: 250px;
-		overflow-y: auto;
+.custom-options-menu {
+    width: 75px;
+		overflow-x: hidden;
 }
 
-ul {
-    padding: 0;
+.ui-widget-content.ui-autocomplete.ui-menu {
+    background-color: #fff !important; /* important is bad, but the */
+		background-image: none !important; /* jquery ui css looks worse */
 }
 
-.ui-helper-hidden-accessible {
-    position: absolute;
-		top: -1000px;
-		left: -1000px;
-}
-
-.ui-autocomplete > .ui-menu-item {
-    padding: 5px;
-		cusor: pointer;
-}
-
-.ui-autocomplete > .ui-state-focus {
-    border-radius: 5px;
-		margin: -1px 2px;
-		padding-left: 3px;
-		padding-right: 3px;
-		background-color: #75767B;
-		border: 1px solid #888;
-		color: #fff;
+.ui-widget-content.ui-autocomplete.ui-menu > .ui-menu-item.ui-state-focus {
+    background-image: none !important; 
+		background-color: #F8FC61 !important;
+		margin: 
+		border-radius: 4px;
 }

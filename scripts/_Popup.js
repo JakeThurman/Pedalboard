@@ -73,32 +73,35 @@ define(["jquery", "helperMethods", "jquery-ui"], function ($, helpers) {
   							
   					 //Add rename functionality if needed
   					 if (options.renameable) {
-  					 	  var switchBack = function () {
+  					 	  var rename = function () {
+  									title.replaceWith(renameBox);
+  								  renameBox.focus();
+  								
+  								  if (options.header)
+  		 		  				    options.header.hide();
+												
+									  renameBox.blur(switchBack)
+    										.keyup(function (e) {
+    												if (e.keyCode === 13)
+    													 switchBack();
+    										});
+  							};
+								
+								var switchBack = function () {
   								  title.text(renameBox.val());
   								  renameBox.replaceWith(title);
   								
   								  if (options.header)
   		 		  				    options.header.show();
+												
+									  title.click(rename);
   							}
-								
-								var renameBox = $("<input>", { type: "text" })
-  									.val(title.text())
-  									.blur(switchBack)
-										.keyup(function (e) {
-												if (e.keyCode === 13)
-													 switchBack();
-										});
-										
-								
+							
+								var renameBox = $("<input>", { type: "text", "class": "full-width" })
+  									.val(title.text());
 								
   					 		title.addClass('renameable')
-  									.click(function () {
-  											title.replaceWith(renameBox);
-												renameBox.focus();
-												
-												if (options.header)
-						 		  				 options.header.hide();
-  									});
+  									.click(rename);
   					 }
   				 
   				 //Add moveable if needed
