@@ -1,0 +1,104 @@
+define(function () {
+			var helpers = {};
+			
+			//returns true if the param is undefined
+			helpers.isUndefined = function(maybeSomething) {
+			    return typeof maybeSomething === "undefined";
+			}
+			
+			//if the param is an array, it returns it, other wise it returns the object as an array of one
+			helpers.asArray = function (maybeArray) {
+				if (helpers.isUndefined(maybeArray)) 
+					 throw "a parameter required for helperMethods.js/asArray! ";
+				if (helpers.isUndefined(maybeArray.length))
+					 return [maybeArray];
+				
+			  return maybeArray;
+			};
+
+			//Loops through the array (collection) and calls the passed in function (action) on each item
+      helpers.forEach = function (collection, action) {
+					collection = helpers.asArray(collection);
+					
+          for (var i = 0; collection.length > i; i++)
+              action(collection[i]);
+      };
+			
+			//Creates a vanilla js div node with the passed in string [text] as it's inner html
+			// the passed in string [className] (optional) as it's css class name
+			// and appends it to the passed in vanilla js node [parentNode] (optional)
+			helpers.createTextDiv = function (text, className, parentNode) {
+					if (typeof className == "object" && parentNode == undefined) {
+						 parentNode = className;
+						 className = undefined;
+					}
+					
+					var el = document.createElement("div");
+					el.innerHTML = text;
+					
+					if(className)
+						el.className = className;
+					if (parentNode)
+						 parentNode.appendChild(el);
+					
+					return el;
+			};
+			
+			//Loops through the passed in collection
+			// if the isBottomFilterAction(collection[i]) fucntion returns true:
+			// 		the bottomAction(collection[i])
+			// otherwise:
+			// 		the function is recurrsed until the isBottomFilterAction responds that this is the bottom
+			//    the getChildCollectionAction(collection[i]) is also first called, and should return the array collection of that object
+			//				if the object is the collection, the function can just return the input.
+			helpers.forUntilBottom = function (collection, isBottomFilterAction, getChildCollectionAction, bottomAction) {
+					helpers.forEach(collection, function (obj) {
+							if (isBottomFilterAction(obj))
+								 	 bottomAction(obj);
+							else
+									 helpers.forUntilBottom(getChildCollectionAction(obj), isBottomFilterAction, getChildCollectionAction, bottomAction);
+					});
+			};
+			
+			//forEach wrapper that loops through an array and calls a passed in function
+			// on each item and adds it to a new array which is then returned
+			helpers.select = function (collection, selectAction) {
+						var newCollection = [];
+						helpers.forEach(collection, function (obj) {
+								newCollection.push(selectAction(obj));
+						})
+						return newCollection;						
+			};
+			
+			//forEach wrapper that loops through an array and calls a passed in function
+			// on each item and if it returns true, it to a new array which is then returned
+			helpers.where = function (collection, whereFilterAction) {
+						var newCollection = [];
+						helpers.forEach(collection, function (obj) {
+								if (whereFilterAction(obj))
+									 newCollection.push(obj);
+						})
+						return newCollection;
+			};
+			
+			//returns the [0] of the collection. BUT, if that is not the case one of the
+			// passed in functions is called (which one, depending on the case)
+			helpers.single = function(collection, moreThanOneResultsAction, zeroResultsAction) {
+			   if (collection.length <= 0)
+				     return zeroResultsAction();
+				 else if (collection.length > 1)
+				     return moreThanOneResultsAction();
+				 else
+				 		 return collection[0];
+			};
+			
+			//Gets the first item in a collection or returns the passed in function if there are none
+			helpers.first = function (collection, zeroResultsAction) {
+				 if (collection.length === 0)
+				     return zeroResultsAction();
+				 else
+				 		 return collection[0];
+			};
+			
+			return helpers;
+});
