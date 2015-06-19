@@ -88,7 +88,7 @@ define(["jquery", "helperMethods", "jquery-ui"], function ($, helpers) {
 												
 									  renameBox.blur(switchBack)
     										.keyup(function (e) {
-    												if (e.keyCode === 13)
+    												if (e.keyCode === 13)//enter
     													 switchBack();
     										});
   							};

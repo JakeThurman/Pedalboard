@@ -1,9 +1,6 @@
 define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "textResources"], function (_Popup, addPedalPopup, _OptionMenu, $, resources) {
 		var methods = {};
 		
-		/*Default value, user overrideable*/
-		methods.toAppendTo = document.body; 
-		
 		/*Make sure the window nextNewPedalBoardIdoardId value is setup*/
 		if (window && !window.nextNewPedalBoardId)
 			 window.nextNewPedalBoardId = 1;
@@ -15,7 +12,7 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "textResources"], fu
 		 *  @deletePedalCallback: (the visual/dom pedal board is automatically updated)
 		 *			 Params: @pedal: the deleted pedal object
 		 */
-		methods.create =  function (title, addPedalCallback, deletePedalCallback, deleteBoardCallback) {
+		methods.create =  function (title, appendTo, addPedalCallback, deletePedalCallback, deleteBoardCallback) {
 			 var content = $("<div>", { "class": "pedal-board" });
 		
 			 var menuButton = $('<svg class="float-right menu-icon" version="1.1" x="0px" y="0px" viewBox="0 0 70.627 62.27" enable-background="new 0 0 70.627 62.27" xml:space="preserve">' + 
@@ -40,7 +37,7 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "textResources"], fu
 			 /*Make the pedals sortable*/
 			 content.sortable();
 			 
-			 var addPedal = function (pedal) {
+			 function addPedalToBoard(pedal) {
 					 $("<div>", { "class": "single-pedal-data" })
 					 			.appendTo(content)
 					 			.text("$" + pedal.price + " - " + pedal.fullName);
@@ -50,7 +47,7 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "textResources"], fu
 			 		 		addPedalCallback(pedal);
 							
 					unflip();
-			 };
+			 }
 			 
 			 function unflip(flipIfNeeded) {
 			  	if (menuButton[0].classList.contains("flipped"))
@@ -74,30 +71,33 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "textResources"], fu
 					var deleteLink = $("<div>")
 					    .text(resources.deletePedalBoard)
   					  .click(function () {
+							    if (!confirm(resources.singleBoardDeleteConfirm))
+										 return;
+							
 						      if(deleteBoardCallback)
   					          deleteBoardCallback();
+								  
+								  popup.el.remove()
   					  });
 						
 				  var addPedal = $("<div>")
 					    .text(resources.addPedalToBoard)
 							.click(function () {
-							    addPedalPopup.create(menuButton, popup.options.id, addPedal, unflip);
+							    addPedalPopup.create(menuButton, popup.options.id, addPedalToBoard, unflip);
 							});
 					
 					optionsMenu = _OptionMenu.create(menuButton, addPedal.add(deleteLink));
 					
-					setTimeout(function () {
-					    $(document).one("click", function () {
-							    if (optionsMenu)
-  					          optionsMenu.remove();
-  					          unflip();
-                      optionsMenu = undefined;
-							})
-					}, 0);//Keeps jquery from firing on this click event
+			    $(document).one("click", function () {
+					    if (optionsMenu) {
+							    unflip();
+                  optionsMenu = undefined;
+							}
+					});
 			 });
 			 
 			 function init(popup) {
-  			 	popup.el.appendTo(methods.toAppendTo);
+  			 	popup.el.appendTo(appendTo);
 			 }
 							 
 			 /*return the popup*/

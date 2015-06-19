@@ -1,4 +1,4 @@
-define (["_OptionMenu", "textResources", "helperMethods", "pedalDataAccess", "jquery", "jquery-ui"], function (_OptionMenu, resources, helpers, Pedals, $) {
+define (["_SavePopup", "textResources", "helperMethods", "pedalDataAccess", "jquery", "jquery-ui"], function (_SavePopup, resources, helpers, Pedals, $) {
 			 var methods = {};	
 			 
 			 methods.create = function (button, boardId, addPedalCallback, cancelCallback) {
@@ -11,7 +11,14 @@ define (["_OptionMenu", "textResources", "helperMethods", "pedalDataAccess", "jq
 								.appendTo(content)
             	  .autocomplete({
                      source: allPedalNames
-                });
+                })
+								.keyup(function (e) {
+								   if (e.keyCode === 13) {//enter
+									     var failed = false;
+									     save(function () {failed = true;});
+											 if (!failed) thisPopup.el.remove();
+									 }
+								});
 					  
 						var errorDisplay = $("<div>", { "class": "add-error-display" }).appendTo(content);
 								
@@ -62,7 +69,7 @@ define (["_OptionMenu", "textResources", "helperMethods", "pedalDataAccess", "jq
   						  });
 						}
 			 
-			 			return _OptionMenu.create(content, {
+			 			var thisPopup = _SavePopup.create(content, {
 								saveText: resources.addPedal,
 								save: save,
 								id: "AddPedal" + boardId,
@@ -70,6 +77,8 @@ define (["_OptionMenu", "textResources", "helperMethods", "pedalDataAccess", "jq
 								init: init,
 								cancel: cancelCallback
 						});
+						
+						return thisPopup;
 			 };
 			 		 
 			 return methods;
