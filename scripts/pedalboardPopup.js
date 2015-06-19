@@ -68,6 +68,7 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "textResources"], fu
 					if (optionsMenu) {
 					    optionsMenu.remove();
 							optionsMenu = undefined;
+							return;
 					}
 					
 					var deleteLink = $("<div>")
@@ -85,12 +86,15 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "textResources"], fu
 					
 					optionsMenu = _OptionMenu.create(menuButton, addPedal.add(deleteLink));
 					
-					$(document).one("click", function () {
-							if (optionsMenu)
-  					      optionsMenu.remove();
-  					      unflip();
-					});
-			 })
+					setTimeout(function () {
+					    $(document).one("click", function () {
+							    if (optionsMenu)
+  					          optionsMenu.remove();
+  					          unflip();
+                      optionsMenu = undefined;
+							})
+					}, 0);//Keeps jquery from firing on this click event
+			 });
 			 
 			 function init(popup) {
   			 	popup.el.appendTo(methods.toAppendTo);

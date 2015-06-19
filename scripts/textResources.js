@@ -8,4 +8,7 @@ define({
 			 addButtonText: "Add",
 			 addPedal: "Add Pedal",
 			 pedalSearchPlaceholder: "Search",
+			 deletePedalBoard: "Delete",
+			 addPedalToBoard: "Add Pedal",
+			 
 });

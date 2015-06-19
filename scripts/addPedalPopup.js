@@ -1,4 +1,4 @@
-define (["_SaveOptionMenu", "textResources", "helperMethods", "pedalDataAccess", "jquery", "jquery-ui"], function (_SavePopup, resources, helpers, Pedals, $) {
+define (["_OptionMenu", "textResources", "helperMethods", "pedalDataAccess", "jquery", "jquery-ui"], function (_OptionMenu, resources, helpers, Pedals, $) {
 			 var methods = {};	
 			 
 			 methods.create = function (button, boardId, addPedalCallback, cancelCallback) {
@@ -62,7 +62,7 @@ define (["_SaveOptionMenu", "textResources", "helperMethods", "pedalDataAccess",
   						  });
 						}
 			 
-			 			return _SavePopup.create(content, {
+			 			return _OptionMenu.create(content, {
 								saveText: resources.addPedal,
 								save: save,
 								id: "AddPedal" + boardId,
