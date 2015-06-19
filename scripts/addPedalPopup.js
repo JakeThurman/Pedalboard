@@ -1,14 +1,13 @@
-define (["_SavePopup", "textResources", "helperMethods", "pedalDataAccess", "jquery", "jquery-ui"], function (_SavePopup, resources, helpers, Pedals, $) {
+define (["_SaveOptionMenu", "textResources", "helperMethods", "pedalDataAccess", "jquery", "jquery-ui"], function (_SavePopup, resources, helpers, Pedals, $) {
 			 var methods = {};	
 			 
-			 methods.create = function (button, boardId, addPedalCallback) {
-			 				 
+			 methods.create = function (button, boardId, addPedalCallback, cancelCallback) {
 			 			var content = $("<div>");
 						
 						var allPedalNames = helpers.select(Pedals.allPedals, function (pedal) {
     	    			return pedal.fullName;
     				});
-			 			var nameBox = $("<input>", { type: "text", placeholder: resources.pedalSearchPlaceholder, 'class': "shadowed pedal-search" })
+			 			var nameBox = $("<input>", { type: "text", placeholder: resources.pedalSearchPlaceholder, 'class': "pedal-search" })
 								.appendTo(content)
             	  .autocomplete({
                      source: allPedalNames
@@ -20,8 +19,7 @@ define (["_SavePopup", "textResources", "helperMethods", "pedalDataAccess", "jqu
 								errorDisplay.addClass("visible")
 										 		.text(message);
 					  }
-								
-								
+						
 				    function getNewPedal(name) {
 						    name=name.toLowerCase();
 						
@@ -70,6 +68,7 @@ define (["_SavePopup", "textResources", "helperMethods", "pedalDataAccess", "jqu
 								id: "AddPedal" + boardId,
 								title: resources.addPedal,
 								init: init,
+								cancel: cancelCallback
 						});
 			 };
 			 		 

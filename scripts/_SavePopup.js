@@ -27,7 +27,8 @@ define(["_Popup", "jquery", "textResources"], function (_Popup, $, resources) {
 		  ///			init: 			(function)						Safe place to put logic done after popup create 
 		  ///																								 		 Param: _Popup object of this pedal (See top)
 		  ///		  save:				(function)						Save logic -> called on save button click.				
-			///																						  		 	 Param: Failure function, call on error to prevent close.				 
+			///																						  		 	 Param: Failure function, call on error to prevent close.		
+			///			cancel: 		(function)            Called on cancel/close button click.										 		 
   	  ///}; 
 			methods.create = function(content, options) {
 							methods.assertOptionValidity(options);
@@ -50,6 +51,8 @@ define(["_Popup", "jquery", "textResources"], function (_Popup, $, resources) {
 									.text(options.cancelText || resources.cancel)
 									.click(function () {
 											methods.close(options.id);
+											if (options.cancel)
+											    options.cancel();
 									});
 							
 							//Add the footer to the options object

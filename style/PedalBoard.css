@@ -7,10 +7,10 @@
 .output-box {
 		background-color:#F6F6F6;
 		display: inline-block;
-    margin: 5px auto;		
     border: 1px solid black;
 		position: absolute;
     z-index: 91;
+		margin: 1px;
 }
 
 .pedal-board {
@@ -24,8 +24,19 @@
 
 .menu-icon {
    height: 11px;
-   padding-left: 4px;
+   margin-left: 4px;
 	 cursor: pointer;
+}
+
+.close-button {
+    color: #999;
+		border: 1px solid #bbb;
+		border-radius: 5px;
+		background-color: #fff;
+    height: 18px;
+    line-height: 17px;
+    width: 17px;
+    text-align: center;
 }
 
 .renameable {
@@ -150,7 +161,7 @@ button:active {
 }
 
 .shadowed {
-   /* box-shadow: 0 4px 5px -3px black;*/
+    box-shadow: 0 4px 5px 1px rgba(0,0,0,0.14);
 }
 
 .add-error-display {
@@ -188,7 +199,6 @@ body {
 }
 
 .custom-options-menu {
-    width: 75px;
 		overflow-x: hidden;
 }
 
@@ -200,6 +210,57 @@ body {
 .ui-widget-content.ui-autocomplete.ui-menu > .ui-menu-item.ui-state-focus {
     background-image: none !important; 
 		background-color: #F8FC61 !important;
-		margin: 
 		border-radius: 4px;
+		margin: 2px; 
+		padding: 2px;
+}
+
+.ui-draggable-handle {
+    cursor: pointer;
+}
+
+.flipped {
+    transform: rotate(180deg);
+}
+
+svg, img {
+    transition: transform .3s ease;
+}
+
+.options-menu {
+    background: #fff;
+    border-radius: 3px;
+    left: -42px;
+    min-width: 180px;
+    padding: 5px 0;
+    position: absolute;
+    top: 40px;
+    z-index: 1001;
+}
+
+.options-menu:before {
+    border-color: transparent transparent #fff transparent;
+    border-style: solid;
+    border-width: 9px;
+    content: " ";
+    left: 50%;
+    margin-left: -9px;
+    position: absolute;
+    top: -18px;
+}
+
+a, a:visited {
+    color: #4183c4;
+    text-decoration: none;
+}
+
+.options-menu > * {
+    display: block;
+    font-size: 13px;
+    padding: 5px 15px;
+}
+
+.options-menu > *:hover {
+    background: #4183c4;
+    color: #fff;
 }

@@ -40,7 +40,8 @@ define(["jquery", "helperMethods", "jquery-ui"], function ($, helpers) {
   	 ///			footer:			($object) 					 			 Appended as a global footer for the popup
 		 ///			header: 		($object) 								 Appended to the header and floated to the right 
 		 ///			init: 			(function)								 Safe place to put logic done after popup create 
-		 ///																								 		 Param: _Popup object of this pedal (See top)
+		 ///																								 		 Param: _Popup object of this pedal (See top)		
+			///			cancel: 		(function)                 Called on close button click.										 		 
   	 ///};
   		 methods.create = function (content, options) {  	 
   	 				 //Make sure the options are valid.
@@ -50,14 +51,20 @@ define(["jquery", "helperMethods", "jquery-ui"], function ($, helpers) {
   					 		return methods.close(options.id);
   					 
   					 //Create the popup
-  					 var popup = $("<div>", { "class": "output-box shadowed" });
+  					 var popup = $("<div>", { "class": "output-box" });
   					
+						 //Add a close button if there's no header button
+						 if (!options.header)
+						 {
+						    options.header = $("<div>", { "class": "close-button float-right" }).text("X");
+						    if (options.cancel)
+						        options.header.click(options.cancel);
+						 }
+						
   					 //Create the header 
   					 var header = $("<div>", { "class": "header" })
-						 		 .appendTo(popup);
-								 
-						 if (options.header)
-						 		 options.header.appendTo(header);
+						 		 .appendTo(popup)
+								 .append(options.header);
   					 
   					 var title = $("<h2>")
   					 		 .text(options.title)
@@ -77,8 +84,7 @@ define(["jquery", "helperMethods", "jquery-ui"], function ($, helpers) {
   									title.replaceWith(renameBox);
   								  renameBox.focus();
   								
-  								  if (options.header)
-  		 		  				    options.header.hide();
+  		 		  				options.header.hide();
 												
 									  renameBox.blur(switchBack)
     										.keyup(function (e) {
@@ -91,8 +97,7 @@ define(["jquery", "helperMethods", "jquery-ui"], function ($, helpers) {
   								  title.text(renameBox.val());
   								  renameBox.replaceWith(title);
   								
-  								  if (options.header)
-  		 		  				    options.header.show();
+  		 		  				options.header.show();
 												
 									  title.click(rename);
   							}
