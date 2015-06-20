@@ -1,7 +1,9 @@
 define(["helperMethods", "textResources"], function (helpers, resources) {
 	 var classes = {};
 
-	 classes.PedalBoard = function (pedals) {
+	 classes.PedalBoard = function (name, pedals) {
+	      this.Name = name;
+	 
         var thisBoard = this;
         if (!pedals) pedals = [];
   			this.pedals = pedals;
@@ -31,6 +33,10 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 						thisBoard.pedals = helpers.where(thisBoard.pedals, function (pedal) {
 						    return pedal.id !== pedalToRemove.id;
 						});
+				};
+				
+				this.Clear = function () {
+				    thisBoard.pedals = {};
 				};
 				
         //returns a new pedalboard without any pedals in both this PedalBoard object and a passed in PedalBoard object

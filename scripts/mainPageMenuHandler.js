@@ -5,15 +5,18 @@ define(["textResources", "_OptionMenu", "jquery", "pedalBoardPopup"], function (
 		 * @pageMenuButton:       the menu button that triggered this
 		 * @mainContentContainer: the content container that the board should be appended to
 		 * @callbacks:            object of callback functions
-		 * 												    Params: @addBoard:    added a board
-		 *																		@deleteBoard: deleted the board
-		 *                                    @addPedal:    added a pedal to the board
-		 *                                    @deletePedal: deleted a pedal from the board
-		 *                                    @clearAll:    clear all created boards
-		 *                                    @clear:       clear the created board
-		 *																		@rename:      renamed the created board
+		 * 												    Params: @addBoard:    added a board                       | (domBoard)
+		 *																		@deleteBoard: deleted the board                   | (boardId)
+		 *                                    @deleteAll:   delete all created boards           | ()
+		 *                                    @addPedal:    added a pedal to the board          | (pedal, boardId)
+		 *                                    @deletePedal: deleted a pedal from the board      | (pedalId, boardId)
+		 *                                    @clear:       clear the created board             | (boardId) 
+		 *																		@rename:      renamed the created board           | (name, boardId)
+		 * @helpActions:          an object of help functions.
+		 *                            Params: @anyBoards:   are there any pedal boards?         | ()
+		 *                                    @anyPedals:   are there any pedals on this board? | (boardId)
 		 */
-		methods.handle = function(pageMenuButton, mainContentContainer, callbacks) {
+		methods.handle = function(pageMenuButton, mainContentContainer, callbacks, helpActions) {
 		   		var addBoardButton = $("<div>")
     			    .text(resources.addPedalBoardButtonText)
       				.click(function () {
@@ -28,7 +31,7 @@ define(["textResources", "_OptionMenu", "jquery", "pedalBoardPopup"], function (
 											if (!newName)
 												 return;
 											
-											var newBoard = pedalBoardPopup.create(newName, mainContentContainer, callbacks);
+											var newBoard = pedalBoardPopup.create(newName, mainContentContainer, callbacks, helpActions);
 											
 											if (callbacks.addBoard)
 											    callbacks.addBoard(newBoard);
@@ -50,12 +53,16 @@ define(["textResources", "_OptionMenu", "jquery", "pedalBoardPopup"], function (
       				.click(function () {
       				    if (!confirm(resources.clearAllBoardsConfirm))
       						    return;
-      					  
-      				    if (callbacks.clearAll)
-									    callbacks.clearAll();
+      					  									
+      				    if (callbacks.deleteAll)
+									    callbacks.deleteAll();
       				});
-		
-		    _OptionMenu.create(addBoardButton.add(clearAllBoards)).addClass("main-page-menu");
+							
+				  var options = helpActions.anyBoards() 
+							? addBoardButton.add(clearAllBoards) 
+							: addBoardButton;
+					
+		      _OptionMenu.create(options).addClass("main-page-menu");
 		};
 		
     return methods;

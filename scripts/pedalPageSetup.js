@@ -1,55 +1,47 @@
 //How to render a pedal board...
-require(["helperMethods", "pedalDataAccess", "pedalBoardClasses", "pedalBoardPopup", "jquery", "textResources", "mainPageMenuHandler"], function (helpers, Pedals, classes, pedalBoardPopup, $, resources, mainPageMenuHandler) {
+require(["helperMethods", "pedalDataAccess", "pedalBoardClasses", "pedalBoardManager", "jquery", "textResources", "mainPageMenuHandler"], function (helpers, Pedals, classes, pedalBoardManager, $, resources, mainPageMenuHandler) {
 	$(function () {
 	  //init dom vars
 		var mainContentContainer = $("#content-container");
 		var pageMenuButton = $("#page-main-menu");
-		
-		//init other vars
-		var boards = {};
-		
-		//Create a button handler and give it the needed events.
+				
+		/*Create a button handler and give it the needed events.*/
 		pageMenuButton.click(function () {
-				var id; /*the id of the current board we are working with*/
-								
-				var addPedalBoard = function (domBoard) {
-				    id = domBoard.options.id;
-						boards[id] = { 
-						    data: new classes.PedalBoard(), 
-						    dom: domBoard 
-					  };
-						console.log("addBoard");
+  			
+				/*Wrap the manager for the callbacks*/
+				var callbacks = {
+				    addBoard: function (domBoard) { 
+						    pedalBoardManager.Add(domBoard); 
+						},
+						rename: function (name, boardId) {
+						    pedalBoardManager.Rename(name, boardId)
+						},
+						deleteBoard: function(boardId) { 
+						    pedalBoardManager.Delete(boardId); 
+						},
+						deleteAll: function () {
+						    pedalBoardManager.DeleteAll(); 
+						},
+						addPedal: function (pedal, boardId) { 
+						   pedalBoardManager.AddPedal(pedal, boardId); 
+						},
+						deletePedal: function (pedalId, boardId) { 
+						    pedalBoardManager.RemovePedal(pedalId, boardId); 
+						},
+						clear: function (boardId) { 
+						    pedalBoardManager.Clear(boardId); 
+				    },
+				};
+				var helpActions = {
+				    anyBoards: function () { 
+						    pedalBoardManager.Any(); 
+						},
+						anyPedals: function (boardId) { 
+						    pedalBoardManager.AnyPedals(boardId);
+						},
 				};
 				
-				var deletePedalBoard = function(domBoard) {
-				    delete boards[domBoard.options.id];
-						console.log("deleteBoard");
-				};
-				
-				var clearBoards = function () {
-				    for(var key in boards) {
-						    boards[key].dom.remove();
-						    delete boards[key];
-					  }
-						console.log("clearAll");
-				};
-				
-				var clearPedals = function () {
-				    boards[id].data.Clear();
-						console.log("clear");
-				};
-				
-				var callBacks = {
-				    addBoard: addPedalBoard,
-						deleteBoard: deletePedalBoard,
-						addPedal: function (pedal) { boards[id].data.AddPedal(pedal); console.log("addPedal"); },
-						deletePedal: function (pedal) { boards[id].data.RemovePedal(pedal); console.log("deletePedal"); },
-						clearAll: clearBoards,
-						clear: clearPedals,
-				};
-				
-		    mainPageMenuHandler.handle(pageMenuButton, mainContentContainer, callbacks, 
-				boards.length > 0);
+		    mainPageMenuHandler.handle(pageMenuButton, mainContentContainer, callbacks, helpActions);
 		});
 		
 		function addPedal(boardId) {

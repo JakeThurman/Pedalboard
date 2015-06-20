@@ -1,6 +1,10 @@
 define(["jquery", "pedalDataAccess", "helperMethods"], function ($, pedalDataAccess, helpers) {
     var methods = {};
 		
+		/*
+		 * @pedal:    a {pedalClasses.js}.pedal object to render
+		 * @returns   $(redered-pedal)
+		 */
 		methods.render = function (pedal) {
 				var pedalType = helpers.single(
     		    helpers.where(pedalDataAccess.types, function (type) {

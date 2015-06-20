@@ -11,18 +11,23 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "helperMethods", "te
 		 *  @callbacks: object with callback functions
 		 *      Params:
 		 *          @addPedal: 
-		 *		    	    Params: @pedal: the new pedal object
+		 *		    	    Params: @pedal:    the new pedal object
 		 *          @deletePedal: 
-		 *			         Params: @pedal: the deleted pedal object
+		 *			         Params: @pedalId: the deleted pedal object's id
 		 *          @deleteBoard: 
-		 *               Params: @board: the _Popup pedalboard dom object deleted.
+		 *               Params: @boardId: the id of the pedalboard deleted.
 		 *          @rename:
-		 *               Params: @name:  the new name of the board.
-		 *                       @board: the _Popup pedalboard dom object renamed.
+		 *               Params: @name:    the new name of the board.
+		 *                       @boardId: the id of the pedalboard renamed.
 		 *          @clear: 
-		 *		        	 Params: @board: the _Popup pedalboard dom object cleared.
+		 *		        	 Params: @boardId: the id of the pedalboard cleared.
+		 *          @delete:
+		 *  @helpActions: object with bool returning help functions
+		 *      Params:
+		 *          @anyPedals: 
+		 *              Params: @boardId: the id of this board.
 		 */
-		methods.create =  function (title, appendTo, callbacks) {
+		methods.create =  function (title, appendTo, callbacks, helpActions) {
 			 if (!callbacks) { callbacks = {}; }
 		
 			 var content = $("<div>", { "class": "pedal-board" });
@@ -117,8 +122,13 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "helperMethods", "te
                   if (callbacks.clear)
 									    callbacks.clear();
 					    });
+							
+					/* We can't clear a board with no pedals... */
+					var options = helpActions.anyPedals(popup.options.id) 
+					    ? addPedal.add(clearLink).add(deleteLink)
+							: addPedal.add(deleteLink);
 					
-					optionsMenu = _OptionMenu.create(addPedal.add(clearLink).add(deleteLink), menuButton);
+					optionsMenu = _OptionMenu.create(options, menuButton);
 					
 			    $(document).one("click", function () {
 					    if (optionsMenu) {

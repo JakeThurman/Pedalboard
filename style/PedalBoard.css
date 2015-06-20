@@ -61,6 +61,7 @@
 		border-radius: 5px;
 		border: 1px solid #ddd;
 		padding: 4px;
+		cursor: pointer;
 }
 
 .single-pedal-data:not(:last-child) {
