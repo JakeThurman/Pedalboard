@@ -33,13 +33,9 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 						});
 				};
 				
-				function isUndefined(something) {
-						return typeof something === 'undefined';
-				}
-				
         //returns a new pedalboard without any pedals in both this PedalBoard object and a passed in PedalBoard object
         this.RemoveOverlap = function(other) {
-            if (isUndefined(other) || isUndefined(other.pedals))
+            if (helpers.isUndefined(other) || helpers.isUndefined(other.pedals))
                 throw "parameter must be another pedalboard object";
             
 						var otherBoardPedalIds = helpers.select(other.pedals, function (pedal) { 

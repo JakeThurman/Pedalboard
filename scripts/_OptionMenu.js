@@ -1,23 +1,27 @@
 define(["jquery", "helperMethods"], function ($, helpers) {
     var methods = {};
-  	
+				
 		/*
 		 * @params
-		 * 				link:        ($) The refurring link
-		 * 				optionLinks: ($) Items to be appended to the menu 
+		 * 				optionLinks: ($)            Items to be appended to the menu 
+		 * 				link:        ($) {optional} The refurring link, skip to avoid positioning
 		 *
 		 * @returns: $(menu)
 		 */
-  	methods.create = function (link, optionLinks) {
-  				var el = $("<div>", { "class": "options-menu shadowed" })
-					    .append(optionLinks)
-							.insertBefore(link)
-					    .position({
-      				    my: "top center",
-      						at: "bottom center",
-      						of: link
-      				})
-							.css("top", ""); /*Clear top prop, */
+  	methods.create = function (optionLinks, link) {		
+  			 var el = $("<div>", { "class": "options-menu shadowed" })
+             .append(optionLinks);
+						 
+				 if (link) {
+             el.insertBefore(link)
+						     .position({
+                     my: "top center",
+                     at: "bottom center",
+                     of: link
+                 }).css("top", ""); /*Clear top prop, */
+				 }
+				 else
+				     el.appendTo(document.body);
 				 
 		     setTimeout(function () {
   			     $(document).one("click", function () {

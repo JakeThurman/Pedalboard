@@ -1,7 +1,7 @@
 define(["textResources", "_OptionMenu", "jquery", "pedalBoardPopup"], function (resources, _OptionMenu, $, pedalBoardPopup) {
     var methods = {};
 		
-		methods.create = function(pageMenuButton, mainContentContainer, addBoardCallback) {
+		methods.create = function(pageMenuButton, mainContentContainer, addBoardCallback, deleteBoardCallback, addPedalCallback, deletePedalCallback) {
 		   		var addBoardButton = $("<div>")
     			    .text(resources.addPedalBoardButtonText)
       				.click(function () {
@@ -10,13 +10,17 @@ define(["textResources", "_OptionMenu", "jquery", "pedalBoardPopup"], function (
       				    var addPedalBoardEvent = function () {
       						    var newName = newNameBox.val();
 											
-											var newBoard = pedalBoardPopup.create(newName, mainContentContainer);
+											//If they didn't even give us a name, don't bother creating a board
+											if (!newName)
+												 return;
+											
+											var newBoard = pedalBoardPopup.create(newName, mainContentContainer, addBoardCallback, addPedalCallback, deletePedalCallback, deleteBoardCallback);
 											
 											if (addBoardCallback)
 											    addBoardCallback(newBoard);
       						};
       				
-      						_OptionMenu.create(pageMenuButton, newNameBox);
+      						_OptionMenu.create(newNameBox).addClass("main-page-menu");
       						
       						newNameBox.blur(addPedalBoardEvent)
       								.keyup(function (e) {
@@ -35,7 +39,7 @@ define(["textResources", "_OptionMenu", "jquery", "pedalBoardPopup"], function (
       				    console.log("//TODO: add clear all logic")
       				});
 		
-		    _OptionMenu.create(pageMenuButton, addBoardButton.add(clearAllBoards));
+		    _OptionMenu.create(addBoardButton.add(clearAllBoards)).addClass("main-page-menu");
 		};
 		
     return methods;

@@ -5,14 +5,26 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "textResources"], fu
 		if (window && !window.nextNewPedalBoardId)
 			 window.nextNewPedalBoardId = 1;
 		
-		/*Params:
+		/*Params: (for callbacks: note the dom is auto-updated)
 		 *  @title: The inital title for the pedal board
-		 *  @addPedalCallback: (the visual/dom pedal board is automatically updated)
-		 *			 Params: @pedal: the new pedal object
-		 *  @deletePedalCallback: (the visual/dom pedal board is automatically updated)
-		 *			 Params: @pedal: the deleted pedal object
+		 *  @appendTo: the main dom object to append and limit this board to.
+		 *  @callbacks: object with callback functions
+		 *      Params:
+		 *          @addPedal: 
+		 *		    	    Params: @pedal: the new pedal object
+		 *          @deletePedal: 
+		 *			         Params: @pedal: the deleted pedal object
+		 *          @deleteBoard: 
+		 *               Params: @board: the _Popup pedalboard dom object deleted.
+		 *          @rename:
+		 *               Params: @name:  the new name of the board.
+		 *                       @board: the _Popup pedalboard dom object renamed.
+		 *          @clear: 
+		 *		        	 Params: @board: the _Popup pedalboard dom object cleared.
 		 */
-		methods.create =  function (title, appendTo, addPedalCallback, deletePedalCallback, deleteBoardCallback) {
+		methods.create =  function (title, appendTo, callbacks) {
+			 if (!callbacks) { callbacks = {}; }
+		
 			 var content = $("<div>", { "class": "pedal-board" });
 		
 			 var menuButton = $('<svg class="float-right menu-icon" version="1.1" x="0px" y="0px" viewBox="0 0 70.627 62.27" enable-background="new 0 0 70.627 62.27" xml:space="preserve">' + 
@@ -25,6 +37,7 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "textResources"], fu
 					 
 	 		 var popup = _Popup.create(content, {
 					  renameable: true,
+						rename: callbacks.rename,
 					  resizable: true,
 						moveable: true,
 						//TODO: movecontain: methods.toAppendTo,
@@ -35,7 +48,11 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "textResources"], fu
 			 });
 			 
 			 /*Make the pedals sortable*/
-			 content.sortable();
+			 content.sortable({
+			     containment: ".output-box",
+					 connectWith: ".pedal-board",
+					 axis: "y"
+			 });
 			 
 			 function addPedalToBoard(pedal) {
 					 $("<div>", { "class": "single-pedal-data" })
@@ -84,9 +101,19 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "textResources"], fu
 					    .text(resources.addPedalToBoard)
 							.click(function () {
 							    addPedalPopup.create(menuButton, popup.options.id, addPedalToBoard, unflip);
+									popup.el.remove();
+							});
+							
+					var clearLink = $("<div>")
+							.text(resources.clearPedalsFromBoard)
+							.click(function () {
+							    if (!confirm(resources.clearPedalsFromBoardConfirm))
+									    return;
+									
+									popup.el.remove();
 							});
 					
-					optionsMenu = _OptionMenu.create(menuButton, addPedal.add(deleteLink));
+					optionsMenu = _OptionMenu.create(addPedal.add(clearLink).add(deleteLink), menuButton);
 					
 			    $(document).one("click", function () {
 					    if (optionsMenu) {

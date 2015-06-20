@@ -1,4 +1,4 @@
-define(["pedalBoardClasses", "pedalsGetter", "helperMethods"], function (classes, pedalsGetter, helpers) {
+  define(["pedalBoardClasses", "pedalsGetter", "helperMethods"], function (classes, pedalsGetter, helpers) {
 		if (window && window.pedalBoardDataAccessCache)
 			 return window.pedalBoardDataAccessCache;
 		

@@ -54,11 +54,14 @@ define(["jquery", "helperMethods", "jquery-ui"], function ($, helpers) {
   					 var popup = $("<div>", { "class": "output-box" });
   					
 						 //Add a close button if there's no header button
-						 if (!options.header)
-						 {
-						    options.header = $("<div>", { "class": "close-button float-right" }).text("X");
-						    if (options.cancel)
-						        options.header.click(options.cancel);
+						 if (!options.header) {
+						    options.header = $("<button>", { "class": "close-button" })
+								    .text("x")
+										.click(function () {
+    										methods.close(options.id);
+    										if (options.cancel)
+    								        options.cancel();
+    							  });
 						 }
 						
   					 //Create the header 
