@@ -5,6 +5,7 @@ define(["_OptionMenu", "jquery", "addPedalPopup", "textResources"], function (_O
 		 *  @id:                the id of this popup
 		 *  @menubutton:        $object of the menu button
 		 *  @removePopupAction: calling this should remove the popup from the dom (Params: id)
+		 *  @clearPedalsAction:  calling this should clear the popup of all dom pedals (Params: id)
 		 *  @helpActions:       object with bool returning help functions
 		 *      Params:
 		 *          @anyPedals: 
@@ -18,7 +19,7 @@ define(["_OptionMenu", "jquery", "addPedalPopup", "textResources"], function (_O
 		 *              Params: @boardId: the id of this pedalboard
 		 *      
 		 */
- 		methods.handle = function (id, menuButton, removePopupAction, helpActions, callbacks) {
+ 		methods.handle = function (id, menuButton, removePopupAction, clearPedalsAction, helpActions, callbacks) {
 		    if (!callbacks) callbacks = {};
 		
 		    var optionsMenu;
@@ -67,9 +68,7 @@ define(["_OptionMenu", "jquery", "addPedalPopup", "textResources"], function (_O
       			    if (!confirm(resources.clearPedalsFromBoardConfirm))
       					    return;
       							
-      					helpers.forEach(allPedals, function (pedal) {
-      			        pedal.remove();
-      	        });
+								clearPedalsAction();
       					
                 if (callbacks.clear)
       			        callbacks.clear(id);

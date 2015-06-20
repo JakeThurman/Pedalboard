@@ -9,13 +9,28 @@ define(function () {
 			//returns true if the param is undefined
 			helpers.isUndefined = function(maybeSomething) {
 			    return typeof maybeSomething === "undefined";
-			}
+			};
+			
+			//returns true if the param is an object or array.
+			helpers.isObjectOrArray = function (maybe) {
+			    return typeof maybeObject === "object";
+			};
+			
+			//return true if the param is an "object". Arrays not included!
+			helpers.isObject = function(maybeObject) {
+			    return typeof maybeObject == "object" && helpers.isUndefined(maybeObject.length);
+			};
+			
+			//returns true if the param is an array.
+			helpers.isArray = function(maybeArray) {
+			    return typeof maybeArray == "object" && !helpers.isUndefined(maybeArray.length);
+			};
 			
 			//if the param is an array, it returns it, other wise it returns the object as an array of one
 			helpers.asArray = function (maybeArray) {
 				if (helpers.isUndefined(maybeArray)) 
-					 throw "a parameter required for helperMethods.js/asArray! ";
-				if (helpers.isUndefined(maybeArray.length))
+					 return [];
+				if (!helpers.isArray(maybeArray))
 					 return [maybeArray];
 				
 			  return maybeArray;
@@ -103,6 +118,26 @@ define(function () {
 				     return zeroResultsAction ? zeroResultsAction() : helpers.throwThis("No results.");
 				 else
 				 		 return collection[0];
+			};
+			
+			//provides a deep clone for objects
+			helpers.clone = function (object) {
+			   ///handle arrays
+			   if (helpers.isArray(object)) {
+				     return helpers.select(object, function (arrayobj) {
+    				     helpers.clone(arrayobj);
+    				 });
+				 }
+			   
+				 //clone each property				 
+			   var newObject = {};
+			   for (var key in object) {
+				     if (helpers.isObjectOrArray(object[key]))
+						     newObject[key] = helpers.clone(object[key]);
+						 else
+				         newObject[key] = object[key];
+				 }
+				 return newObject;
 			};
 			
 			return helpers;

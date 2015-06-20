@@ -1,19 +1,20 @@
-define(["jquery", "pedalDataAccess", "helperMethods"], function ($, pedalDataAccess, helpers) {
+define(["jquery",], function ($) {
     var methods = {};
 		
 		/*
 		 * @pedal:    a {pedalClasses.js}.pedal object to render
 		 * @returns   $(redered-pedal)
 		 */
-		methods.render = function (pedal) {
-				var pedalType = helpers.single(
-    		    helpers.where(pedalDataAccess.types, function (type) {
-    				    return type.id === pedal.type;
-            }));
-		
+		methods.render = function (pedal) {		
 		    return $("<div>", { "class": "single-pedal-data" })
-            .text("$" + pedal.price + " - " + pedal.fullName + ' [' + pedalType.name + '] ');
+						.data("id", pedal.id)
+            .append($("<span>", { "class": "price" }).text("$" + pedal.price))
+						.append($("<span>").text(" - " + pedal.fullName));
 		};
+		
+    methods.getId = function (domPedal) {
+        return domPedal.data("id");
+    }
 		
 		return methods;
 });

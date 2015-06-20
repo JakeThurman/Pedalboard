@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+.fa-trash {
+    z-index: 12;
+}
+
 .output-box {
 		background-color:#F6F6F6;
 		display: inline-block;
@@ -11,8 +15,15 @@
 		position: absolute;
     z-index: 91;
 		margin: 1px;
-		min-height: 150px;
-		min-width: 200px;
+		min-height: 135px;
+		min-width: 270px;
+}
+
+.output-box > .header > .fa-bars {
+    font-size: 1.5em;
+    position: absolute;
+    top: 8px;
+    right: 9px;
 }
 
 .full-width {
@@ -27,7 +38,10 @@
 
 .menu-icon#page-main-menu {
     height: 22px;
+    line-height: 23px;
     margin: 5px;
+    margin-right: 4px;
+    font-size: 3em;
 }
 
 .close-button {
@@ -64,6 +78,11 @@
 		border: 1px solid #ddd;
 		padding: 4px;
 		cursor: pointer;
+}
+
+.single-pedal-data > .price{
+    display: inline-block;
+    min-width: 39px;
 }
 
 .single-pedal-data:not(:last-child) {
@@ -235,12 +254,12 @@ input {
 }
 
 .footer {
-	  border-top: 1px solid black;
+	  border-top: 1px solid #B1B1B1;
 }
 
 .pedal-search {
 		width: 250px;
-		border: 1px solid black;
+    border: 1px solid #C3C3C3;
 }
 
 body {
