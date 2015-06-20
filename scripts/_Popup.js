@@ -131,10 +131,10 @@ define(["jquery", "jquery-ui"], function ($) {
   				 //Add resizeable if needed
   				 if (options.resizable){
   				 		popup.resizable({ 
-                    minHeight: 75,
-                    minWidth: 100,
-										maxHeight: 500,
-      							maxWidth: 700,
+                    minHeight: 150,
+                    minWidth: 200,
+										maxHeight: 900,
+      							maxWidth: 900,
   						});
   				 }
 					 
