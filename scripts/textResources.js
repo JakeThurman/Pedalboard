@@ -17,5 +17,5 @@ define({
 			 clearAllBoardsConfirm: "This will delete all pedalboards currently on the page. Are you sure?",
 			 singleBoardDeleteConfirm: "This will delete this pedalboard forever. Are you sure?",
 			 clearPedalsFromBoard: "Clear",
-			 clearPedalsFromBoardConfirm; "This will delete all of the pedals on this board. Are you sure?",
+			 clearPedalsFromBoardConfirm: "This will delete all of the pedals on this board. Are you sure?",
 });

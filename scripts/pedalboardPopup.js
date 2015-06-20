@@ -1,4 +1,4 @@
-define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "textResources"], function (_Popup, addPedalPopup, _OptionMenu, $, resources) {
+define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "helperMethods", "textResources", "pedalRenderer", "jquery-ui"], function (_Popup, addPedalPopup, _OptionMenu, $, helpers, resources, pedalRenderer) {
 		var methods = {};
 		
 		/*Make sure the window nextNewPedalBoardIdoardId value is setup*/
@@ -50,18 +50,19 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "textResources"], fu
 			 /*Make the pedals sortable*/
 			 content.sortable({
 			     containment: ".output-box",
-					 connectWith: ".pedal-board",
 					 axis: "y"
 			 });
 			 
+			 var allPedals = [];			 
 			 function addPedalToBoard(pedal) {
-					 $("<div>", { "class": "single-pedal-data" })
-					 			.appendTo(content)
-					 			.text("$" + pedal.price + " - " + pedal.fullName);
+			 		 var newPedal = pedalRenderer.render(pedal)
+					 		 .appendTo(content);
+					 
+					 allPedals.push(newPedal);
 					 
 			 		 /*Call back!*/
-					 if (addPedalCallback)
-			 		 		addPedalCallback(pedal);
+					 if (callbacks.addPedal)
+			 		 		callbacks.addPedal(pedal);
 							
 					unflip();
 			 }
@@ -88,20 +89,19 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "textResources"], fu
 					var deleteLink = $("<div>")
 					    .text(resources.deletePedalBoard)
   					  .click(function () {
-							    if (!confirm(resources.singleBoardDeleteConfirm))
-										 return;
+                  if (!confirm(resources.singleBoardDeleteConfirm))
+                      return;
 							
-						      if(deleteBoardCallback)
-  					          deleteBoardCallback();
+                  if(callbacks.deleteBoard)
+  					          callbacks.deleteBoard(popup);
 								  
-								  popup.el.remove()
+                  popup.el.remove();
   					  });
 						
 				  var addPedal = $("<div>")
 					    .text(resources.addPedalToBoard)
 							.click(function () {
 							    addPedalPopup.create(menuButton, popup.options.id, addPedalToBoard, unflip);
-									popup.el.remove();
 							});
 							
 					var clearLink = $("<div>")
@@ -109,9 +109,14 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "textResources"], fu
 							.click(function () {
 							    if (!confirm(resources.clearPedalsFromBoardConfirm))
 									    return;
+											
+									helpers.forEach(allPedals, function (pedal) {
+  					          pedal.remove();
+  			          });
 									
-									popup.el.remove();
-							});
+                  if (callbacks.clear)
+									    callbacks.clear();
+					    });
 					
 					optionsMenu = _OptionMenu.create(addPedal.add(clearLink).add(deleteLink), menuButton);
 					

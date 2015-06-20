@@ -7,9 +7,6 @@ require(["helperMethods", "pedalDataAccess", "pedalBoardClasses", "pedalBoardPop
 		
 		//init other vars
 		var boards = {};
-
-	  //Add a default pedalboard to start
-		addPedalBoard(pedalBoardPopup.create(resources.defaultPedalBoardName, mainContentContainer));
 		
 		//Create a button handler and give it the needed events.
 		pageMenuButton.click(function () {
@@ -24,11 +21,12 @@ require(["helperMethods", "pedalDataAccess", "pedalBoardClasses", "pedalBoardPop
 				    delete boards[domBoard.options.id];
 				};
 				
-				//Pedal add and delete event propagators
-				var addPedal = function (pedal) { thisBoard.AddPedal(pedal); };
-				var deletePedal = function (pedal) { thisBoard.RemovePedal(pedal); }; 
-				
-		    mainPageMenuHandler.create(pageMenuButton, mainContentContainer, addPedalBoard, deletePedalBoard, addPedal, deletePedal);
+		    mainPageMenuHandler.handle(pageMenuButton, mainContentContainer, {
+				    addBoard: addPedalBoard,
+						deleteBoard: deletePedalBoard,
+						addPedal: function (pedal) { thisBoard.AddPedal(pedal); },
+						deletePedal: function (pedal) { thisBoard.RemovePedal(pedal); },
+				});
 		});
 		
 		function addPedal(boardId) {

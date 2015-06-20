@@ -1,6 +1,11 @@
 define(function () {
 			var helpers = {};
 			
+			//Just throws the msg, makes for easier inlining of logic.
+			helpers.throwThis = function (msg) {
+			    throw msg;
+			};
+			
 			//returns true if the param is undefined
 			helpers.isUndefined = function(maybeSomething) {
 			    return typeof maybeSomething === "undefined";
@@ -85,9 +90,9 @@ define(function () {
 			// passed in functions is called (which one, depending on the case)
 			helpers.single = function(collection, moreThanOneResultsAction, zeroResultsAction) {
 			   if (collection.length <= 0)
-				     return zeroResultsAction();
+				     return zeroResultsAction ? zeroResultsAction() : helpers.throwThis("No results.");
 				 else if (collection.length > 1)
-				     return moreThanOneResultsAction();
+				     return moreThanOneResultsAction ? moreThanOneResultsAction() : helpers.throwThis("Too many results.");
 				 else
 				 		 return collection[0];
 			};
@@ -95,7 +100,7 @@ define(function () {
 			//Gets the first item in a collection or returns the passed in function if there are none
 			helpers.first = function (collection, zeroResultsAction) {
 				 if (collection.length === 0)
-				     return zeroResultsAction();
+				     return zeroResultsAction ? zeroResultsAction() : helpers.throwThis("No results.");
 				 else
 				 		 return collection[0];
 			};

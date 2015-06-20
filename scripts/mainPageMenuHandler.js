@@ -1,31 +1,46 @@
 define(["textResources", "_OptionMenu", "jquery", "pedalBoardPopup"], function (resources, _OptionMenu, $, pedalBoardPopup) {
     var methods = {};
 		
-		methods.create = function(pageMenuButton, mainContentContainer, addBoardCallback, deleteBoardCallback, addPedalCallback, deletePedalCallback) {
+		/*
+		 * @pageMenuButton:       the menu button that triggered this
+		 * @mainContentContainer: the content container that the board should be appended to
+		 * @callbacks:            object of callback functions
+		 * 												    Params: @addBoard:    added a board
+		 *																		@deleteBoard: deleted the board
+		 *                                    @addPedal:    added a pedal to the board
+		 *                                    @deletePedal: deleted a pedal from the board
+		 *                                    @clearAll:    clear all created boards
+		 *                                    @clear:       clear the created board
+		 *																		@rename:      renamed the created board
+		 */
+		methods.handle = function(pageMenuButton, mainContentContainer, callbacks) {
 		   		var addBoardButton = $("<div>")
     			    .text(resources.addPedalBoardButtonText)
       				.click(function () {
                   var newNameBox = $("<input>", { type: "text", placeholder: resources.newBoardNamePlaceholder })
-      				
-      				    var addPedalBoardEvent = function () {
+    				
+      						var menu = _OptionMenu.create(newNameBox).addClass("main-page-menu");
+      						
+									var addPedalBoardEvent = function () {
       						    var newName = newNameBox.val();
 											
 											//If they didn't even give us a name, don't bother creating a board
 											if (!newName)
 												 return;
 											
-											var newBoard = pedalBoardPopup.create(newName, mainContentContainer, addBoardCallback, addPedalCallback, deletePedalCallback, deleteBoardCallback);
+											var newBoard = pedalBoardPopup.create(newName, mainContentContainer, callbacks);
 											
-											if (addBoardCallback)
-											    addBoardCallback(newBoard);
+											if (callbacks.addBoard)
+											    callbacks.addBoard(newBoard);
+											
+											//we're done here!
+											menu.remove();
       						};
-      				
-      						_OptionMenu.create(newNameBox).addClass("main-page-menu");
-      						
+									
       						newNameBox.blur(addPedalBoardEvent)
       								.keyup(function (e) {
       								   if (e.keyCode == 13)//enter
-      									     addPedalBoardEvent();									     
+      									     addPedalBoardEvent();   
       								})
       								.focus();
       				});
@@ -36,7 +51,8 @@ define(["textResources", "_OptionMenu", "jquery", "pedalBoardPopup"], function (
       				    if (!confirm(resources.clearAllBoardsConfirm))
       						    return;
       					  
-      				    console.log("//TODO: add clear all logic")
+      				    if (callbacks.clearAll)
+									    callbacks.clearAll();
       				});
 		
 		    _OptionMenu.create(addBoardButton.add(clearAllBoards)).addClass("main-page-menu");
