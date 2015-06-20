@@ -1,4 +1,4 @@
-define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "helperMethods", "textResources", "pedalRenderer", "jquery-ui"], function (_Popup, addPedalPopup, _OptionMenu, $, helpers, resources, pedalRenderer) {
+define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "helperMethods", "textResources", "pedalRenderer", "pedalboardPopupOptionsHandler", "jquery-ui"], function (_Popup, addPedalPopup, _OptionMenu, $, helpers, resources, pedalRenderer, pedalboardPopupOptionsHandler) {
 		var methods = {};
 		
 		/*Make sure the window nextNewPedalBoardIdoardId value is setup*/
@@ -57,85 +57,25 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "helperMethods", "te
 			     containment: popup.el,
 					 axis: "y"
 			 });
-			 
-			 var allPedals = [];			 
-			 function addPedalToBoard(pedal) {
-			 		 var newPedal = pedalRenderer.render(pedal)
+			 			 	
+			 var originalAddCallback = callbacks.addPedal;
+			 var addPedalToBoard = function(pedal) {
+			 		 pedalRenderer.render(pedal)
 					 		 .appendTo(content);
-					 
-					 allPedals.push(newPedal);
-					 
+					 					 
 			 		 /*Call back!*/
-					 if (callbacks.addPedal)
-			 		 		callbacks.addPedal(popup.options.id, pedal);
-							
-					unflip();
+					 if (originalAddCallback)
+			 		 		originalAddCallback(popup.options.id, pedal);
 			 }
 			 
-			 function unflip(flipIfNeeded) {
-			  	if (menuButton[0].classList.contains("flipped"))
-			 		    menuButton[0].classList.remove("flipped");
-			    
-			    else if (flipIfNeeded)
-			 		    menuButton[0].classList.add("flipped");
+			 callbacks.addPedal	= addPedalToBoard;
+			 
+			 var remover = function () {
+			     popup.el.remove();
 			 };
 			 
-			 var optionsMenu;
-			 
 			 menuButton.click(function () {			 
-          unflip(true);
-					
-					if (optionsMenu) {
-					    optionsMenu.remove();
-							optionsMenu = undefined;
-							return;
-					}
-					
-					var deleteLink = $("<div>")
-					    .text(resources.deletePedalBoard)
-  					  .click(function () {
-                  if (!confirm(resources.singleBoardDeleteConfirm))
-                      return;
-							
-                  if(callbacks.deleteBoard)
-  					          callbacks.deleteBoard(popup.options.id);
-								  
-                  popup.el.remove();
-  					  });
-						
-				  var addPedal = $("<div>")
-					    .text(resources.addPedalToBoard)
-							.click(function () {
-							    addPedalPopup.create(menuButton, popup.options.id, addPedalToBoard, unflip);
-							});
-							
-					var clearLink = $("<div>")
-							.text(resources.clearPedalsFromBoard)
-							.click(function () {
-							    if (!confirm(resources.clearPedalsFromBoardConfirm))
-									    return;
-											
-									helpers.forEach(allPedals, function (pedal) {
-  					          pedal.remove();
-  			          });
-									
-                  if (callbacks.clear)
-									    callbacks.clear(popup.options.id);
-					    });
-							
-					/* We can't clear a board with no pedals... */
-					var options = helpActions.anyPedals(popup.options.id) 
-					    ? addPedal.add(clearLink).add(deleteLink)
-							: addPedal.add(deleteLink);
-					
-					optionsMenu = _OptionMenu.create(options, menuButton);
-					
-			    $(document).one("click", function () {
-					    if (optionsMenu) {
-							    unflip();
-                  optionsMenu = undefined;
-							}
-					});
+          pedalboardPopupOptionsHandler.handle(popup.options.id, menuButton, remover, helpActions, callbacks);
 			 });
 			 
 			 function init(popup) {
