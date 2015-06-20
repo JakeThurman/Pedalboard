@@ -46,36 +46,33 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "helperMethods", "te
 						init: init
 			 });
 			 
-			 /* So we can clear all easily */
-			 var allPedals = [];
-			 
-			 /* Add a trash can icon we can use to delete pedals */
-			 var trashCan = $("<i>", { "class": "fa fa-trash" }).droppable({
-			     activeClass: 'trash-hover',
-           hoverClass: 'trash-hover',
-			     drop: function( event, ui ) {
-					     var item = $(ui.item);
-					     var id = pedalRenderer.getId(item);
-               item.remove();
+       var deleteAction  = function( event, ui ) {
+			     var id = pedalRenderer.getId(ui.draggable);
+             ui.draggable.remove();
+					 
+					 if (callbacks.deletePedal)
+					     callbacks.deletePedal(id, popup.options.id);
 							 
-							 if (callbacks.deletePedal)
-							     callbacks.deletePedal(id);
-									 
-								/* do this in a try catch because it does not matter if it fails */
-							 try { delete allPedal[$(ui.item)] }
-							 catch (e) {}
-					 }
-       });
+						/* do this in a try catch because it does not matter if it fails */
+					 try { delete allPedal[ui.draggable] }
+					 catch (e) {}
+			 };
 			 
-			 var header = popup.el.find(".header");
+			 /* So we can clear all easily */
+			 var allPedals = [];		 
+			 /* Add a trash can icon we can use to delete pedals */
+			 var trashCan = $("<i>", { "class": "fa fa-trash" });
 			 
 			 /*Make the pedals sortable*/
 			 content.sortable({
 			     containment: popup.el,
 					 axis: "y",
 					 start: function (e, ui) {
-					     trashCan.appendTo(header)
-							     .position({ my: "center", at: "center", of: header });
+					     trashCan.appendTo(content)
+									 .droppable({
+                       hoverClass: "trash-hover",
+            			     drop: deleteAction
+                   });
 					 },
 					 stop: function (e, ui) {
 					     trashCan.remove();

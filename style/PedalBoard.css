@@ -4,10 +4,6 @@
     box-sizing: border-box;
 }
 
-.fa-trash {
-    z-index: 12;
-}
-
 .output-box {
 		background-color:#F6F6F6;
 		display: inline-block;
@@ -346,4 +342,24 @@ a, a:visited {
 .options-menu > *:hover {
     background: #4183c4;
     color: #fff;
+}
+
+.trash-hover {
+    background-color: #c77;   
+}
+
+.fa-trash {
+    z-index: 15;
+		position: absolute;
+		width: 100%;
+		text-align: center;
+		top: 0;
+		left: 0;
+		height: 31px;
+}
+
+.fa-trash:before {
+		line-height: 31px;
+		vertical-align: middle;
+		font-size: 1.5em;
 }
