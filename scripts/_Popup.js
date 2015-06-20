@@ -1,4 +1,4 @@
-define(["jquery", "helperMethods", "jquery-ui"], function ($, helpers) {
+define(["jquery", "jquery-ui"], function ($) {
 	  var openPopups = {};
 		
 		var methods = {};
