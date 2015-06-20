@@ -14,9 +14,25 @@ define(["mainPageMenuHandler", "pedalboardClasses"], function (mainPageMenuHandl
 				return out;
 		};
 		
-		methods.Any = function () {
+		methods.Any = function (where) {
 		    for(var key in boards) {
-				    return true; /*if any return true of the first one*/
+				    if (!where || where(boards[key])) /* if there is no where statement, or this one counts */
+						    return true; /* if any return true of the first one */
+				}
+				return false;
+		};
+		
+		methods.
+		
+		methods.Multiple = function (where) {
+		    var any = false;
+		    for (var key in boards) {
+				    if (where && !where(boards[key]))
+						    continue;
+				
+				    if (any) /* This way we have to set that the first time */
+						    return true; /* And then the second we can return this */
+					  any = true;
 				}
 				return false;
 		};
