@@ -1,4 +1,4 @@
-define(["mainPageMenuHandler", "pedalboardClasses"], function (mainPageMenuHandler, classes) {
+define(["pedalboardClasses"], function (classes) {
     var methods = {};
 		
 		/* Where all of the managed boards are stored */
@@ -21,8 +21,6 @@ define(["mainPageMenuHandler", "pedalboardClasses"], function (mainPageMenuHandl
 				}
 				return false;
 		};
-		
-		methods.
 		
 		methods.Multiple = function (where) {
 		    var any = false;
