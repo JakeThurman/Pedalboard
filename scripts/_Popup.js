@@ -107,7 +107,7 @@ define(["jquery", "helperMethods", "jquery-ui"], function ($, helpers) {
 									      outputPopup.options.title = newName;
 												
 												if (options.rename)
-												    options.rename()
+												    options.rename(newName, options.id);
 										}
   								  renameBox.replaceWith(title);
   		 		  				options.header.show();

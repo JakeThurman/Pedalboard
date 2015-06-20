@@ -34,10 +34,10 @@ require(["helperMethods", "pedalDataAccess", "pedalBoardClasses", "pedalBoardMan
 				};
 				var helpActions = {
 				    anyBoards: function () { 
-						    pedalBoardManager.Any(); 
+						    return pedalBoardManager.Any(); 
 						},
 						anyPedals: function (boardId) { 
-						    pedalBoardManager.AnyPedals(boardId);
+						    return pedalBoardManager.AnyPedals(boardId);
 						},
 				};
 				

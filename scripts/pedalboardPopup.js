@@ -67,7 +67,7 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "helperMethods", "te
 					 
 			 		 /*Call back!*/
 					 if (callbacks.addPedal)
-			 		 		callbacks.addPedal(pedal);
+			 		 		callbacks.addPedal(popup.options.id, pedal);
 							
 					unflip();
 			 }
@@ -98,7 +98,7 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "helperMethods", "te
                       return;
 							
                   if(callbacks.deleteBoard)
-  					          callbacks.deleteBoard(popup);
+  					          callbacks.deleteBoard(popup.options.id);
 								  
                   popup.el.remove();
   					  });
@@ -120,7 +120,7 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "helperMethods", "te
   			          });
 									
                   if (callbacks.clear)
-									    callbacks.clear();
+									    callbacks.clear(popup.options.id);
 					    });
 							
 					/* We can't clear a board with no pedals... */

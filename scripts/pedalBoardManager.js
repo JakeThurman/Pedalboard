@@ -1,7 +1,10 @@
 define(["mainPageMenuHandler", "pedalboardClasses"], function (mainPageMenuHandler, classes) {
     var methods = {};
 		
+		/* Where all of the managed boards are stored */
 		var boards = {};
+		
+		/* Data Methods */
 	  methods.Boards = function () {
 		    var out = [];
 				
@@ -19,9 +22,10 @@ define(["mainPageMenuHandler", "pedalboardClasses"], function (mainPageMenuHandl
 		};
 		
 		methods.AnyPedals = function (boardId) {
-		    boards[boardId].data.pedals.length > 0;
+		    return boards[boardId].data.pedals.length > 0;
 		};
     
+		/* Board Methods */
     methods.Add = function (domboard) {
 		    boards[domboard.options.id] = { 
 				    dom: domboard,
@@ -38,13 +42,18 @@ define(["mainPageMenuHandler", "pedalboardClasses"], function (mainPageMenuHandl
 				delete boards[boardId];
 		};
 		
+		methods.DeleteAll = function () {
+		    for(var key in boards)
+						methods.Delete(key);
+		};
+		
+		/* Pedal Methods */
 		methods.AddPedal = function (boardId, pedal) {
 		    boards[boardId].data.Add(pedal);
 		};
 		
-		methods.DeleteAll = function () {
-		    for(var key in boards)
-						methods.Delete(key);
+		methods.RemovePedal = function (pedalId, boardId) {
+		    boards[boardId].data.Remove(pedalId);
 		};
 				
 		methods.Clear = function (boardId) {

@@ -8,11 +8,11 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
         if (!pedals) pedals = [];
   			this.pedals = pedals;
     
-		    this.AddPedal = function(pedal) {
+		    this.Add = function(pedal) {
 					  thisBoard.pedals.push(pedal);
 				};
 				
-				this.RemovePedal = function(pedalId, copyId){
+				this.Remove = function(pedalId){
 						var pedalsWithThisId = helpers.where(thisBoard.pedals, function (boardPedal) {
 								return boardPedal.id === pedalId;
 						});
@@ -28,8 +28,7 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 								}
 						)
 						
-						//We can't use delete because it leaves 
-						// a messy undefined in the array.						
+						//We can't use delete because it leaves a messy undefined in the array.						
 						thisBoard.pedals = helpers.where(thisBoard.pedals, function (pedal) {
 						    return pedal.id !== pedalToRemove.id;
 						});
@@ -72,15 +71,16 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 							
 							//Create a pedal of correct class
 							if (pedalData.identifier === 2)//Is a pedal
-								 pedal = new classes.Pedal(pedalData);
-							else if (pedalData.identifier === 1) //This is a pedal line
-								 pedal = new classes.PedalLine(pedalData);
+								  pedal = new classes.Pedal(pedalData);
+							else if (pedalData.identifier === 1) {//This is a pedal line
+							    pedalData.fullName = (pedalContainerData.fullName || pedalContainerData.name) + " " + pedalData.name;
+								  pedal = new classes.PedalLine(pedalData);
+						  }
 							else //OH NO! This is a pedal brand!
-								 throw "Nothing may contain pedal brands. They are the top level. Failed on container id = " + pedalContainerData.id;
+								  throw "Nothing may contain pedal brands. They are the top level. Failed on container id = " + pedalContainerData.id;
 							
 							//Prepend the container name to the full name
-							pedal.fullName = pedalContainerData.name + " " + pedal.fullName;
-							
+							pedal.fullName = (pedalContainerData.fullName || pedalContainerData.name) + " " + pedal.fullName;
 							pedals.push(pedal);
 				});
 				return pedals;
@@ -90,24 +90,24 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 		classes.PedalLine = function (pedalLineData) {
 				for (var key in pedalLineData) {
 						if (key === "pedals")
-							 this[key] = getPedals(pedalLineData);
+						    this[key] = getPedals(pedalLineData);
 						else
-							 this[key] = pedalLineData[key];
+						    this[key] = pedalLineData[key];
 				}
     };
 		
 		classes.PedalBrand = function(pedalBrandData) {
 				for (var key in pedalBrandData) {
 						if (key === "pedals")
-							 this[key] = getPedals(pedalBrandData);
+						    this[key] = getPedals(pedalBrandData);
 						else
-							 this[key] = pedalBrandData[key];
+						    this[key] = pedalBrandData[key];
 				}
 		};
 		
 	 classes.Pedal = function(pedalData) {
 	 			for (var key in pedalData)
-						this[key] = pedalData[key];
+				    this[key] = pedalData[key];
 				
 				//This will be appended to by parent containers
 				this.fullName = this.name;
