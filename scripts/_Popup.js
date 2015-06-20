@@ -40,8 +40,10 @@ define(["jquery", "helperMethods", "jquery-ui"], function ($, helpers) {
   	 ///			footer:			($object) 					 			 Appended as a global footer for the popup
 		 ///			header: 		($object) 								 Appended to the header and floated to the right 
 		 ///			init: 			(function)								 Safe place to put logic done after popup create 
-		 ///																								 		 Param: _Popup object of this pedal (See top)		
-			///			cancel: 		(function)                 Called on close button click.										 		 
+		 ///																								 		 Params: { _Popup: object of this board (See top) }
+		 ///			cancel: 		(function)                 Called on close button click.
+		 ///		  rename:     (function)                 Called on rename.
+		 ///																						 				 Params: { Name: new name, _Popup: object of this board (See top) }
   	 ///};
   		 methods.create = function (content, options) {  	 
   	 				 //Make sure the options are valid.
@@ -91,18 +93,25 @@ define(["jquery", "helperMethods", "jquery-ui"], function ($, helpers) {
 												
 									  renameBox.blur(switchBack)
     										.keyup(function (e) {
-    												if (e.keyCode === 13)//enter
+    												if (e.keyCode === 13)/*enter button*/
     													 switchBack();
     										});
   							};
 								
 								var switchBack = function () {
-  								  title.text(renameBox.val());
-  								  renameBox.replaceWith(title);
-  								
-  		 		  				options.header.show();
+								    var oldName = title.text();
+										var newName = renameBox.val();
+										
+										if (newName !== oldName) {
+  								      title.text(newName);
+									      outputPopup.options.title = newName;
 												
-									  title.click(rename);
+												if (options.rename)
+												    options.rename()
+										}
+  								  renameBox.replaceWith(title);
+  		 		  				options.header.show();
+									  title.click(rename); /*make the next click rename too!*/
   							}
 							
 								var renameBox = $("<input>", { type: "text", "class": "full-width" })

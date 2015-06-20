@@ -49,7 +49,7 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "helperMethods", "te
 			 
 			 /*Make the pedals sortable*/
 			 content.sortable({
-			     containment: ".output-box",
+			     containment: popup.el,
 					 axis: "y"
 			 });
 			 
@@ -130,6 +130,7 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "helperMethods", "te
 			 
 			 function init(popup) {
   			 	popup.el.appendTo(appendTo);
+					popup.el.css("position","absolute");
 			 }
 							 
 			 /*return the popup*/

@@ -10,23 +10,46 @@ require(["helperMethods", "pedalDataAccess", "pedalBoardClasses", "pedalBoardPop
 		
 		//Create a button handler and give it the needed events.
 		pageMenuButton.click(function () {
-				var thisBoard;
+				var id; /*the id of the current board we are working with*/
 								
 				var addPedalBoard = function (domBoard) {
-						thisBoard = new classes.PedalBoard();
-						boards[domBoard.options.id] = thisBoard;
+				    id = domBoard.options.id;
+						boards[id] = { 
+						    data: new classes.PedalBoard(), 
+						    dom: domBoard 
+					  };
+						console.log("addBoard");
 				};
 				
 				var deletePedalBoard = function(domBoard) {
 				    delete boards[domBoard.options.id];
+						console.log("deleteBoard");
 				};
 				
-		    mainPageMenuHandler.handle(pageMenuButton, mainContentContainer, {
+				var clearBoards = function () {
+				    for(var key in boards) {
+						    boards[key].dom.remove();
+						    delete boards[key];
+					  }
+						console.log("clearAll");
+				};
+				
+				var clearPedals = function () {
+				    boards[id].data.Clear();
+						console.log("clear");
+				};
+				
+				var callBacks = {
 				    addBoard: addPedalBoard,
 						deleteBoard: deletePedalBoard,
-						addPedal: function (pedal) { thisBoard.AddPedal(pedal); },
-						deletePedal: function (pedal) { thisBoard.RemovePedal(pedal); },
-				});
+						addPedal: function (pedal) { boards[id].data.AddPedal(pedal); console.log("addPedal"); },
+						deletePedal: function (pedal) { boards[id].data.RemovePedal(pedal); console.log("deletePedal"); },
+						clearAll: clearBoards,
+						clear: clearPedals,
+				};
+				
+		    mainPageMenuHandler.handle(pageMenuButton, mainContentContainer, callbacks, 
+				boards.length > 0);
 		});
 		
 		function addPedal(boardId) {
