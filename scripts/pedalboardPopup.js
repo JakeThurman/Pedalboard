@@ -1,42 +1,23 @@
-define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "helperMethods", "textResources", "pedalRenderer", "pedalboardPopupOptionsHandler", "jquery-ui"], function (_Popup, addPedalPopup, _OptionMenu, $, helpers, resources, pedalRenderer, pedalboardPopupOptionsHandler) {
+define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOptionsHandler", "jquery-ui"], function (_Popup, addPedalPopup, _OptionMenu, $, resources, pedalRenderer, pedalboardPopupOptionsHandler) {
 		var methods = {};
 		
 		/*Make sure the window nextNewPedalBoardIdoardId value is setup*/
 		if (window && !window.nextNewPedalBoardId)
 			 window.nextNewPedalBoardId = 1;
 		
-		/*Params: (for callbacks: note the dom is auto-updated)
-		 *  @title: The inital title for the pedal board
+		/*Params:
+		 *  @title:    the inital title for the pedal board
 		 *  @appendTo: the main dom object to append and limit this board to.
-		 *  @callbacks: object with callback functions
-		 *      Params:
-		 *          @addPedal: 
-		 *		    	    Params: @pedal:    the new pedal object
-		 *          @deletePedal: 
-		 *			         Params: @pedalId: the deleted pedal object's id
-		 *          @deleteBoard: 
-		 *               Params: @boardId: the id of the pedalboard deleted.
-		 *          @rename:
-		 *               Params: @name:    the new name of the board.
-		 *                       @boardId: the id of the pedalboard renamed.
-		 *          @clear: 
-		 *		        	 Params: @boardId: the id of the pedalboard cleared.
-		 *          @delete:
-		 *  @helpActions: object with bool returning help functions
-		 *      Params:
-		 *          @anyPedals: 
-		 *              Params: @boardId: the id of this board.
+		 *  @manager:  the pedalBoardManager.js instance that created this
 		 */
-		methods.create =  function (title, appendTo, callbacks, helpActions) {
-			 if (!callbacks) { callbacks = {}; }
-		
+		methods.create =  function (title, appendTo, manager) {		
 			 var content = $("<div>", { "class": "pedal-board" });
 		
 			 var menuButton = $("<i>", { "class": "fa fa-bars" });
 					 
 	 		 var popup = _Popup.create(content, {
 					  renameable: true,
-						rename: callbacks.rename,
+						rename: function (name, boardId) { manager.Rename(name, boardId); },
 					  resizable: true,
 						moveable: true,
 						//TODO: movecontain: methods.toAppendTo,
@@ -47,23 +28,15 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "helperMethods", "te
 			 });
 			 
        var deleteAction  = function( event, ui ) {
-			     var id = pedalRenderer.getId(ui.draggable);
-             ui.draggable.remove();
+           var id = pedalRenderer.getId(ui.draggable);
+           ui.draggable.remove();
 					 
-					 if (callbacks.deletePedal)
-					     callbacks.deletePedal(id, popup.options.id);
-							 
-						/* do this in a try catch because it does not matter if it fails */
-					 try { delete allPedal[ui.draggable] }
-					 catch (e) {}
+				   manager.DeletePedal(id, popup.options.id);
 			 };
-			 
-			 /* So we can clear all easily */
-			 var allPedals = [];		 
-			 /* Add a trash can icon we can use to delete pedals */
+			 	 
 			 var trashCan = $("<i>", { "class": "fa fa-trash" });
 			 
-			 /*Make the pedals sortable*/
+			 /* Make the pedals sortable */
 			 content.sortable({
 			     containment: popup.el,
 					 axis: "y",
@@ -79,34 +52,19 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "helperMethods", "te
 					 },
 			 });
 			 
-			 var addPedalToBoard = function(pedal) {
-			 		 var newpedal = pedalRenderer.render(pedal)
-					 		 .appendTo(content);
-					 	
-					 /* store so we can clear easily */
-					 allPedals.push(newpedal);
-						
-			 		 /*Call back!*/
-					 if (callbacks.addPedal)
-			 		 		callbacks.addPedal(popup.options.id, pedal);
-			 };
-			 
-			 var optionsMenuCallbacks = helpers.clone(callbacks);
-			 optionsMenuCallbacks.addPedal = addPedalToBoard;
-			 
-			 var remover = function () {
-			     popup.el.remove();
-			 };
-			 
-			 var clearer = function () {
-           helpers.forEach(allPedals, function (pedal) {
-               pedal.remove();
-           });
-			 };
-			 
 			 menuButton.click(function () {			 
-          pedalboardPopupOptionsHandler.handle(popup.options.id, menuButton, remover, clearer, helpActions, optionsMenuCallbacks);
-			 });
+          pedalboardPopupOptionsHandler.handle(popup.options.id, menuButton, 
+    			    function () { /* deleter */
+      			      manager.Delete(popup.options.id);
+      		    }, 
+              function () { /* clearer */
+        			    manager.Clear(popup.options.id);
+              },
+							function (pedal) { /* adder */
+							    manager.AddPedal(popup.options.id, pedal);
+									pedalRenderer.render(pedal).appendTo(content);
+							});
+  	   });
 			 
 			 function init(popup) {
   			 	popup.el.appendTo(appendTo);
