@@ -4,6 +4,7 @@ requirejs.config({
 				/* Libraries */
 		    "jquery":                        "lib/jquery",
 				"jquery-ui":                     "lib/jquery-ui",
+				"Chart":                         "lib/Chart.min",
 				
 				/* Core */
 				"helperMethods":                 "core/helperMethods",
@@ -30,9 +31,12 @@ requirejs.config({
 		},
 });
 
-require(["jquery", "setupPedalboardPage"], function ($, setupPedalboardPage) {
-    //No non-amd $ dependencies! yay
+require([ "setupPedalboardPage", "jquery", "Chart" ], function (setupPedalboardPage, $, Chart) {
+    /* No non-amd $ dependencies! yay */
     $.noConflict();
+		
+		/* No non-amd chart dependencies either! */
+		Chart.noConflict();
 		
 		setupPedalboardPage.setup();
 });
