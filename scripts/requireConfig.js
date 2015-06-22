@@ -32,6 +32,6 @@ requirejs.config({
 		}
 });
 
-require([ jquery ], function ($) {
+require([ "jquery" ], function ($) {
     $.noConflict();
 });
