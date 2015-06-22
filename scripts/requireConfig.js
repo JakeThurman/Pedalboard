@@ -2,9 +2,10 @@ requirejs.config({
 		baseUrl: "scripts",
 		paths: {
 				/* Libraries */
+				"domReady":                      "lib/domReady",
 		    "jquery":                        "lib/jquery",
 				"jquery-ui":                     "lib/jquery-ui",
-				"Chart":                         "lib/Chart.min",
+				"Chart":                         "lib/Chart",
 				
 				/* Core */
 				"helperMethods":                 "core/helperMethods",
@@ -13,7 +14,7 @@ requirejs.config({
 				/* UI Core */
 				"_Popup":                        "ui-core/_Popup",
 				"_SavePopup":                    "ui-core/_SavePopup",
-				"_OptionMenu":                  "ui-core/_OptionMenu",
+				"_OptionMenu":                   "ui-core/_OptionMenu",
 				
 				/* UI */
 				"addPedalPopup":                 "ui/addPedalPopup",
@@ -28,15 +29,9 @@ requirejs.config({
 				"pedalBoardStorage":             "data/pedalBoardStorage",
 				"pedalDataAccess":               "data/pedalDataAccess",
 				"pedalsGetter":                  "data/pedalsGetter",
-		},
+		}
 });
 
-require([ "setupPedalboardPage", "jquery", "Chart" ], function (setupPedalboardPage, $, Chart) {
-    /* No non-amd $ dependencies! yay */
+require([ jquery ], function ($) {
     $.noConflict();
-		
-		/* No non-amd chart dependencies either! */
-		Chart.noConflict();
-		
-		setupPedalboardPage.setup();
 });
