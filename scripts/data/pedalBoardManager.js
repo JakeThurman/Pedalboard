@@ -1,4 +1,4 @@
-define(["pedalboardClasses", "pedalBoardPopup", "pedalRenderer"], function (classes, pedalBoardPopup, pedalRenderer) {
+define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer"], function (classes, pedalBoardPopup, pedalRenderer) {
     var actions = {};
 		
 		actions.create = function () {		
