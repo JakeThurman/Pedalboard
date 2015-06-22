@@ -19,4 +19,6 @@ define({
 			 clearPedalsFromBoard: "Clear",
 			 clearPedalsFromBoardConfirm: "This will delete all of the pedals on this board. Are you sure?",
 			 saveBoardsToStorageButton: "Save",
+			 boardReportButton: "Report",
+			 boardCompareButton: "Compare",
 });

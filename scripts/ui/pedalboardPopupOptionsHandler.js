@@ -50,6 +50,12 @@ define(["_OptionMenu", "jquery", "addPedalPopup", "textResources"], function (_O
       			    if (confirm(resources.clearPedalsFromBoardConfirm))
       					    manager.Clear(id);
       	    });
+						
+				var reportButton = $("<div>")
+				    .text(resources.boardReportButton);
+						
+				var compareButton = $("<div>")
+				    .text(resources.boardCompareButton);
       			
       	/* We can't clear a board with no pedals... */
       	var options = manager.AnyPedals(id) 

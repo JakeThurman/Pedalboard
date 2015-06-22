@@ -339,8 +339,8 @@ a, a:visited {
 		cursor: pointer;
 }
 
-.options-menu > *:hover {
-    background: #4183c4;
+.options-menu > *:not(input):hover {
+    background-color: #4183c4;
     color: #fff;
 }
 
