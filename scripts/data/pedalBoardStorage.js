@@ -65,7 +65,7 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 												
 						/* loop through each of the pedal so we can add them to the board */
 						helpers.forEach(board.data.pedals, function (pedal) {
-						    manager.AddPedal(pedal, board.dom.options.id, pedalContainer);
+						    manager.AddPedal(pedal, domBoard.dom.options.id, pedalContainer);
 						});
 				});
 		};
