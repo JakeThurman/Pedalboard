@@ -1,4 +1,4 @@
-define(["pedalboardClasses", "pedalBoardPopup"], function (classes, pedalBoardPopup) {
+define(["pedalboardClasses", "pedalBoardPopup", "pedalRenderer"], function (classes, pedalBoardPopup, pedalRenderer) {
     var actions = {};
 		
 		actions.create = function () {		
@@ -6,11 +6,11 @@ define(["pedalboardClasses", "pedalBoardPopup"], function (classes, pedalBoardPo
 		    
     		/* Where all of the managed boards are stored */
     		var boards = {};
-    		
+				
     		/* !Data Methods! */
     		/*Get the board with id of @boardId */
-    		manager.Board = function (boardId) {
-    		    var thisBoard = boards[boardId].data;
+    		manager.GetBoard = function (boardId) {
+    		    var thisBoard = boards[boardId];
     				
     				/* Vanilla js is cool getBoundingClientRect() gets us all the data we need!*/
     				var rect = boards[boardId].dom.el.get(0).getBoundingClientRect();
@@ -26,10 +26,10 @@ define(["pedalboardClasses", "pedalBoardPopup"], function (classes, pedalBoardPo
     		};
     		
     		/* Get an array of all of the board data */
-    	  manager.Boards = function () {
+    	  manager.GetBoards = function () {
     		    var out = [];
     				for(var key in boards) {
-    				    out.push(manager.Board(key));
+    				    out.push(manager.GetBoard(key));
     				}
     				return out;
     		};
@@ -69,8 +69,10 @@ define(["pedalboardClasses", "pedalBoardPopup"], function (classes, pedalBoardPo
     		
     		    boards[domboard.options.id] = { 
     				    dom: domboard,
-    						data: new classes.PedalBoard(domboard.options.title)
+    						data: new classes.PedalBoard(domboard.options.title),
     			  };
+						
+						return domboard;
     		};
     		
     		/* Rename a board */
@@ -91,18 +93,27 @@ define(["pedalboardClasses", "pedalBoardPopup"], function (classes, pedalBoardPo
     		};
     		
     		/* !Pedal Methods! */
-    		/* Add the passed in pedal object to the board with id of @boardId */
-    		manager.AddPedal = function (boardId, pedal) {
+    		/* 
+				 * Add the passed in pedal object to the board with id of @boardId. 
+				 * Append the created dom element to @pedalContainer 
+				 */
+    		manager.AddPedal = function (pedal, boardId, pedalContainer) {
     		    boards[boardId].data.Add(pedal);
+						return pedalRenderer.render(pedal).appendTo(pedalContainer);
     		};
     		
-    		/* Remove a pedal with id of @pedal id from the board with id of @boardId. */
-    		manager.RemovePedal = function (pedalId, boardId) {
+    		/* Remove a pedal with id of @pedal id from the board with id of @boardId. if @deleteDom, it also deletes the dom*/
+    		manager.RemovePedal = function (pedalId, boardId, deleteDom) {
     		    boards[boardId].data.Remove(pedalId);
+						
+						if (deleteDom)
+						    throw "TODO: Impliment manager dom delete";
     		};
-    	  
-    		/* Clear the board with id of @boardId */
+				
+				/* Clear the board with id of @boardId of all pedals*/
     		manager.Clear = function (boardId) {
+						/* todo don't use this magic find */						
+				    boards[boardId].dom.el.find(".single-pedal-data").remove();
     		    boards[boardId].data.Clear();
     		};
         

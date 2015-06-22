@@ -34,9 +34,9 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 						});
 				};
 				
-				this.Clear = function () {
-				    thisBoard.pedals = {};
-				};
+        this.Clear = function () {
+            thisBoard.pedals = [];
+        };
 				
         //returns a new pedalboard without any pedals in both this PedalBoard object and a passed in PedalBoard object
         this.RemoveOverlap = function(other) {

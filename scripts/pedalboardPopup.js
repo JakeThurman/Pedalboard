@@ -29,9 +29,8 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "textResources", "pe
 			 
        var deleteAction  = function( event, ui ) {
            var id = pedalRenderer.getId(ui.draggable);
-           ui.draggable.remove();
-					 
-				   manager.DeletePedal(id, popup.options.id);
+					 ui.draggable.remove();
+				   manager.RemovePedal(id, popup.options.id);
 			 };
 			 	 
 			 var trashCan = $("<i>", { "class": "fa fa-trash" });
@@ -53,17 +52,7 @@ define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "textResources", "pe
 			 });
 			 
 			 menuButton.click(function () {			 
-          pedalboardPopupOptionsHandler.handle(popup.options.id, menuButton, 
-    			    function () { /* deleter */
-      			      manager.Delete(popup.options.id);
-      		    }, 
-              function () { /* clearer */
-        			    manager.Clear(popup.options.id);
-              },
-							function (pedal) { /* adder */
-							    manager.AddPedal(popup.options.id, pedal);
-									pedalRenderer.render(pedal).appendTo(content);
-							});
+          pedalboardPopupOptionsHandler.handle(popup.options.id, menuButton, content, manager);
   	   });
 			 
 			 function init(popup) {

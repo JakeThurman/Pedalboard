@@ -5,8 +5,9 @@ define(["textResources", "_OptionMenu", "jquery"], function (resources, _OptionM
 		 * @pageMenuButton:       the menu button that triggered this
 		 * @mainContentContainer: the content container that the board should be appended to
 		 * @manager:              pedalBoardManager.js object to manage pedal boards with
+		 * @save:                 calling this function should save the current pedal board data
 		 */
-		methods.handle = function(pageMenuButton, mainContentContainer, manager) {
+		methods.handle = function(pageMenuButton, mainContentContainer, manager, save) {
 		   		var addBoardButton = $("<div>")
     			    .text(resources.addPedalBoardButtonText)
       				.click(function () {
@@ -33,6 +34,10 @@ define(["textResources", "_OptionMenu", "jquery"], function (resources, _OptionM
       								})
       								.focus();
       				});
+							
+					var saveButton = $("<div>")
+					    .text(resources.saveBoardsToStorageButton)
+							.click(save);
       				
       	  var deleteAllBoards = $("<div>")
       		    .text(resources.clearAllBoards)
@@ -41,9 +46,10 @@ define(["textResources", "_OptionMenu", "jquery"], function (resources, _OptionM
 									    manager.DeleteAll();
       				});
 							
-				  var menuOptions = manager.Any() 
-							? addBoardButton.add(deleteAllBoards) 
-							: addBoardButton;
+				  var menuOptions = addBoardButton.add(saveButton);
+					
+					if (manager.Any())
+							menuOptions = menuOptions.add(deleteAllBoards);
 					
 		      _OptionMenu.create(menuOptions).addClass("main-page-menu");
 		};

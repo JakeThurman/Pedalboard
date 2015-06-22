@@ -44,26 +44,6 @@ define(function () {
               action(collection[i]);
       };
 			
-			//Creates a vanilla js div node with the passed in string [text] as it's inner html
-			// the passed in string [className] (optional) as it's css class name
-			// and appends it to the passed in vanilla js node [parentNode] (optional)
-			helpers.createTextDiv = function (text, className, parentNode) {
-					if (typeof className == "object" && parentNode == undefined) {
-						 parentNode = className;
-						 className = undefined;
-					}
-					
-					var el = document.createElement("div");
-					el.innerHTML = text;
-					
-					if(className)
-						el.className = className;
-					if (parentNode)
-						 parentNode.appendChild(el);
-					
-					return el;
-			};
-			
 			//Loops through the passed in collection
 			// if the isBottomFilterAction(collection[i]) fucntion returns true:
 			// 		the bottomAction(collection[i])
