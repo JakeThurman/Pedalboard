@@ -12,6 +12,10 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer"], function (clas
     		manager.GetBoard = function (boardId) {
     		    var thisBoard = boards[boardId];
     				
+						/* if there is no board by this id just return undefined now */
+						if (!thisBoard)
+						    return thisBoard
+						
     				/* Vanilla js is cool getBoundingClientRect() gets us all the data we need!*/
     				var rect = boards[boardId].dom.el.get(0).getBoundingClientRect();
     				
@@ -21,7 +25,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer"], function (clas
     						width: rect.width,
     						height: rect.height,
     				};
-    				
+						
     				return thisBoard;
     		};
     		
@@ -69,7 +73,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer"], function (clas
     		
     		    boards[domboard.options.id] = { 
     				    dom: domboard,
-    						data: new classes.PedalBoard(domboard.options.title),
+    						data: new classes.PedalBoard(name),
     			  };
 						
 						return domboard;
