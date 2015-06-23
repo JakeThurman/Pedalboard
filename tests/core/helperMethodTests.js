@@ -365,5 +365,30 @@ define([ "helperMethods" ], function ( helpers, undef ) {
 						    expect(thrower).toThrow();
 						});
 				});
+				
+				describe("clone", function () {
+				    it("should be able to clone an array", function () {
+						    expect(helpers.clone([])).toEqual([]);
+						});
+						
+						it("should be able to clone an object", function () {
+						    expect(helpers.clone({})).toEqual({});						
+						});
+												
+						it("should just return a string", function () {
+						    var str = "hello";
+						    expect(helpers.clone(str)).toEqual(str);
+						});
+						
+						it("should just return a number", function () {
+						    var num = 1;
+						    expect(helpers.clone(num)).toEqual(num);
+						});
+						
+						it("should just return a function", function () {
+						    var func = function () {};
+						    expect(helpers.clone(func)).toEqual(func);
+						});
+				});
 		});
 });

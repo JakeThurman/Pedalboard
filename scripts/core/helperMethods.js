@@ -102,14 +102,19 @@ define(function () {
 			
 			//provides a deep clone for objects
 			helpers.clone = function (object) {
-			   ///handle arrays
+  		   ///handle arrays
 			   if (helpers.isArray(object)) {
 				     return helpers.select(object, function (arrayobj) {
     				     helpers.clone(arrayobj);
     				 });
 				 }
-			   
-				 //clone each property				 
+				 
+				 //cloneing other object types like date is not currently supported
+				 //or cloneing functions, numbers or strings.
+				 if (!helpers.isObject(object))
+				     return object;
+				 				  
+				 //clone each property
 			   var newObject = {};
 			   for (var key in object) {
 				     if (helpers.isObjectOrArray(object[key]))
