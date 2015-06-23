@@ -307,5 +307,41 @@ define([ "helperMethods" ], function ( helpers, undef ) {
 								expect(filtered).toEqual([]);
 						});
 				});
+				
+				/* (collection, moreThanOneResultsAction, zeroResultsAction) */
+				describe("single", function () {
+				    it("should return the item at index 0 of an array", function () {
+						    var data = {};
+								expect(helpers.single([data])).toBe(data);
+						});
+						
+						
+				    it("should return the value of the proper function if the length != 1", function () {
+						    var multi = [1, 2];
+						    var zero = [];
+								
+								var multiResult = "multi";
+								var zeroResult = "zero";
+								
+								var onZero = function () { return zeroResult; };
+								var onMulti = function () { return multiResult; };
+								
+								expect(helpers.single(multi, onMulti, onZero)).toBe(multiResult);
+								expect(helpers.single(zero, onMulti, onZero)).toBe(zeroResult);
+						});
+						
+						it("should throw if an action is not provided", function () {
+						    var zeroThrower = function () {
+								    helpers.single([]);
+								};
+								
+								var multiThrower = function () {
+								    helpers.single([1, 2]);
+								};
+						
+						    expect(zeroThrower).toThrow();
+						    expect(multiThrower).toThrow();
+						});
+				});
 		});
 });
