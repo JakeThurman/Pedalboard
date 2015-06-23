@@ -317,17 +317,14 @@ define([ "helperMethods" ], function ( helpers, undef ) {
 						
 						
 				    it("should return the value of the proper function if the length != 1", function () {
-						    var multi = [1, 2];
-						    var zero = [];
-								
 								var multiResult = "multi";
 								var zeroResult = "zero";
 								
 								var onZero = function () { return zeroResult; };
 								var onMulti = function () { return multiResult; };
 								
-								expect(helpers.single(multi, onMulti, onZero)).toBe(multiResult);
-								expect(helpers.single(zero, onMulti, onZero)).toBe(zeroResult);
+								expect(helpers.single([1, 2], onMulti, onZero)).toBe(multiResult);
+								expect(helpers.single([], onMulti, onZero)).toBe(zeroResult);
 						});
 						
 						it("should throw if an action is not provided", function () {
@@ -341,6 +338,31 @@ define([ "helperMethods" ], function ( helpers, undef ) {
 						
 						    expect(zeroThrower).toThrow();
 						    expect(multiThrower).toThrow();
+						});
+				});
+				
+			  /* (collection, zeroResultsAction) */
+				describe("first", function () {
+				    it("should return the item at index 0 of an array", function () {
+						    var data = {};
+								expect(helpers.first([data])).toBe(data);
+						});
+						
+						
+				    it("should return the value from the zeroAction function param if the array is empty", function () {							
+								var zeroResult = "zero";
+								
+								var onZero = function () { return zeroResult; };
+								
+								expect(helpers.first([], onZero)).toBe(zeroResult);
+						});
+						
+						it("should throw if an zeroAction is not provided", function () {
+						    var thrower = function () {
+								    helpers.first([]);
+								};
+						    
+						    expect(thrower).toThrow();
 						});
 				});
 		});
