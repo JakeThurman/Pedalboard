@@ -189,7 +189,60 @@ define([ "helperMethods" ], function ( helpers, undef ) {
 								    actionCalled = true;
 								});
 								
-								expect(actionCalled).toEqual(false);
+								expect(actionCalled).toBe(false);
+						});
+				});
+				
+				/* (collection, isBottomFilterAction, getChildCollectionAction, bottomAction) */
+				describe("forUntilBottom", function () {
+				    it("should ca", function () {
+						    var testData = [
+								    {
+  										next: [
+  										    { bottom: true }
+  										]
+										}, 
+										{
+										  bottom: true,
+										  next: [
+											   { bottom: true },
+												 { bottom: true }
+											]
+										}, 
+										{
+											next: [
+											   { bottom: true }, 
+												 { bottom: true },
+												 { bottom: true }
+											]
+										}
+								];
+								
+								var bottomCount = 0;
+						    helpers.forUntilBottom(testData, 
+								    function (obj) {
+										    return obj.bottom;
+										},
+										function (obj) {
+										    return obj.next;
+										},
+  								  function () { /* Bottom Action */
+  								      bottomCount++;
+  								  });
+								
+								expect(bottomCount).toEqual(5); /* See those six on the bottom! */
+						});
+				
+				    it("should not call any action for an empty collection", function () {
+						    var actionCalled = false;
+								
+								var action = function () {
+								    actionCalled = true;
+								};
+								
+								helpers.forUntilBottom([], action, action, action);
+								
+								expect(actionCalled).toBe(false);
 						});
 				});
 		});
