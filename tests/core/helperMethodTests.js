@@ -154,5 +154,43 @@ define([ "helperMethods" ], function ( helpers, undef ) {
 						    expect(helpers.asArray(func)).toEqual([func]);
 						});
     		});
+				
+				describe("forEach", function () {
+				    it("should call an action for every item in an array", function () {
+						    var arr = ["1", "2", "3"];
+								
+								var output = [];
+								
+								helpers.forEach(arr, function (num) {
+								    output.push(num);
+								});
+						
+						    expect(arr).toEqual(output);
+						});
+						
+						it("should wrap other types of params in array and the callback once on that", function () {
+						    var count = 0;
+								var obj = {};
+								
+								var output;
+								helpers.forEach(obj, function (something) {
+								    output = something;
+										count++;
+								});
+								
+								expect(output).toEqual(obj);
+								expect(count).toEqual(1);
+						});
+						
+						it("should never call the action from an empty array", function () {
+						    var actionCalled = false;
+								
+								helpers.forEach([], function () {
+								    actionCalled = true;
+								});
+								
+								expect(actionCalled).toEqual(false);
+						});
+				});
 		});
 });
