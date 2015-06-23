@@ -7,6 +7,12 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer"], function (clas
     		/* Where all of the managed boards are stored */
     		var boards = {};
 				
+				/* helper */
+				function assertBoardIdExists(id) {
+				    if (!boards[id]) 
+						    throw new Error("A board with id of: \"" + id + "\" does not exist");
+				}
+				
     		/* !Data Methods! */
     		/*Get the board with id of @boardId */
     		manager.GetBoard = function (boardId) {
@@ -14,7 +20,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer"], function (clas
     				
 						/* if there is no board by this id just return undefined now */
 						if (!thisBoard)
-						    return thisBoard
+						    return thisBoard;
 						
     				/* Vanilla js is cool getBoundingClientRect() gets us all the data we need!*/
     				var rect = boards[boardId].dom.el.get(0).getBoundingClientRect();
@@ -63,7 +69,8 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer"], function (clas
     		
     		/* Are there any pedals on the board with id of @boardId? */
     		manager.AnyPedals = function (boardId) {
-    		    return boards[boardId].data.pedals.length > 0;
+				    var board = boards[boardId];
+    		    return board ? board.data.pedals.length > 0 : false; /* If there is no board with this id return false */
     		};
         
     		/* !Board Methods! */
@@ -81,11 +88,15 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer"], function (clas
     		
     		/* Rename a board */
     		manager.Rename = function (name, boardId) {
+						assertBoardIdExists(boardId);
+						
     		    boards[boardId].data.Name = name;
     		};
     		
     		/* Delete a board */
     		manager.Delete = function (boardId) {
+						assertBoardIdExists(boardId);
+						
     		    boards[boardId].dom.el.remove();
     				delete boards[boardId];
     		};
@@ -102,16 +113,20 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer"], function (clas
 				 * Append the created dom element to @pedalContainer 
 				 */
     		manager.AddPedal = function (pedal, boardId, pedalContainer) {
+				    assertBoardIdExists(boardId);
+				
     		    boards[boardId].data.Add(pedal);
-						return pedalRenderer.render(pedal).appendTo(pedalContainer);
+						
+						var rendered = pedalRenderer.render(pedal);
+						if (pedalContainer) rendered.appendTo(pedalContainer);
+						
+						return rendered;
     		};
     		
-    		/* Remove a pedal with id of @pedal id from the board with id of @boardId. if @deleteDom, it also deletes the dom*/
-    		manager.RemovePedal = function (pedalId, boardId, deleteDom) {
+    		/* Remove a pedal with id of @pedal id from the board with id of @boardId. */
+    		manager.RemovePedal = function (pedalId, boardId) {		
+						assertBoardIdExists(boardId);		
     		    boards[boardId].data.Remove(pedalId);
-						
-						if (deleteDom)
-						    throw "TODO: Impliment manager dom delete";
     		};
 				
 				/* Clear the board with id of @boardId of all pedals*/
