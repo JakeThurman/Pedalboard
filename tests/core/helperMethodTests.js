@@ -195,7 +195,7 @@ define([ "helperMethods" ], function ( helpers, undef ) {
 				
 				/* (collection, isBottomFilterAction, getChildCollectionAction, bottomAction) */
 				describe("forUntilBottom", function () {
-				    it("should ca", function () {
+				    it("should not keep searching when it finds the bottom of a stack", function () {
 						    var testData = [
 								    {
   										next: [
@@ -243,6 +243,26 @@ define([ "helperMethods" ], function ( helpers, undef ) {
 								helpers.forUntilBottom([], action, action, action);
 								
 								expect(actionCalled).toBe(false);
+						});
+				});
+				
+				describe("select", function () {
+				    it("should select the items it's told to", function () {
+						    var testArr = [
+								    { data: { data: {} } },
+								    { data: { data: {} } },
+										{ data: { data: {} } },
+								];
+								
+								var expected = [
+								   {}, {}, {},
+								];
+						
+						    var output = helpers.select(testArr, function (obj) {
+								    return obj.data.data;
+								});
+								
+								expect(output).toEqual(expected);
 						});
 				});
 		});
