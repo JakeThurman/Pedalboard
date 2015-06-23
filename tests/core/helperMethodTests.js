@@ -265,5 +265,47 @@ define([ "helperMethods" ], function ( helpers, undef ) {
 								expect(output).toEqual(expected);
 						});
 				});
+				
+				describe("where", function () {
+				    it("should filter to only object where a predicate returns true", function () {
+						    var data = [1, 2, 3];
+								
+								var filtered = helpers.where(data, function (num) {
+								    return num === 2;
+								});
+								
+								expect(filtered).toEqual([2]);
+						});
+						
+						it("should include duplicate results", function () {
+						    var data = [1, 2, 2, 3, 2];
+								
+								var filtered = helpers.where(data, function (num) {
+								    return num === 2;
+								});
+								
+								expect(filtered).toEqual([2, 2, 2]);
+						});
+						
+						it("should return the same array if the predicate always returns true", function () {
+						    var data = [1, 2, 3];
+								
+								var filtered = helpers.where(data, function (num) {
+								    return true; /* Keep all */
+								});
+								
+								expect(filtered).toEqual(data);
+						});
+												
+						it("should return the an empty array if the predicate finds no maches", function () {
+						    var data = [1, 2, 3];
+								
+								var filtered = helpers.where(data, function (num) {
+								    return false; /* throw away all */
+								});
+								
+								expect(filtered).toEqual([]);
+						});
+				});
 		});
 });
