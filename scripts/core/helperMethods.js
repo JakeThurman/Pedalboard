@@ -8,22 +8,22 @@ define(function () {
 			
 			//returns true if the param is undefined
 			helpers.isUndefined = function(maybeSomething) {
-			    return typeof maybeSomething === "undefined";
+			    return typeof maybeSomething === "undefined" || maybeSomething === null;
 			};
 			
 			//returns true if the param is an object or array.
 			helpers.isObjectOrArray = function (maybe) {
-			    return typeof maybeObject === "object";
+			    return !helpers.isUndefined(maybe) && typeof maybeObject === "object";
 			};
 			
 			//return true if the param is an "object". Arrays not included!
 			helpers.isObject = function(maybeObject) {
-			    return typeof maybeObject == "object" && helpers.isUndefined(maybeObject.length);
+			    return !helpers.isUndefined(maybeObject) && typeof maybeObject == "object" && helpers.isUndefined(maybeObject.length);
 			};
 			
 			//returns true if the param is an array.
 			helpers.isArray = function(maybeArray) {
-			    return typeof maybeArray == "object" && !helpers.isUndefined(maybeArray.length);
+			    return !helpers.isUndefined(maybeArray) && typeof maybeArray == "object" && !helpers.isUndefined(maybeArray.length);
 			};
 			
 			//if the param is an array, it returns it, other wise it returns the object as an array of one
