@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Pedalboard Test Runner</title>
+  <link rel="stylesheet" href="style/tests/jasmine.css">
+
+	<!-- Making jasmine work with require js isn't worth the time to get the almost 0 return. -->
+  <script src="tests/jasmine/jasmine.js"></script>
+  <script src="tests/jasmine/jasmine-html.js"></script>
+  <script src="tests/jasmine/boot.js"></script>
+  
+	<!-- Import require to use for the tests -->
+  <script src="scripts/lib/require.js"></script>
+		
+  <script>
+	    require([ "scripts/requireConfig" ], function () {
+					//Load all of the tests as if they were dependencies
+			    require([ 
+					    "../tests/core/helperMethodTests",
+							"domReady!"
+				  ], 
+					function () {
+					    /* Once they've all loaded, trigger jasmine */
+					    window.onload();
+					});
+			});
+	</script>	
+</head>
+<body>
+  <!-- left blank intentionally -->
+</body>
+</html>
