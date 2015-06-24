@@ -13,9 +13,9 @@ requirejs.config({
 				"stringReplacer":                "core/stringReplacer",
 				
 				/* UI Core */
-				"_Popup":                        "ui-core/_Popup",
-				"_SavePopup":                    "ui-core/_SavePopup",
-				"_OptionMenu":                   "ui-core/_OptionMenu",
+				"_Popup":                        "ui-core/Popup",
+				"_SavePopup":                    "ui-core/SavePopup",
+				"_OptionMenu":                   "ui-core/OptionMenu",
 				
 				/* UI */
 				"addPedalPopup":                 "ui/addPedalPopup",
