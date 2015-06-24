@@ -22,7 +22,7 @@ define([ "helperMethods", "textResources" ], function ( helpers, resources ) {
 			throw new Error("lookup parameter must be an object or array (or a single string to be put in a single item array)! Actual: " + lookup);
 		
 		/* find all instances of curly brace wrapped strings */
-		return str.replace(/{[a-zA-Z0-9]+}/, function(match, i) { 
+		return str.replace(/{[a-zA-Z0-9]+}/g, function(match, i) { 
 		      /* remove the curly braces */
 			  var key = match.slice(1, match.length - 1);
 			  

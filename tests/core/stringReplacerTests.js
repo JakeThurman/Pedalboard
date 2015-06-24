@@ -23,6 +23,10 @@ define([ "stringReplacer" ], function ( replacer ) {
 			it("should leave any curly braced wrapped strings can't be replaced", function () {
 				expect(replacer.replace("hello {test}", {})).toEqual("hello {test}");
 			});
+			
+			it("should be able to replace multiple braced variables in one string", function () {
+				expect(replacer.replace("hello {0}{1}", [ "bob", "!"])).toEqual("hello bob!");
+			});
 		});
 	});
 });
