@@ -30,6 +30,7 @@ requirejs.config({
 				"pedalBoardStorage":             "data/pedalBoardStorage",
 				"pedalDataAccess":               "data/pedalDataAccess",
 				"pedalsGetter":                  "data/pedalsGetter",
+				"changeLogger":                  "data/changeLogger",
 		}
 });
 
