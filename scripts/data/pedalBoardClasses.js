@@ -2,42 +2,44 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 	 var classes = {};
 
 	 classes.PedalBoard = function (name, pedals) {
-	      this.Name = name;
+		this.Name = name;
 	 
         var thisBoard = this;
         if (!pedals) pedals = [];
   			this.pedals = pedals;
     
-		    this.Add = function(pedal) {
-					  thisBoard.pedals.push(pedal);
-				};
+		this.Add = function(pedal) {
+			  thisBoard.pedals.push(pedal);
+		};
 				
-				this.Remove = function(pedalId){
-						var pedalsWithThisId = helpers.where(thisBoard.pedals, function (boardPedal) {
-								return boardPedal.id === pedalId;
-						});
-						
-				    var pedalToRemove = helpers.single(pedalsWithThisId,
-								function() {// more than one result
-										//Figure out which one to remove
-										console.log("TODO: handle choosing which to delete.");
-										return pedalsWithThisId[0];
-								},
-								function() {// zero results
-								    throw resources.noPedalsWithThatIdMessage;
-								}
-						)
-						
-						var deletedOne = false;
-						
-						/* We can't use the delete keyword because it leaves a messy undefined in the array. */			
-						thisBoard.pedals = helpers.where(thisBoard.pedals, function (pedal) {
-						    /* Use the already deleted bool to make sure we only delete one instance of this pedal */
-								if (deletedOne) return true;
-								deletedOne = (pedal.id === pedalToRemove.id);
-						    return pedal.id !== pedalToRemove.id;
-						});
-				};
+		this.Remove = function(pedalId){
+			var pedalsWithThisId = helpers.where(thisBoard.pedals, function (boardPedal) {
+					return boardPedal.id === pedalId;
+			});
+				
+			var pedalToRemove = helpers.single(pedalsWithThisId,
+				function() {// more than one result
+						//Figure out which one to remove
+						console.log("TODO: handle choosing which to delete.");
+						return pedalsWithThisId[0];
+				},
+				function() {// zero results
+					throw resources.noPedalsWithThatIdMessage;
+				}
+			);
+				
+			var deletedOne = false;
+			
+			/* We can't use the delete keyword because it leaves a messy undefined in the array. */			
+			thisBoard.pedals = helpers.where(thisBoard.pedals, function (pedal) {
+				/* Use the already deleted bool to make sure we only delete one instance of this pedal */
+					if (deletedOne) return true;
+					deletedOne = (pedal.id === pedalToRemove.id);
+				return pedal.id !== pedalToRemove.id;
+			});
+			
+			return pedalToRemove;
+		};
 				
         this.Clear = function () {
             thisBoard.pedals = [];
