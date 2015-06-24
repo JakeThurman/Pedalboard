@@ -4,6 +4,7 @@ define([ "helperMethods", "textResources" ], function ( helpers, resources ) {
 	/*
 	 * replaces instances of /{[a-zA-Z0-9]+}/ in the string @str
 	 * by looking up the value inside the braces as indexed from object or array @lookup
+	 *   -> @str can also be a single string that will be automatically wrapped in an array
 	 * 
 	 * if no value is provided for lookup, it will default to the textResources file
 	 */
@@ -12,9 +13,13 @@ define([ "helperMethods", "textResources" ], function ( helpers, resources ) {
 		if (helpers.isUndefined(lookup)) 
 			lookup = resources;
 		
+		/* wrap lookup in an array if it's a string */
+		else if (typeof lookup === "string")
+			lookup = [lookup];
+		
 		/* if there is a lookup, assert that it's an object or an array */
 		else if (!helpers.isObjectOrArray(lookup)) 
-			throw new Error("lookup parameter must be an object or array! Actual: " + lookup);
+			throw new Error("lookup parameter must be an object or array (or a single string to be put in a single item array)! Actual: " + lookup);
 		
 		/* find all instances of curly brace wrapped strings */
 		return str.replace(/{[a-zA-Z0-9]+}/, function(match, i) { 

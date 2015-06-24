@@ -9,11 +9,14 @@ define([ "stringReplacer" ], function ( replacer ) {
 			    expect(replacer.replace("hello {0}", [ "joe" ])).toEqual("hello joe");
 			});
 			
-			it("should throw an error if a lookup is not a valid object/array", function () {
+			it("should replace {0} from single string resource automatically", function () {
+			    expect(replacer.replace("hello {0}", "joe")).toEqual("hello joe");
+			});
+			
+			it("should throw an error if a lookup is not a valid object/array or single string", function () {
 				var thrower = function () {
-					replacer.replace("test {0}", "");
+					replacer.replace("test {0}", function () {});
 				};
-				
 			    expect(thrower).toThrow();
 			});
 			
