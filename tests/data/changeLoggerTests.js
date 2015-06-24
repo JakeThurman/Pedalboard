@@ -12,6 +12,41 @@ define([ "changeLogger" ], function ( changeLogger ) {
 				expect(logger.changes.length).toEqual(1);
 			});
 			
+			it("should be able to record objects in a second 'state' param", function () {
+				var state = { the: "current state" };
+				logger.log("a change was made with state", state);
+				expect(logger.changes.length).toEqual(1);
+				expect(logger.changes[0].state).toBe(state);
+			});
+			
+			it("should be able to record strings in a second 'state' param", function () {
+				var state = "the state";
+				logger.log("a change was made with state", state);
+				expect(logger.changes.length).toEqual(1);
+				expect(logger.changes[0].state).toBe(state);
+			});
+			
+			it("should be able to record arrays in a second 'state' param", function () {
+				var state = [1, 2, 3];
+				logger.log("a change was made with state", state);
+				expect(logger.changes.length).toEqual(1);
+				expect(logger.changes[0].state).toBe(state);
+			});
+			
+			it("should be able to record a function in a second 'state' param", function () {
+				var state = function () {};
+				logger.log("a change was made with state", state);
+				expect(logger.changes.length).toEqual(1);
+				expect(logger.changes[0].state).toBe(state);
+			});
+			
+			it("should allow state to be undefined", function () {
+				var state = function () {};
+				logger.log("a change was made without state");
+				expect(logger.changes.length).toEqual(1);
+				expect(logger.changes[0].state).toBeUndefined();
+			});
+			
 			it("should throw an exception if no description is provided", function () {
 				var thrower = function () {
 					logger.log();

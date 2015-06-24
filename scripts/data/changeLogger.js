@@ -12,8 +12,9 @@ define([ "helperMethods" ], function ( helpers ) {
 		
 		/* classes */
 		var topChangeId = 0;
-		function Change(description) {
+		function Change(description, state) {
 			this.description = description;
+			this.state = state;
 			this.id = "change-" + topChangeId++;
 			this.isBatch = false;
 		}
@@ -75,13 +76,13 @@ define([ "helperMethods" ], function ( helpers ) {
 				changeLogger.changes.push(batch);;
 		};
 		
-		changeLogger.log = function (desc) {
+		changeLogger.log = function (desc, state) {
 			/* If we are inside of a DontLog function, don't save any changes */
 			if (!enabled) return;
 			
 			assertDesc(desc);
 			
-			var change = new Change(desc);
+			var change = new Change(desc, state);
 		
 			if (batchIsRunning()) /* push change to the top batch */
 				getCurrentBatch().changes.push(change);
