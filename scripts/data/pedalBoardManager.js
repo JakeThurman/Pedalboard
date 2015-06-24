@@ -89,6 +89,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			boards[domboard.options.id] = { 
 				dom: domboard,
 				data: new classes.PedalBoard(name),
+				__pedalEls: [], /* we use this for caching the rendered pedals so that we can easily access them for removing/clearing */
 			};
 			
 			log(resources.change_AddBoard, name);
@@ -134,23 +135,31 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 		/* ! Pedal Methods ! */
 		/* 
 		 * Add the passed in pedal object to the board with id of @boardId. 
-		 * Append the created dom element to @pedalContainer 
+		 * Optionally then appends the created dom element to @pedalContainer 
 		 */
 		manager.AddPedal = function (pedal, boardId, pedalContainer) {
 			assertBoardIdExists(boardId);
 			
+			/* render the pedal and cache it so we can use it for removing/clearing */
+			var rendered = pedalRenderer.render(pedal);
+			boards[boardId].__pedalEls.push(rendered);
+			
+			/* add the data pedal */
 			boards[boardId].data.Add(pedal);
 			
 			log(resources.change_AddPedal, [ pedal.fullName, boards[boardId].data.Name ]);
 			
-			var rendered = pedalRenderer.render(pedal);
+			/* if the gave us something append the rendered pedal to, do it. */
 			if (pedalContainer) rendered.appendTo(pedalContainer);
 			
 			return rendered;
 		};
 		
 		/* Remove a pedal with id of @pedal id from the board with id of @boardId. */
-		manager.RemovePedal = function (pedalId, boardId) {		
+		/* NOTE: this function breaks convention and DOES NOT handle the dom. This
+		   is becuase choosing which instance of a pedal that is on the same board
+		   is not yet implimented. */
+		manager.RemovePedal = function (pedalId, boardId) {	
 			assertBoardIdExists(boardId);			
 			var removedPedal = boards[boardId].data.Remove(pedalId);
 			log(resources.change_RemovedPedal, [ removedPedal.fullName, boards[boardId].data.Name ]);
@@ -158,8 +167,16 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			
 		/* Clear the board with id of @boardId of all pedals*/
 		manager.Clear = function (boardId) {
-			/* todo don't use this magic find */						
-			boards[boardId].dom.el.find(".single-pedal-data").remove();
+			assertBoardIdExists(boardId);			
+			
+			/*remove the pedals from the dom */
+			for (var i = 0; i > boards[boardId].__pedalEls.length ;i++) {
+			    boards[boardId].__pedalEls[i].remove()
+			}			
+			/* reset the dom container */
+			boards[boardId].__pedalEls = []; 
+			
+			/* clear the data pedals from the data board */
 			boards[boardId].data.Clear();
 			
 			log(resources.change_ClearedBoard, boards[boardId].data.Name);
