@@ -1,9 +1,7 @@
 ## Intro
-This project was created by Jake Thurman.
+This project was created by Jake Thurman. You are free to use this project or any part of it with credit.
 
 [Run a live version.](http://jakethurman.github.io/pedalboard/)
-
-You are free to use this project or any part of it with credit.
 
 ## Reuse
 To use this project was created with the intention of reuse in mind. Update the following files to fit your project.
