@@ -21,4 +21,13 @@ define({
 	saveBoardsToStorageButton: "Save",
 	boardReportButton: "Report",
 	boardCompareButton: "Compare",
+	
+	/* change log resources */
+	change_AddBoard: "Added pedalboard: \"{0}\"",
+	change_RenamedBoard: "Renamed pedalboard \"{0}\" to \"{1}\"",
+	change_DeleteBoard: "Deleted pedalboard: \"{0}\"",
+	change_DeleteAllBoards: "Deleted all pedalboards",
+	change_AddPedal: "Added {0} to \"{1}\"",
+	change_RemovedPedal: "Removed {0} from \"{1}\"",
+	change_ClearedBoard: "Cleared all pedals from pedalboard: \"{0}\"",
 });

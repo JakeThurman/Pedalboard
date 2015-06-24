@@ -1,14 +1,15 @@
-define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer"], function (classes, pedalBoardPopup, pedalRenderer) {
+define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger", "stringReplacer", "textResources"], function (classes, pedalBoardPopup, pedalRenderer, changeLogger, replacer, resources) {
 	var actions = {};
 		
 	actions.create = function () {
 		var manager = {};
 			
+		/* create a logger instance */
 		manager.logger = changeLogger.create();
 		
 		/* Where all of the managed boards are stored */
 		var boards = {};
-			
+		
 		/* helper */
 		function assertBoardIdExists(id) {
 			if (!boards[id]) 
@@ -38,7 +39,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer"], function (clas
 		};
 		
 		/* Get an array of all of the board data */
-	  manager.GetBoards = function () {
+		manager.GetBoards = function () {
 			var out = [];
 			for(var key in boards) {
 				out.push(manager.GetBoard(key));
@@ -75,7 +76,12 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer"], function (clas
 			return board ? board.data.pedals.length > 0 : false; /* If there is no board with this id return false */
 		};
 	
-		/* !Board Methods! */
+		/* ! Board Methods ! */
+		/* logging helper to reduce duplicate code */
+		function log(resource, params) {
+			manager.logger.log(replacer.replace(resource, params), manager.GetBoards());
+		}
+		
 		/* Add a board! */
 		manager.Add = function (name, contentConatiner) {	
 			var domboard = pedalBoardPopup.create(name, contentConatiner, manager);
@@ -84,33 +90,48 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer"], function (clas
 				dom: domboard,
 				data: new classes.PedalBoard(name),
 			};
-					
+			
+			log(resources.change_AddBoard, name);
+			
 			return domboard;
 		};
 		
 		/* Rename a board */
 		manager.Rename = function (name, boardId) {
 			assertBoardIdExists(boardId);
-					
+			
+			/* record so we can log the change in a second */
+			var oldName = boards[boardId].data.Name;
+			
 			boards[boardId].data.Name = name;
+			log(resources.change_RenamedBoard, [ oldName, name ]);
 		};
 		
 		/* Delete a board */
-		manager.Delete = function (boardId) {
+		manager.Delete = function (boardId) {			
 			assertBoardIdExists(boardId);
+			
+			/* record so we can log the change in a second */
+			var name = boards[boardId].data.Name;
 					
 			boards[boardId].dom.el.remove();
-				delete boards[boardId];
+			delete boards[boardId];
+							
+			log(resources.change_DeleteBoard, name);
 		};
 		
 		/* Delete all of the boards */
 		manager.DeleteAll = function () {
-			for(var key in boards)
-				manager.Delete(key);
+			
+			manager.logger.dontLog(function () { /* don't log the individual changes here */
+				for(var key in boards)
+					manager.Delete(key);
+			});
+			
+			log(resources.change_DeleteAllBoards);
 		};
 		
-		/* !Pedal Methods! */
-		
+		/* ! Pedal Methods ! */
 		/* 
 		 * Add the passed in pedal object to the board with id of @boardId. 
 		 * Append the created dom element to @pedalContainer 
@@ -119,7 +140,9 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer"], function (clas
 			assertBoardIdExists(boardId);
 			
 			boards[boardId].data.Add(pedal);
-					
+			
+			log(resources.change_AddPedal, [ pedal.fullName, boards[boardId].data.Name ]);
+			
 			var rendered = pedalRenderer.render(pedal);
 			if (pedalContainer) rendered.appendTo(pedalContainer);
 			
@@ -128,8 +151,9 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer"], function (clas
 		
 		/* Remove a pedal with id of @pedal id from the board with id of @boardId. */
 		manager.RemovePedal = function (pedalId, boardId) {		
-			assertBoardIdExists(boardId);		
-			boards[boardId].data.Remove(pedalId);
+			assertBoardIdExists(boardId);			
+			var removedPedal = boards[boardId].data.Remove(pedalId);
+			log(resources.change_RemovedPedal, [ removedPedal.fullName, boards[boardId].data.Name ]);
 		};
 			
 		/* Clear the board with id of @boardId of all pedals*/
@@ -137,6 +161,8 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer"], function (clas
 			/* todo don't use this magic find */						
 			boards[boardId].dom.el.find(".single-pedal-data").remove();
 			boards[boardId].data.Clear();
+			
+			log(resources.change_ClearedBoard, boards[boardId].data.Name);
 		};
         
         return manager;
