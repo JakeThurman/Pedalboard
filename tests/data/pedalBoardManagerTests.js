@@ -323,7 +323,23 @@ define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], 
 				});
 				
 				describe("Clear", function () {
-				
+				    it("should clear all of the pedals on the pedalboard", function () {
+						    var board = manager.Add("board", $fakeEl);
+						    
+								manager.AddPedal(dummyPedal, board.options.id, board.el);
+								manager.AddPedal(dummyPedal, board.options.id, board.el);
+								
+								manager.Clear(board.options.id);
+								
+								expect(manager.GetBoard(board.options.id).data.pedals).toEqual([]);
+						});
+						
+						it("should throw an exception when no boards with that id exist", function () {
+							  var thrower = function () {
+								    manager.Clear("Clearly not a_ board-id. " + new Date());
+								};
+								expect(thrower).toThrow();
+						});
 				});
 		});
 })
