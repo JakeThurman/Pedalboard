@@ -30,4 +30,6 @@ define({
 	change_AddPedal: "Added {0} to \"{1}\"",
 	change_RemovedPedal: "Removed {0} from \"{1}\"",
 	change_ClearedBoard: "Cleared all pedals from pedalboard: \"{0}\"",
+	
+	restoreBatchName: "Restored from save",
 });
