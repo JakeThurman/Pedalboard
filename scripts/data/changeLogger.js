@@ -93,6 +93,13 @@ define([ "helperMethods" ], function ( helpers ) {
 		changeLogger.dontLog = function (func) {
 			if (typeof func !== "function") throw new TypeError("dontLog takes a function")
 			
+			/* If logging is already disabled don't try to do it again, if we did
+			   that we would also stop logging after the deepest dontLog finishes */
+			if (!enabled) {
+				func();
+				return;
+			}
+		
 			enabled = false; /* Temporarily disable logging */
 			func();
 			enabled = true; /* Re-enable logging */

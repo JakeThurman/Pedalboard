@@ -133,6 +133,17 @@ define([ "changeLogger" ], function ( changeLogger ) {
 				};
 				expect(thrower).toThrow();
 			});
+			
+			it("should allow for sub-functions to call dontLog as well without causing the enabled flag to get reset early", function () {
+				logger.dontLog(function () {
+					logger.log("top");
+					logger.dontLog(function () {
+						logger.log("inner");
+					});
+				})
+				
+				expect(logger.changes.length).toEqual(0);
+			});
 		});
 		
 		describe("create", function () {
