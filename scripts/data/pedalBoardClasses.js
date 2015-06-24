@@ -16,7 +16,7 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 						var pedalsWithThisId = helpers.where(thisBoard.pedals, function (boardPedal) {
 								return boardPedal.id === pedalId;
 						});
-				
+						
 				    var pedalToRemove = helpers.single(pedalsWithThisId,
 								function() {// more than one result
 										//Figure out which one to remove
@@ -28,8 +28,13 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 								}
 						)
 						
-						//We can't use delete because it leaves a messy undefined in the array.						
+						var deletedOne = false;
+						
+						/* We can't use the delete keyword because it leaves a messy undefined in the array. */			
 						thisBoard.pedals = helpers.where(thisBoard.pedals, function (pedal) {
+						    /* Use the already deleted bool to make sure we only delete one instance of this pedal */
+								if (deletedOne) return true;
+								deletedOne = (pedal.id === pedalToRemove.id);
 						    return pedal.id !== pedalToRemove.id;
 						});
 				};
