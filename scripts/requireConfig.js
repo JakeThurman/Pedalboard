@@ -3,13 +3,14 @@ requirejs.config({
 		paths: {
 				/* Libraries */
 				"domReady":                      "lib/domReady",
-		    "jquery":                        "lib/jquery",
+				"jquery":                        "lib/jquery",
 				"jquery-ui":                     "lib/jquery-ui",
 				"Chart":                         "lib/Chart",
 				
 				/* Core */
 				"helperMethods":                 "core/helperMethods",
-				"textResources":								 "core/textResources",
+				"textResources":				 "core/textResources",
+				"stringReplacer":                "core/stringReplacer",
 				
 				/* UI Core */
 				"_Popup":                        "ui-core/_Popup",
