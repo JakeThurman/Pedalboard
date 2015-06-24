@@ -11,7 +11,7 @@ To use this project was created with the intention of reuse in mind. Update the 
 - *[/scripts/core/textResources.js](/scripts/core/textResources.js)* 
 - *[/scripts/data/pedalsGetter.js](/scripts/data/pedalsGetter.js)*
 
-Additionally, you can update the stylesheet to better suite your preference.
+Additionally, you can update the stylesheet to better suit your preference.
 
 - *[/style/PedalBoard.css](/style/PedalBoard.css)*
 
