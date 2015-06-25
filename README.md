@@ -14,7 +14,7 @@ Additionally, you can update the stylesheet to better suit your preference.
 - *[/style/PedalBoard.css](/style/PedalBoard.css)*
 
 ## Dependencies
-The current included JS library dependencies (as versioned in */scripts/versions.txt*)
+The current included JS library dependencies (as versioned in *[versions.txt](versions.txt)*)
 
 1. [RequireJS](http://www.requirejs.org)
 2. [JQuery](http://jquery.com/)
