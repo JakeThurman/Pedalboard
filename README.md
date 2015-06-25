@@ -16,11 +16,12 @@ Additionally, you can update the stylesheet to better suit your preference.
 ## Dependencies
 The current included JS library dependencies (as versioned in *[versions.txt](versions.txt)*)
 
-1. [RequireJS](http://www.requirejs.org)
-2. [JQuery](http://jquery.com/)
-3. [JQuery UI](https://jqueryui.com/)
-4. [Jasmine](http://jasmine.github.io/)
-5. [Chart.js](http://www.chartjs.org)
+- [RequireJS](http://www.requirejs.org)
+- [JQuery](http://jquery.com/)
+- [JQuery UI](https://jqueryui.com/)
+- [Jasmine](http://jasmine.github.io/)
+- [Chart.js](http://www.chartjs.org)
+- [Font Awesome](http://fortawesome.github.io/Font-Awesome/)
 
 ## Testing
 This code is covered under strong automated unit tests to ensure functionality.

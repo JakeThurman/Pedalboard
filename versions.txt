@@ -1,4 +1,5 @@
 requirejs
+requirejs.org
 6/2015
 V2.1.18
 
@@ -20,3 +21,9 @@ V2.3.4
 Chart
 chartjs.org
 6/21/2015
+2.0.0-alpha3
+
+font awesome
+http://fortawesome.github.io/Font-Awesome/
+6/2015
+v4.3.0
