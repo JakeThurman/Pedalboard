@@ -373,3 +373,10 @@ a, a:visited {
 	min-height: 200px;
 	min-width: 300px;
 }
+
+.help-text {
+	color: #aaa;
+	width: 100%;
+	text-align: right;
+    padding-top: 8px;
+}

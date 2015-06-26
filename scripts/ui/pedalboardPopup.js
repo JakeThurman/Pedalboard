@@ -12,10 +12,13 @@ define(["_Popup", "_OptionMenu", "jquery", "textResources", "pedalRenderer", "pe
 	 */
 	methods.create =  function (title, appendTo, manager) {		
 		var content = $("<div>", { "class": "pedal-board" });
-
+		
+		var helpText = $("<div>", { "class": "help-text" })
+			.text(resources.pedalBoardDragHelpText);
+		
 		var menuButton = $("<i>", { "class": "fa fa-bars" });
 					 
-		var popup = _Popup.create(content, {
+		var popup = _Popup.create(content.add(helpText), {
 			renameable: true,
 			rename: function (name, boardId) { manager.Rename(name, boardId); },
 			id: "pedal-board-" + window.nextNewPedalBoardId++,
@@ -37,37 +40,37 @@ define(["_Popup", "_OptionMenu", "jquery", "textResources", "pedalRenderer", "pe
 			 
 		var deleteAction  = function( event, ui ) {
 			var id = pedalRenderer.getId(ui.draggable);
-				ui.draggable.remove();
-				manager.RemovePedal(id, popup.options.id);
-			};
+			ui.draggable.remove();
+			manager.RemovePedal(id, popup.options.id);
+		};
 
-			var trashCan = $("<i>", { "class": "fa fa-trash" });
+		var trashCan = $("<i>", { "class": "fa fa-trash" });
 
-			/* Make the pedals sortable */
-			content.sortable({
-			    containment: popup.el,
-				axis: "y",
-				start: function (e, ui) {
-					trashCan.appendTo(content)
-						.droppable({
-							hoverClass: "trash-hover",
-							drop: deleteAction
-						});
-				},
-				stop: function (e, ui) {
-					trashCan.remove();
-				},
-			});
-			 
-			menuButton.click(function () {			 
-			pedalboardPopupOptionsHandler.handle(popup.options.id, menuButton, content, manager);
+		/* Make the pedals sortable */
+		content.sortable({
+			containment: popup.el,
+			axis: "y",
+			start: function (e, ui) {
+				trashCan.appendTo(content)
+					.droppable({
+						hoverClass: "trash-hover",
+						drop: deleteAction
+					});
+			},
+			stop: function (e, ui) {
+				trashCan.remove();
+			},
 		});
 			 
+		menuButton.click(function () {			 
+			pedalboardPopupOptionsHandler.handle(popup.options.id, menuButton, content, manager);
+		});
+		
 		function init(popup) {
 			popup.el.appendTo(appendTo)
 				.css("position","absolute");
 		}
-							 
+		
 		/* return the popup */
 		return popup;
 	};

@@ -31,4 +31,5 @@ define({
 	change_ClearedBoard: "Cleared all pedals from pedalboard: \"{0}\"",
 	
 	restoreBatchName: "Restored from save",
+	pedalBoardDragHelpText: "Drag and drop to change order or delete",
 });
