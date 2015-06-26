@@ -1,7 +1,7 @@
 define (["_SavePopup", "textResources", "helperMethods", "pedalDataAccess", "jquery", "jquery-ui"], function (_SavePopup, resources, helpers, Pedals, $) {
 	var methods = {};	
 
-	methods.create = function (button, boardId, addPedalCallback, cancelCallback) {
+	methods.create = function (button, id, addPedalCallback) {
 		var content = $("<div>");
 			
 		var allPedalNames = helpers.select(Pedals.allPedals, function (pedal) {
@@ -76,7 +76,6 @@ define (["_SavePopup", "textResources", "helperMethods", "pedalDataAccess", "jqu
 			id: "AddPedal" + boardId,
 			title: resources.addPedal,
 			init: init,
-			cancel: cancelCallback
 		});
 		
 		return thisPopup;
