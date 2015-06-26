@@ -14,7 +14,8 @@ define(["_Popup", "_OptionMenu", "jquery", "textResources", "pedalRenderer", "pe
 		var content = $("<div>", { "class": "pedal-board" });
 		
 		var helpText = $("<div>", { "class": "help-text" })
-			.text(resources.pedalBoardDragHelpText);
+			.text(resources.pedalBoardDragHelpText)
+			.css("display", "none");
 		
 		var menuButton = $("<i>", { "class": "fa fa-bars" });
 					 
@@ -70,6 +71,11 @@ define(["_Popup", "_OptionMenu", "jquery", "textResources", "pedalRenderer", "pe
 			popup.el.appendTo(appendTo)
 				.css("position","absolute");
 		}
+		
+		/* add a change callback to decide if the help text should be hidden */
+		manager.AddChangeCallback(popup.id, function () {
+			helpText.toggle(manager.AnyPedals(popup.id));
+		});
 		
 		/* return the popup */
 		return popup;

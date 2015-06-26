@@ -1,4 +1,4 @@
-define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger", "stringReplacer", "textResources"], function (classes, pedalBoardPopup, pedalRenderer, changeLogger, replacer, resources) {
+define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger", "stringReplacer", "textResources", "helperMethods"], function (classes, pedalBoardPopup, pedalRenderer, changeLogger, replacer, resources, helpers) {
 	var actions = {};
 		
 	actions.create = function () {
@@ -9,6 +9,9 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 		
 		/* Where all of the managed boards are stored */
 		var boards = {};
+		
+		/* separate from boards so that we can keep it more light weight for configuration logs */
+		var changeCallbacks = {};
 		
 		/* helper */
 		function assertBoardIdExists(id) {
@@ -85,12 +88,12 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 		manager.Add = function (name, contentConatiner) {	
 			var domboard = pedalBoardPopup.create(name, contentConatiner, manager);
 		
-			boards[domboard.options.id] = { 
+			boards[domboard.id] = { 
 				dom: domboard,
 				data: new classes.PedalBoard(name),
 				__pedalEls: [], /* we use this for caching the rendered pedals so that we can easily access them for removing/clearing */
 			};
-			
+						
 			log(resources.change_AddBoard, name);
 			
 			return domboard;
@@ -102,9 +105,15 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			
 			/* record so we can log the change in a second */
 			var oldName = boards[boardId].data.Name;
-			
+						
+			/* update the saved data object */
 			boards[boardId].data.Name = name;
+			
+			/* log this change to the history */
 			log(resources.change_RenamedBoard, [ oldName, name ]);
+			
+			/* call all of the change callbacks for this board id */
+			callChangeCallbacks(boardId);
 		};
 		
 		/* Delete a board */
@@ -116,13 +125,13 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 					
 			boards[boardId].dom.el.remove();
 			delete boards[boardId];
+			delete changeCallbacks[boardId];
 							
 			log(resources.change_DeleteBoard, name);
 		};
 		
 		/* Delete all of the boards */
 		manager.DeleteAll = function () {
-			
 			manager.logger.dontLog(function () { /* don't log the individual changes here */
 				for(var key in boards)
 					manager.Delete(key);
@@ -146,7 +155,11 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			/* add the data pedal */
 			boards[boardId].data.Add(pedal);
 			
+			/* log this change to the history */
 			log(resources.change_AddPedal, [ pedal.fullName, boards[boardId].data.Name ]);
+				
+			/* call all of the change callbacks for this board id */
+			callChangeCallbacks(boardId);
 			
 			/* if the gave us something append the rendered pedal to, do it. */
 			if (pedalContainer) rendered.appendTo(pedalContainer);
@@ -161,7 +174,12 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 		manager.RemovePedal = function (pedalId, boardId) {	
 			assertBoardIdExists(boardId);			
 			var removedPedal = boards[boardId].data.Remove(pedalId);
+			
+			/* log this change to the history */
 			log(resources.change_RemovedPedal, [ removedPedal.fullName, boards[boardId].data.Name ]);
+			
+			/* call all of the change callbacks for this board id */
+			callChangeCallbacks(boardId);
 		};
 			
 		/* Clear the board with id of @boardId of all pedals*/
@@ -169,17 +187,40 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			assertBoardIdExists(boardId);			
 			
 			/*remove the pedals from the dom */
-			for (var i = 0; i > boards[boardId].__pedalEls.length ;i++) {
-			    boards[boardId].__pedalEls[i].remove()
-			}			
+			helpers.forEach(boards[boardId].__pedalEls, function (pedalEl) { 
+			    pedalEl.remove();
+			});	
 			/* reset the dom container */
 			boards[boardId].__pedalEls = []; 
 			
 			/* clear the data pedals from the data board */
 			boards[boardId].data.Clear();
 			
+			/* log this change to the history */
 			log(resources.change_ClearedBoard, boards[boardId].data.Name);
+			
+			/* call all of the change callbacks for this board id */
+			callChangeCallbacks(boardId);
 		};
+		
+		
+		/* ! Change Callbacks ! */
+		/* calls all of the change callback functions for the given board id */
+		function callChangeCallbacks(boardId) {	
+			helpers.forEach(changeCallbacks[boardId], function (callback) {
+				callback();
+			});
+		}
+		
+		/* Add a change callback to a board */
+		manager.AddChangeCallback = function (boardId, func) {
+			if (typeof func !== "function")
+				throw new TypeError("AddChangeCallback takes a board id and secondly a function to be called when ever the pedals on a board are changed");
+			
+			changeCallbacks[boardId] = changeCallbacks[boardId] || [];
+			
+			changeCallbacks[boardId].push(func);
+		}
         
         return manager;
 	};

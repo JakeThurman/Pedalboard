@@ -23,7 +23,7 @@ define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], 
 				    it("should return a board with the given id", function () {
 						   /* setup */
 							 var domBoard = manager.Add("Test", $fakeEl);
-							 var id = domBoard.options.id;
+							 var id = domBoard.id;
 							 
 							 /* test */
 							 var output = manager.GetBoard(id);
@@ -125,7 +125,7 @@ define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], 
 				
 						it("should return false if there are no pedals on the given board", function () {
 						    var board = manager.Add("Test 1", $fakeEl);
-								var id = board.options.id
+								var id = board.id
 										
 								expect(manager.AnyPedals(id)).toBe(false);
 						});
@@ -146,7 +146,7 @@ define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], 
 						
 						it("should add the board to the board stack to be retrived with .GetBoard()", function () {
 						    var board = manager.Add("Stack me", $fakeEl);
-								expect(manager.GetBoard(board.options.id).dom).toBe(board);
+								expect(manager.GetBoard(board.id).dom).toBe(board);
 						});
 						
 						it("should allow for boards with the same name", function () {
@@ -155,8 +155,8 @@ define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], 
 								var b2 = manager.Add(sharedName, $fakeEl);
 								
 								expect(b1).not.toEqual(b2);
-								expect(b1.options.id).not.toEqual(b2.options.id);
-								expect(manager.GetBoard(b1.options.id)).not.toEqual(manager.GetBoard(b2.options.id));
+								expect(b1.id).not.toEqual(b2.id);
+								expect(manager.GetBoard(b1.id)).not.toEqual(manager.GetBoard(b2.id));
 						});
 				});
 				
@@ -165,9 +165,9 @@ define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], 
 						    var board = manager.Add("test board", $fakeEl);
 								
 								var newName = "test new name";
-								manager.Rename(newName, board.options.id);
+								manager.Rename(newName, board.id);
 								
-								expect(manager.GetBoard(board.options.id).data.Name).toEqual(newName);
+								expect(manager.GetBoard(board.id).data.Name).toEqual(newName);
 						});
 						
 						it("should throw if no board has that id", function () {
@@ -184,19 +184,19 @@ define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], 
 						    var board = manager.Add("test board", $fakeEl);
 								
 								var newName = "test new name";
-								manager.Delete(board.options.id);
+								manager.Delete(board.id);
 								
-								expect(manager.GetBoard(board.options.id)).toBeUndefined();
+								expect(manager.GetBoard(board.id)).toBeUndefined();
 						});
 						
 						it("should not delete any other boards", function () {
 								var keepBoard   = manager.Add("test1", $fakeEl);
 						    var deleteBoard = manager.Add("test2", $fakeEl);
 								
-								manager.Delete(keepBoard.options.id);
+								manager.Delete(keepBoard.id);
 								
-								expect(manager.GetBoard(keepBoard.options.id)).toBeUndefined();
-								expect(manager.GetBoard(deleteBoard.options.id)).not.toBeUndefined();
+								expect(manager.GetBoard(keepBoard.id)).toBeUndefined();
+								expect(manager.GetBoard(deleteBoard.id)).not.toBeUndefined();
 						});
 						
 						it("should throw if no board has that id", function () {
@@ -224,38 +224,38 @@ define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], 
 				    /* (pedal, boardId, pedalContainer) */
 						it("should add the pedal to the board with the given id", function () {
 						    var board = manager.Add("board", $fakeEl);
-						    manager.AddPedal(dummyPedal, board.options.id, board.el);
+						    manager.AddPedal(dummyPedal, board.id, board.el);
 								
-								expect(manager.GetBoard(board.options.id).data.pedals).toContain(dummyPedal);
+								expect(manager.GetBoard(board.id).data.pedals).toContain(dummyPedal);
 						});
 						
 						it("should ONLY add the pedal to the board with the given id, and no others", function () {
 						    var addBoard   = manager.Add("board", $fakeEl);
 						    var otherBoard = manager.Add("another", $fakeEl);
 
-								manager.AddPedal(dummyPedal, addBoard.options.id, addBoard.el);
+								manager.AddPedal(dummyPedal, addBoard.id, addBoard.el);
 								
-								expect(manager.GetBoard(addBoard.options.id).data.pedals).toContain(dummyPedal);
-								expect(manager.GetBoard(otherBoard.options.id).data.pedals).not.toContain(dummyPedal);
+								expect(manager.GetBoard(addBoard.id).data.pedals).toContain(dummyPedal);
+								expect(manager.GetBoard(otherBoard.id).data.pedals).not.toContain(dummyPedal);
 						});
 						
 						it("should return a rendered pedal as a jquery object", function () {
 						    var board = manager.Add("board", $fakeEl);
-							  var pedal = manager.AddPedal(dummyPedal, board.options.id, board.el);
+							  var pedal = manager.AddPedal(dummyPedal, board.id, board.el);
 								
 								expect(pedal instanceof $).toBe(true);
 						});
 						
 						it("should append the rendered pedal to the passed in element", function () {
 						    var board = manager.Add("board", $fakeEl);
-							  var pedal = manager.AddPedal(dummyPedal, board.options.id, board.el);
+							  var pedal = manager.AddPedal(dummyPedal, board.id, board.el);
 								
 								expect(pedal.get(0).parentNode).toBe(board.el.get(0));
 						});
 						
 						it("should still render and return the pedal if no element is passed in to append it to", function () {
 						    var board = manager.Add("board", $fakeEl);
-							  var pedal = manager.AddPedal(dummyPedal, board.options.id);
+							  var pedal = manager.AddPedal(dummyPedal, board.id);
 
 								expect(pedal.get(0)).not.toBeUndefined();
 						});
@@ -270,10 +270,10 @@ define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], 
 						it("should allow for pedals with the same id", function () {
 						    var board = manager.Add("board", $fakeEl);
 						    
-								manager.AddPedal(dummyPedal, board.options.id, board.el);
-								manager.AddPedal(dummyPedal, board.options.id, board.el);
+								manager.AddPedal(dummyPedal, board.id, board.el);
+								manager.AddPedal(dummyPedal, board.id, board.el);
 
-								var dummyPedalsOnBoard = helpers.where(manager.GetBoard(board.options.id).data.pedals, function(pedal) {
+								var dummyPedalsOnBoard = helpers.where(manager.GetBoard(board.id).data.pedals, function(pedal) {
 								     return pedal.id === dummyPedal.id;
 								});
 								
@@ -284,21 +284,21 @@ define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], 
 				describe("RemovePedal", function () {
 				    it("should remove the pedal", function () {
 								var board = manager.Add("board", $fakeEl);
-								manager.AddPedal(dummyPedal, board.options.id, board.el);
-								manager.RemovePedal(dummyPedal.id, board.options.id);
+								manager.AddPedal(dummyPedal, board.id, board.el);
+								manager.RemovePedal(dummyPedal.id, board.id);
 								
-								expect(manager.GetBoard(board.options.id).data.pedals).not.toContain(dummyPedal);
+								expect(manager.GetBoard(board.id).data.pedals).not.toContain(dummyPedal);
 						});
 						
 						it("should only remove one instance of a pedal", function () {
 							  var board = manager.Add("board", $fakeEl);
 						    
-								manager.AddPedal(dummyPedal, board.options.id, board.el);
-								manager.AddPedal(dummyPedal, board.options.id, board.el);
+								manager.AddPedal(dummyPedal, board.id, board.el);
+								manager.AddPedal(dummyPedal, board.id, board.el);
 
-								manager.RemovePedal(dummyPedal.id, board.options.id);
+								manager.RemovePedal(dummyPedal.id, board.id);
 
-								var dummyPedalsOnBoard = helpers.where(manager.GetBoard(board.options.id).data.pedals, function(pedal) {
+								var dummyPedalsOnBoard = helpers.where(manager.GetBoard(board.id).data.pedals, function(pedal) {
 								     return pedal.id === dummyPedal.id;
 								});
 								
@@ -309,7 +309,7 @@ define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], 
 						    var board = manager.Add("board", $fakeEl);
 																
 								var thrower = function () {
-								    manager.RemovePedal(dummyPedal.id, board.options.id);
+								    manager.RemovePedal(dummyPedal.id, board.id);
 								};
 								expect(thrower).toThrow();
 						});
@@ -326,12 +326,12 @@ define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], 
 				    it("should clear all of the pedals on the pedalboard", function () {
 						    var board = manager.Add("board", $fakeEl);
 						    
-								manager.AddPedal(dummyPedal, board.options.id, board.el);
-								manager.AddPedal(dummyPedal, board.options.id, board.el);
+								manager.AddPedal(dummyPedal, board.id, board.el);
+								manager.AddPedal(dummyPedal, board.id, board.el);
 								
-								manager.Clear(board.options.id);
+								manager.Clear(board.id);
 								
-								expect(manager.GetBoard(board.options.id).data.pedals).toEqual([]);
+								expect(manager.GetBoard(board.id).data.pedals).toEqual([]);
 						});
 						
 						it("should throw an exception when no boards with that id exist", function () {
@@ -340,6 +340,145 @@ define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], 
 								};
 								expect(thrower).toThrow();
 						});
+				});
+				
+				describe("AddChangeCallback", function () {
+					it ("should not call callbacks as a part of adding callbacks", function () {
+						var board = manager.Add("test", $fakeEl);
+						
+						var hit = false;
+						manager.AddChangeCallback(board.id, function () {
+							hit = true;
+						});
+						manager.AddChangeCallback(board.id, function () {
+							hit = true;
+						});
+						
+						expect(hit).toBe(false);
+					});
+					
+					it("should add a callback to be called on pedal add", function () {
+						var board = manager.Add("test", $fakeEl);
+						
+						var hit = false;
+						manager.AddChangeCallback(board.id, function () {
+							hit = true;
+						});
+						
+						manager.AddPedal(dummyPedal, board.id, board.el);
+						
+						expect(hit).toBe(true);
+					});
+					
+					it("should add a callback to be called on pedal remove", function () {
+						var board = manager.Add("test", $fakeEl);					
+						manager.AddPedal(dummyPedal, board.id, board.el);
+						
+						var hit = false;
+						manager.AddChangeCallback(board.id, function () {
+							hit = true;
+						});
+						
+						manager.RemovePedal(dummyPedal.id, board.id);
+						
+						expect(hit).toBe(true);
+					});
+					
+					it("should not call callbacks on board delete", function () {
+						var board = manager.Add("test", $fakeEl);					
+						manager.AddPedal(dummyPedal, board.id, board.el);
+						
+						var hit = false;
+						manager.AddChangeCallback(board.id, function () {
+							hit = true;
+						});
+						
+						manager.Delete(board.id);
+						
+						expect(hit).toBe(false);
+					});
+					
+					it("should add a callback to be called on board clear", function () {
+						var board = manager.Add("test", $fakeEl);					
+						manager.AddPedal(dummyPedal, board.id, board.el);
+						
+						var hit = false;
+						manager.AddChangeCallback(board.id, function () {
+							hit = true;
+						});
+						
+						manager.Clear(board.id);
+						
+						expect(hit).toBe(true);
+					});
+					
+					it("should add a throw an error if the callback is undefined", function () {
+						var board = manager.Add("test", $fakeEl);					
+						manager.AddPedal(dummyPedal, board.id, board.el);
+						
+						var hit = false;
+						var thrower = function () {
+							manager.AddChangeCallback(board.id);
+						};
+						
+						expect(thrower).toThrow();
+						expect(thrower).toThrowError();
+					});
+					
+					it("should add a throw an error if the callback is otherwise not a function", function () {
+						var board = manager.Add("test", $fakeEl);					
+						manager.AddPedal(dummyPedal, board.id, board.el);
+						
+						var hit = false;
+						var thrower = function () {
+							manager.AddChangeCallback(board.id, [1, 2, 3]);
+						};
+						
+						expect(thrower).toThrow();
+						expect(thrower).toThrowError();
+					});
+					
+					it("should be able to handle multiple callbacks", function () {
+						var board = manager.Add("test", $fakeEl);
+						
+						var hit1 = false;
+						manager.AddChangeCallback(board.id, function () {
+							hit1 = true;
+						});
+						
+						var hit2 = false;
+						manager.AddChangeCallback(board.id, function () {
+							hit2 = true;
+						});
+						
+						expect(hit1).toBe(false);
+						expect(hit2).toBe(false);
+						
+						manager.AddPedal(dummyPedal, board.id, board.el);
+												
+						expect(hit1).toBe(true);
+						expect(hit2).toBe(true);
+					});
+					
+					it("should not call another boards callbacks", function () {
+						var board1 = manager.Add("test", $fakeEl);
+						var board2 = manager.Add("test", $fakeEl);
+						
+						var hit1 = false;
+						manager.AddChangeCallback(board1.id, function () {
+							hit1 = true;
+						});
+						
+						var hit2 = false;
+						manager.AddChangeCallback(board2.id, function () {
+							hit2 = true;
+						});
+						
+						manager.AddPedal(dummyPedal, board1.id, board1.el);
+												
+						expect(hit1).toBe(true);
+						expect(hit2).toBe(false);
+					});
 				});
 		});
 })
