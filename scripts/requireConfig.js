@@ -14,7 +14,6 @@ requirejs.config({
 				
 				/* UI Core */
 				"_Popup":                        "ui-core/Popup",
-				"_SavePopup":                    "ui-core/SavePopup",
 				"_OptionMenu":                   "ui-core/OptionMenu",
 				
 				/* UI */

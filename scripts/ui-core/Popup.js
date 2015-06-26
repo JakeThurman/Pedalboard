@@ -1,4 +1,4 @@
-define(["jquery", "jquery-ui"], function ($) {
+define([ "jquery" ], function ( $ ) {
 	var openPopups = {};
 
 	var methods = {};
@@ -8,7 +8,7 @@ define(["jquery", "jquery-ui"], function ($) {
 		delete openPopups[popupId];
 	}
 
-	methods.assertOptionValidity = function(options) {
+	function assertOptionValidity(options) {
 		var errorMessage = "";
 
 		if (!options)
@@ -25,7 +25,8 @@ define(["jquery", "jquery-ui"], function ($) {
 	//Class		
 	function _Popup(el, options) {
 		this.el = el;
-		this.options = options;
+		this.options = { id: options.id }; /*!deprecated!*/
+		this.id = options.id;
 	}
 	/*	Content [JQuery Array]:	
 	 *			$("#popup-data");
@@ -34,9 +35,6 @@ define(["jquery", "jquery-ui"], function ($) {
 	 *		title: 			(String) 	[Required] 	    Popup Title
 	 *		id: 			(Any) 		[Required]		Auto closes the popup of that id if it tries to open again (so the icon will close & so no duplicates)
 	 *		renameable: 	(Boolean) 	{Default:false}	Is this user renamable?
-	 *		moveable: 		(Boolean)	{Default:false}	Is this user movable?
-	 *		movecontain:	($) 			 			Movement containment selector
-	 *		resizable:  	(Boolean) 	{Default:false}	Is this user resizeable?
   	 *		footer:			($object)					Appended as a global footer for the popup
 	 *		header:			($object)					Appended to the header and floated to the right 
 	 *		init: 			(function)					Safe place to put logic done after popup create 
@@ -47,7 +45,7 @@ define(["jquery", "jquery-ui"], function ($) {
 	 */
 	 methods.create = function (content, options) {  	 
 		//Make sure the options are valid.
-		methods.assertOptionValidity(options);
+		assertOptionValidity(options);
 
 		if (openPopups[options.id])
 			return methods.close(options.id);
@@ -104,7 +102,6 @@ define(["jquery", "jquery-ui"], function ($) {
 
 				if (newName !== oldName) {
 					title.text(newName);
-					outputPopup.options.title = newName;
 
 					if (options.rename)
 						options.rename(newName, options.id);
@@ -119,24 +116,6 @@ define(["jquery", "jquery-ui"], function ($) {
 				
 			title.addClass('renameable')
 				.click(rename);
-		}
-
-		//Add moveable if needed
-		if (options.moveable)
-			popup.draggable({ 
-					handle: ".header",
-					containment: options.movecontain,
-			});
-
-		//Add resizeable if needed
-		if (options.resizable){
-			popup.resizable({ 
-				handles: 'e, w',
-				minHeight: 150,
-				minWidth: 200,
-				maxHeight: 900,
-				maxWidth: 900,
-			});
 		}
 
 		//Save the data
