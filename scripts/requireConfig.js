@@ -18,7 +18,7 @@ requirejs.config({
 				"_OptionMenu":                   "ui-core/OptionMenu",
 				
 				/* UI */
-				"addPedalPopup":                 "ui/addPedalPopup",
+				"addPedalMenu":                  "ui/addPedalMenu",
 				"mainPageMenuHandler":           "ui/mainPageMenuHandler",
 				"pedalboardPopup":               "ui/pedalboardPopup",
 				"pedalboardPopupOptionsHandler": "ui/pedalboardPopupOptionsHandler",

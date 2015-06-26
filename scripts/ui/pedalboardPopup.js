@@ -1,4 +1,4 @@
-define(["_Popup", "addPedalPopup", "_OptionMenu", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOptionsHandler", "jquery-ui"], function (_Popup, addPedalPopup, _OptionMenu, $, resources, pedalRenderer, pedalboardPopupOptionsHandler) {
+define(["_Popup", "_OptionMenu", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOptionsHandler", "jquery-ui"], function (_Popup, _OptionMenu, $, resources, pedalRenderer, pedalboardPopupOptionsHandler) {
 		var methods = {};
 		
 		/*Make sure the window nextNewPedalBoardIdoardId value is setup*/

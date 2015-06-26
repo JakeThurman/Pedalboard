@@ -11,7 +11,7 @@ define(["textResources", "_OptionMenu", "jquery"], function (resources, _OptionM
 		var addBoardButton = $("<div>")
 			.text(resources.addPedalBoardButtonText)
 			.click(function () {
-				var newNameBox = $("<input>", { type: "text", placeholder: resources.newBoardNamePlaceholder })
+				var newNameBox = $("<input>", { type: "text", "class": "no-hover", placeholder: resources.newBoardNamePlaceholder })
 
 				var nameMenu = _OptionMenu.create(newNameBox).addClass("main-page-menu");
 

@@ -1,4 +1,4 @@
-define(["_OptionMenu", "jquery", "addPedalPopup", "textResources"], function (_OptionMenu, $, addPedalPopup, resources) {
+define(["_OptionMenu", "jquery", "addPedalMenu", "textResources"], function (_OptionMenu, $, addPedalMenu, resources) {
     var methods = {};
 
 	/*
@@ -18,7 +18,7 @@ define(["_OptionMenu", "jquery", "addPedalPopup", "textResources"], function (_O
 		var addPedal = $("<div>")
 			.text(resources.addPedalToBoard)
 			.click(function () {
-				addPedalPopup.create(menuButton, id, function (pedal) {
+				addPedalMenu.create(menuButton, function (pedal) {
 					manager.AddPedal(pedal, id, pedalContainer);
 				});
 			});

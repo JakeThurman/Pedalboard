@@ -226,27 +226,17 @@ input {
 	float: right;
 }
 
-
-.float-center {
-	margin: 0 auto;
-	width: 100%;
-	margin-bottom: 10px;
-}
-
 .shadowed {
 	box-shadow: 0 4px 5px 1px rgba(0,0,0,0.14);
 }
 
-.add-error-display {
-	width: 250%;
+.error-display {
 	color: red;
-	clear: both;
-	display: none;
 }
 
-.add-error-display.visible {
-	display: block;
-	padding-top: 4px;
+.error-display:hover {
+	background-color: #fff;
+	color: red;
 }
 
 .footer {
@@ -284,7 +274,7 @@ body {
 	background-color: #4078c0;
 	background-image: none;
 	color: #fff;
-	border: none;
+	border-color: #4078c0;
 	font-weight: normal;
 }
 
@@ -329,14 +319,14 @@ a, a:visited {
     text-decoration: none;
 }
 
-.options-menu > *:not(input) {
+.options-menu > *:not(.no-hover) {
     display: block;
     font-size: 13px;
     padding: 5px 15px;
 	cursor: pointer;
 }
 
-.options-menu > *:not(input):hover {
+.options-menu > *:not(.no-hover):hover {
     background-color: #4183c4;
     color: #fff;
 }
@@ -360,6 +350,23 @@ a, a:visited {
 	line-height: 31px;
 	vertical-align: middle;
 	font-size: 1.5em;
+}
+
+.fa-plus:before {
+	vertical-align: middle;
+	font-size: 1.5em;
+	line-height: 36px;
+}
+
+.fa-plus {
+	width: 36px;
+    text-align: center;
+    color: #bbb;
+    transition: color .2s ease;
+}
+
+.fa-plus:hover {
+	color: #999;
 }
 
 .pedal-board {
