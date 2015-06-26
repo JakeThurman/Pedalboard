@@ -38,8 +38,7 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 				clientRect: {
 					left: "10px",
 					top: "49px",
-					width: "509px",
-					height: "306px"
+					width: "509px"
 				},
 			}]
 		}

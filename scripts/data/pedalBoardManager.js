@@ -32,7 +32,6 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 				left: rect.left,
 				top: rect.top,
 				width: rect.width,
-				height: rect.height,
 			};
 				
 			return thisBoard;
@@ -50,9 +49,9 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 		/* Are there any boards [where func]? */
 		manager.Any = function (where) {
 			for(var key in boards) {
-					if (!where || where(boards[key])) /* if there is no where statement, or this one counts */
-						return true; /* if any return true of the first one */
-				}
+				if (!where || where(boards[key])) /* if there is no where statement, or this one counts */
+					return true; /* if any return true of the first one */
+			}
 			return false;
 		};
 		

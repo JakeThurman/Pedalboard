@@ -361,3 +361,8 @@ a, a:visited {
 	vertical-align: middle;
 	font-size: 1.5em;
 }
+
+.pedal-board {
+	min-height: 200px;
+	min-width: 300px;
+}
