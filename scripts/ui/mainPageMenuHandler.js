@@ -6,8 +6,9 @@ define(["textResources", "_OptionMenu", "jquery"], function (resources, _OptionM
 	 * @mainContentContainer: the content container that the board should be appended to
 	 * @manager:              pedalBoardManager.js object to manage pedal boards with
 	 * @save:                 calling this function should save the current pedal board data
+	 * @openHistory:          calling this should open the history popup
 	 */
-	methods.handle = function(pageMenuButton, mainContentContainer, manager, save) {
+	methods.handle = function(pageMenuButton, mainContentContainer, manager, save, openHistory) {
 		var addBoardButton = $("<div>")
 			.text(resources.addPedalBoardButtonText)
 			.click(function () {
@@ -45,8 +46,12 @@ define(["textResources", "_OptionMenu", "jquery"], function (resources, _OptionM
 				if (confirm(resources.clearAllBoardsConfirm))
 					manager.DeleteAll();
 			});
+			
+		var historyButon = $("<div>")
+			.text(resources.historyPopupTitle)
+			.click(openHistory);
 
-		var menuOptions = addBoardButton.add(saveButton);
+		var menuOptions = addBoardButton.add(saveButton).add(historyButon);
 
 		if (manager.Any())
 			menuOptions = menuOptions.add(deleteAllBoards);

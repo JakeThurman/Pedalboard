@@ -12,6 +12,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 		
 		/* separate from boards so that we can keep it more light weight for configuration logs */
 		var changeCallbacks = {};
+		var allBoardChangeCallbacks = [];
 		
 		/* helper */
 		function assertBoardIdExists(id) {
@@ -105,6 +106,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			};
 						
 			log(resources.change_AddBoard, name);
+			callChangeCallbacks();
 			
 			return domboard;
 		};
@@ -138,6 +140,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			delete changeCallbacks[boardId];
 							
 			log(resources.change_DeleteBoard, name);
+			callChangeCallbacks();
 		};
 		
 		/* Delete all of the boards */
@@ -148,6 +151,8 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			});
 			
 			log(resources.change_DeleteAllBoards);
+			
+			callChangeCallbacks();
 		};
 		
 		/* Board-UI logging methods */
@@ -164,6 +169,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			
 			boards[boardId].clientRect = clientRect;
 			log(resources.change_MoveBoard, boards[boardId].data.Name);
+			callChangeCallbacks(boardId);
 		}
 		
 		/* log a resized board */
@@ -173,6 +179,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			
 			boards[boardId].clientRect = clientRect;
 			log(resources.change_ResizeBoard, boards[boardId].data.Name);
+			callChangeCallbacks(boardId);
 		}
 		
 		/* ! Pedal Methods ! */
@@ -240,20 +247,33 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 		
 		
 		/* ! Change Callbacks ! */
-		/* calls all of the change callback functions for the given board id */
+		/* calls all of the change callback functions for the given board id, and all global callbacks */
 		function callChangeCallbacks(boardId) {	
-			helpers.forEach(changeCallbacks[boardId], function (callback) {
-				callback();
+			var change = manager.logger.changes[manager.logger.changes.length - 1];
+			
+			if (!helpers.isUndefined(boardId)) {
+				helpers.forEach(changeCallbacks[boardId], function (callback) {
+					callback(change);
+				});
+			}
+			helpers.forEach(allBoardChangeCallbacks, function (callback) {
+				callback(change);
 			});
 		}
 		
 		/* Add a change callback to a board */
 		manager.AddChangeCallback = function (boardId, func) {
-			if (typeof func !== "function")
-				throw new TypeError("AddChangeCallback takes a board id and secondly a function to be called when ever the pedals on a board are changed");
+			if (typeof func !== "function") {
+				if (typeof boardId === "function" && helpers.isUndefined(func)) {
+					func = boardId; /* this is a global/all board callback*/
+					allBoardChangeCallbacks.push(func);
+					return;
+				}
+				
+				throw new TypeError("AddChangeCallback takes a board id and secondly a function to be called when ever the pedals on a board are changed, or just a function to be called on any change from any board");
+			}
 			
 			changeCallbacks[boardId] = changeCallbacks[boardId] || [];
-			
 			changeCallbacks[boardId].push(func);
 		}
         

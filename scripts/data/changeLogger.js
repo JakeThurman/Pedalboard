@@ -17,6 +17,7 @@ define([ "helperMethods" ], function ( helpers ) {
 			this.state = state;
 			this.id = "change-" + topChangeId++;
 			this.isBatch = false;
+			this.timeStamp = new Date();
 		}
 		
 		var topBatchId = 0;
