@@ -1,24 +1,31 @@
-define([ "_Popup", "textResources", "jquery", "helperMethods" ], function ( _Popup, resources, $, helpers ) {
+define([ "_Popup", "textResources", "jquery", "helperMethods", "moment" ], function ( _Popup, resources, $, helpers, moment ) {
 	"use strict";
 
 	var methods = {};
 
 	methods.create = function(changeLog) {
+		/* set up the user language for the moment library */
+		moment.locale(window.navigator.userLanguage || window.navigator.language)
+	
 		var content = $("<div>", { "class": "history-popup" })
 		
 		function renderChange(change) {
-			var changeDiv = $("<div>")
-				.append($("<div>", { "class": "description" })
-					.text(change.description));
+			var changeDiv = $("<div>");
+			
+			var description = $("<div>", { "class": "description" })
+					.text(change.description)
+					.appendTo(changeDiv);
 						
 			if (change.isBatch) {
-				var expander = $("<i>", { "class": "float-left fa fa-plus-square" })
+				var expander = $("<i>", { "class": "float-left fa fa-plus-square" });
+				
+				expander.add(description)
 					.click(function () {
 						changeDiv.toggleClass("expanded");
 						expander.toggleClass("fa-plus-square")
 							.toggleClass("fa-minus-square");
 					});
-								
+				
 				changeDiv.prepend(expander)
 					.addClass("batch");
 					
@@ -27,8 +34,10 @@ define([ "_Popup", "textResources", "jquery", "helperMethods" ], function ( _Pop
 				});
 			}
 			else {
+				console.log(change.timeStamp);
+				
 				changeDiv.append($("<div>", { "class": "time-stamp" })
-					.text("[" + change.timeStamp + "]"))
+					.text(new moment(change.timeStamp).fromNow()))
 					.addClass("change");
 			}
 			

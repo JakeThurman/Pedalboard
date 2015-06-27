@@ -92,6 +92,7 @@
 
 .output-box > .header > h2 {
 	display: inline;
+    margin-right: 15px;
 }
 
 h2 {
@@ -388,7 +389,7 @@ a, a:visited {
 
 .history-popup {
     max-height: 250px;
-    width: 350px;
+    width: 450px;
     overflow-x: hidden;
 	overflow-y: auto;
 }
@@ -405,7 +406,20 @@ a, a:visited {
 	margin-bottom: 5px;
 }
 
-.fa-plus-square, .fa-minus-square {
+.history-popup .fa-plus-square, .fa-minus-square {
 	cursor: pointer;
 	margin-right: 5px;
+}
+
+.history-popup .batch > .description {
+	cursor: pointer;
+}
+
+.history-popup  .change > .time-stamp{
+	color: #888;
+	float: right;
+}
+
+.history-popup  .change > * {
+	display: inline-block;
 }

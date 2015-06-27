@@ -27,3 +27,8 @@ font awesome
 http://fortawesome.github.io/Font-Awesome/
 6/2015
 v4.3.0
+
+moment.js
+http://momentjs.com/
+6/27/2015
+v2.10.3
