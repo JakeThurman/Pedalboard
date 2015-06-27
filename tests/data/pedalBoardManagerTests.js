@@ -480,5 +480,65 @@ define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], 
 						expect(hit2).toBe(false);
 					});
 				});
+				
+				describe("Move", function () {
+					it("should throw an exception if an invalid board id is provided", function () {
+						var thrower = function () {
+							manager.Move("not a reaL_board-iD" + new Date(), {});
+						};
+						
+						expect(thrower).toThrow();
+					});
+					
+					it("should throw a TypeError if @clientRect is not a ClientRect object", function () {
+						var board = manager.Add("Board Name", $fakeEl)
+						
+						var thrower = function () {
+							manager.Move(board.id, {});
+						};
+						
+						expect(thrower).toThrowError(TypeError);
+					});
+					
+					it("should set the clientRect property of the board", function () {
+						var board = manager.Add("Board Name", $fakeEl)
+						
+						var rect = board.el.get(0).getBoundingClientRect();
+						
+						manager.Move(board.id, rect);
+						
+						expect(manager.GetBoard(board.id).clientRect).toEqual(rect);						
+					});
+				});
+				
+				describe("Resize", function () {					
+					it("should set the clientRect property of the board", function () {
+						var board = manager.Add("Board Name", $fakeEl)
+						
+						var rect = board.el.get(0).getBoundingClientRect();
+						
+						manager.Resize(board.id, rect);
+						
+						expect(manager.GetBoard(board.id).clientRect).toEqual(rect);						
+					});
+					
+					it("should throw a TypeError if @clientRect is not a ClientRect object", function () {
+						var board = manager.Add("Board Name", $fakeEl)
+						
+						var thrower = function () {
+							manager.Resize(board.id, {});
+						};
+						
+						expect(thrower).toThrowError(TypeError);
+					});
+					
+					it("should throw an exception if an invalid board id is provided", function () {
+						var thrower = function () {
+							manager.Resize("not a reaL_board-iD" + new Date(), {});
+						};
+						
+						expect(thrower).toThrow();
+					});
+				});
 		});
 })

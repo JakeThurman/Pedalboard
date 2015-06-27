@@ -22,21 +22,31 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 		/* !Data Methods! */
 		/*Get the board with id of @boardId */
 		manager.GetBoard = function (boardId) {
-			var thisBoard = boards[boardId];
-				
-			/* if there is no board by this id just return undefined now */
-			if (!thisBoard)
-				return thisBoard;
-				
-			/* Vanilla js is cool getBoundingClientRect() gets us all the data we need!*/
-			var rect = boards[boardId].dom.el.get(0).getBoundingClientRect();
+			var board = boards[boardId];
 			
-			thisBoard.clientRect = {
-				left: rect.left,
-				top: rect.top,
-				width: rect.width,
+			/* if no board was found, just return undefined now */
+			if (helpers.isUndefined(board))
+				return board;
+			
+			/* Selectively copy the board */
+			var thisBoard = {
+				dom: board.dom,
+				data: board.data,
+				clientRect: board.clientRect,
 			};
-				
+			
+			/* If there is a board, but no clientRect, get the current one */
+			if (helpers.isUndefined(thisBoard.clientRect)) {
+				/* Vanilla js is cool getBoundingClientRect() gets us all the data we need!*/
+				var rect = board.dom.el.get(0).getBoundingClientRect();
+
+				thisBoard.clientRect = {
+					left: rect.left,
+					top: rect.top,
+					width: rect.width,
+				};
+			}
+			
 			return thisBoard;
 		};
 		
@@ -139,6 +149,31 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			
 			log(resources.change_DeleteAllBoards);
 		};
+		
+		/* Board-UI logging methods */
+		/*  clientRect = (vanilla js element).getBoundingClientRect(); */
+		function assertClientRectIsValid(clientRect) {
+			if (!(clientRect instanceof ClientRect))
+				throw new TypeError("clientRect is not a ClientRect. Try using (vanilla js element).getBoundingClientRect()") 
+		}
+		
+		/* log a moved board */
+		manager.Move = function (boardId, clientRect) {
+			assertBoardIdExists(boardId);
+			assertClientRectIsValid(clientRect);
+			
+			boards[boardId].clientRect = clientRect;
+			log(resources.change_MoveBoard, boards[boardId].data.Name);
+		}
+		
+		/* log a resized board */
+		manager.Resize = function (boardId, clientRect) {
+			assertBoardIdExists(boardId);
+			assertClientRectIsValid(clientRect);
+			
+			boards[boardId].clientRect = clientRect;
+			log(resources.change_ResizeBoard, boards[boardId].data.Name);
+		}
 		
 		/* ! Pedal Methods ! */
 		/* 

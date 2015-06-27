@@ -30,6 +30,9 @@ define(["_Popup", "_OptionMenu", "jquery", "textResources", "pedalRenderer", "pe
 			 
 		popup.el.draggable({ 
 				handle: ".header",
+				stop: function () {
+					manager.Move(popup.id, popup.el.get(0).getBoundingClientRect());
+				}
 			})
 			.resizable({ 
 				handles: 'e, w',
@@ -37,12 +40,15 @@ define(["_Popup", "_OptionMenu", "jquery", "textResources", "pedalRenderer", "pe
 				minWidth: 200,
 				maxHeight: 900,
 				maxWidth: 900,
+				stop: function () {
+					manager.Resize(popup.id, popup.el.get(0).getBoundingClientRect());
+				}
 			});
 			 
 		var deleteAction  = function( event, ui ) {
-			var id = pedalRenderer.getId(ui.draggable);
+			var pedalId = pedalRenderer.getId(ui.draggable);
 			ui.draggable.remove();
-			manager.RemovePedal(id, popup.options.id);
+			manager.RemovePedal(pedalId, popup.id);
 		};
 
 		var trashCan = $("<i>", { "class": "fa fa-trash" });
@@ -62,7 +68,7 @@ define(["_Popup", "_OptionMenu", "jquery", "textResources", "pedalRenderer", "pe
 				trashCan.remove();
 			},
 		});
-			 
+		
 		menuButton.click(function () {			 
 			pedalboardPopupOptionsHandler.handle(popup.options.id, menuButton, content, manager);
 		});
