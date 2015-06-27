@@ -435,7 +435,7 @@ define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], 
 						};
 						
 						expect(thrower).toThrow();
-						expect(thrower).toThrowError();
+						expect(thrower).toThrowError(TypeError);
 					});
 					
 					it("should be able to handle multiple callbacks", function () {
@@ -478,6 +478,68 @@ define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], 
 												
 						expect(hit1).toBe(true);
 						expect(hit2).toBe(false);
+					});
+					
+					it("should add a callback to be called by all board changes if only a function is passed in", function () {
+						var board1 = manager.Add("test", $fakeEl);
+						var board2 = manager.Add("test", $fakeEl);
+						
+						var hitOnce = false;
+						var hitTwice = false;
+						var hitAboveTwo = false;
+						manager.AddChangeCallback(function () {
+							if (!hitOnce)
+								hitOnce = true;
+							else if (!hitTwice)
+								hitTwice = true;
+							else
+								hitAboveTwo = true;
+						});
+						
+						manager.AddPedal(dummyPedal, board1.id, board1.el);
+						manager.AddPedal(dummyPedal, board2.id, board2.el);
+
+						expect(hitOnce).toBe(true);
+						expect(hitTwice).toBe(true);
+						expect(hitAboveTwo).toBe(false);
+					});
+					
+					it("should allow for multiple global change callbacks", function () {
+						var board = manager.Add("test", $fakeEl);
+						
+						var hit1 = false;
+						manager.AddChangeCallback(function () {
+							hit1 = true;
+						});
+						
+						var hit2 = false;
+						manager.AddChangeCallback(function () {
+							hit2 = true;
+						});
+						
+						manager.AddPedal(dummyPedal, board.id, board.el);
+												
+						expect(hit1).toBe(true);
+						expect(hit2).toBe(true);
+					});
+					
+					it("should allow for global callbacks and single board change callbacks simultaneously", function () {
+						var board = manager.Add("test", $fakeEl);
+						
+						var hit1 = false;
+						manager.AddChangeCallback(function () {
+							hit1 = true;
+						});
+						
+						var hit2 = false;
+						manager.AddChangeCallback(board.id, function () {
+							hit2 = true;
+						});
+						
+						manager.AddPedal(dummyPedal, board.id, board.el);
+						
+						expect(hit1).toBe(true);
+						expect(hit2).toBe(true);
 					});
 				});
 				
