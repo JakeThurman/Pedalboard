@@ -1,4 +1,4 @@
-define(["_OptionMenu", "jquery", "addPedalMenu", "textResources"], function (_OptionMenu, $, addPedalMenu, resources) {
+define(["_OptionMenu", "jquery", "addPedalMenu", "textResources", "reportTypeMenu"], function (_OptionMenu, $, addPedalMenu, resources, reportTypeMenu) {
     var methods = {};
 
 	/*
@@ -6,8 +6,10 @@ define(["_OptionMenu", "jquery", "addPedalMenu", "textResources"], function (_Op
 	 *  @menubutton:        $object of the menu button,
 	 *  @pedalContainer:    the container to append new pedals,
 	 *  @manager:           the pedalBoardManager.js instance to add the pedal to.
+	 *  @startReport:       calling this function should start a report on it with the given type paramCompare
+	 *  @startCompare:      calling this function should start a comparative report of the given type against board with the given boardId
 	 */
-	methods.handle = function (id, menuButton, pedalContainer, manager) {	
+	methods.handle = function (id, menuButton, pedalContainer, manager, startReport, startCompare) {	
 		var deleteLink = $("<div>")
 			.text(resources.deletePedalBoard)
 			.click(function () {
@@ -31,16 +33,46 @@ define(["_OptionMenu", "jquery", "addPedalMenu", "textResources"], function (_Op
 			});
 		
 		/* These buttons ARE dead code, but are still here to be placeholders for the coming report feature  */
-		var reportButton = $("<div>")
-			.text(resources.boardReportButton);
+		var reportButton = $("<div>", { "class": "section-top" })
+			.text(resources.boardReportButton)
+			.click(function () {
+				reportTypeMenu.create(menuButton, startReport);
+			});
 				
 		var compareButton = $("<div>")
-			.text(resources.boardCompareButton);
+			.text(resources.boardCompareButton)
+			.click(function () {
+				reportTypeMenu.create(menuButton, startCompare);
+			});;
+		
+		/* ! Setting up which options are valid and adding them ! */
+		var addSection = $("<div>", { "class": "section" })
+			.append(addPedal);
+		
+		/* report section */
+		var reportSection = $("<div>", { "class": "section" });
+		var useReportSection = false;
+		
+		if (manager.MultiplePedals(id)) {
+			reportButton.appendTo(reportSection);
+			useReportSection = true;
+		}
+		/* if there are multiple boards with multiple pedals, add the compare button */
+		if (manager.Multiple(function (pedalboard) { return manager.MultiplePedals(pedalboard.dom.id) }))
+			compareButton.appendTo(reportSection);
+		
+		/* delete section */
+		var deleteSection = $("<div>", { "class": "section" });
+		
+		if (manager.AnyPedals(id))
+			clearLink.appendTo(deleteSection);
+		
+		deleteLink.appendTo(deleteSection);
 				
-		/* We can't clear a board with no pedals... */
-		var options = manager.AnyPedals(id) 
-			? addPedal.add(clearLink).add(deleteLink)
-			: addPedal.add(deleteLink);
+		/* create the actual menu with this content */	
+		var options = useReportSection
+			? addSection.add(reportSection).add(deleteSection)
+			: addSection.add(deleteSection);
 		
 		_OptionMenu.create(options, menuButton);
     }

@@ -62,6 +62,8 @@
 	border-bottom: 1px solid #A2A2A2;
 	line-height: 1em;
 	color: black;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
 }
 
 .single-pedal-data {
@@ -315,19 +317,30 @@ svg, img {
     left: initial;
 }
 
+.options-menu > .section:not(:first-child) {
+	padding-top: 5px;
+	border-top: 1px solid #eee;
+}
+
+.options-menu > .section:not(:last-child) {
+	padding-bottom: 5px;
+}
+
 a, a:visited {
     color: #4183c4;
     text-decoration: none;
 }
 
-.options-menu > *:not(.no-hover) {
+.options-menu > *:not(.no-hover):not(.section), 
+.options-menu > .section > *:not(.no-hover) {
     display: block;
     font-size: 13px;
     padding: 5px 15px;
 	cursor: pointer;
 }
 
-.options-menu > *:not(.no-hover):hover {
+.options-menu > *:not(.no-hover):not(.section):hover, 
+.options-menu > .section > *:not(.no-hover):hover {
     background-color: #4183c4;
     color: #fff;
 }
@@ -372,7 +385,6 @@ a, a:visited {
 
 .pedal-board {
 	min-height: 200px;
-	min-width: 300px;
 }
 
 .help-text {
@@ -413,6 +425,10 @@ a, a:visited {
 
 .history-popup .batch > .description {
 	cursor: pointer;
+}
+
+.history-popup .batch > .description:hover {
+	text-decoration: underline;
 }
 
 .history-popup  .change > .time-stamp{

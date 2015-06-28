@@ -24,6 +24,7 @@ requirejs.config({
 			"pedalboardPopupOptionsHandler": "ui/pedalboardPopupOptionsHandler",
 			"pedalRenderer":                 "ui/pedalRenderer",
 			"historyPopup":                  "ui/historyPopup",
+			"reportTypeMenu":                "ui/reportTypeMenu",
 			
 			/* Data */
 			"pedalBoardClasses":             "data/pedalBoardClasses",
