@@ -1,4 +1,4 @@
-define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], function (pedalBoardManager, $, helpers, classes) {
+define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], function (pedalBoardManager, $, helpers, classes) {
     describe("data/pedalBoardManager.js", function () {
 		    var manager;
 				var $fakeEl;
@@ -128,6 +128,32 @@ define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], 
 					
 					it("should return false if the given board does not exists", function () {
 						expect(manager.AnyPedals("This-is not a_real board.,.id: " + new Date())).toBe(false);
+					});
+				});
+				
+				describe("MultiplePedals", function () {
+				    it("should return true if there are any pedals on a given board", function () {
+						var board = manager.Add("Test 1", $fakeEl);
+						
+						manager.AddPedal(dummyPedal, board.id);
+						manager.AddPedal(dummyPedal, board.id);
+								
+						expect(manager.MultiplePedals(board.id)).toBe(true);
+					});
+			
+					it("should return false if there are no pedals on the given board", function () {
+						var board = manager.Add("Test 1", $fakeEl);
+						expect(manager.MultiplePedals(board.id)).toBe(false);
+					});
+					
+					it("should return false if there is one pedal on the given board", function () {
+						var board = manager.Add("Test 1", $fakeEl);
+						manager.AddPedal(dummyPedal, board.id);
+						expect(manager.MultiplePedals(board.id)).toBe(false);
+					});
+					
+					it("should return false if the given board does not exists", function () {
+						expect(manager.MultiplePedals("This is_not a the id of a-real board. on" + new Date())).toBe(false);
 					});
 				});
 				

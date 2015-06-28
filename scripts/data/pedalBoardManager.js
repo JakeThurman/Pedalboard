@@ -88,6 +88,12 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			var board = boards[boardId];
 			return board ? board.data.pedals.length > 0 : false; /* If there is no board with this id return false */
 		};
+		
+		/* Are there multiple pedals on board with id of @boardId? */
+		manager.MultiplePedals = function (boardId) {
+			var board = boards[boardId];
+			return board ? board.data.pedals.length > 1 : false; /* If there is no board with this id return false */
+		};
 	
 		/* ! Board Methods ! */
 		/* logging helper to reduce duplicate code */
