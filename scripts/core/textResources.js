@@ -14,8 +14,8 @@ define({
 	clearPedalsFromBoard: "Clear",
 	clearPedalsFromBoardConfirm: "This will delete all of the pedals on this board. Are you sure?",
 	saveBoardsToStorageButton: "Save",
-	boardReportButton: "Report",
-	boardCompareButton: "Compare",
+	pedalBoardDragHelpText: "Drag and drop to change order or delete",
+	historyPopupTitle: "History",
 	
 	/* change log resources */
 	change_AddBoard: "Added pedalboard \"{0}\"",
@@ -27,10 +27,16 @@ define({
 	change_ClearedBoard: "Cleared all pedals from pedalboard \"{0}\"",
 	change_ResizeBoard: "Resized pedalbard \"{0}\"",
 	change_MoveBoard: "Moved pedalbard \"{0}\"",
-	
 	restoreBatchName: "Restored from save",
-	pedalBoardDragHelpText: "Drag and drop to change order or delete",
-	historyPopupTitle: "History",
-	compareToMenuHelpText: "Compare to which board?",
-	reportInWhatWayHelpText: "Report on what?",
+	
+	/*reporting*/
+	boardReportButton: "Report",
+	boardCompareButton: "Compare",
+	compareToMenuHelpText: "To which board?",
+	reportInWhatWayHelpText: "On what?",
+	reportType_Price: "Price",
+	reportType_Diff: "Difference",
+	reportType_PedalType: "Pedal Type",
+	reportType_Color: "Color",
+	
 });

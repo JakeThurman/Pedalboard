@@ -16,7 +16,7 @@ define([ "_OptionMenu", "jquery", "textResources", "reportTypeMenu", "helperMeth
 			var boardOption = $("<div>")
 				.text(board.data.Name)
 				.click(function () {
-					reportTypeMenu.create(link, function (reportType) {
+					reportTypeMenu.create(link, true, function (reportType) {
 						startCompare(board.id, reportType);
 					});
 				});

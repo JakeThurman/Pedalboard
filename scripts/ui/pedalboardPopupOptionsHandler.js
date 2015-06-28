@@ -36,7 +36,7 @@ define(["_OptionMenu", "jquery", "addPedalMenu", "textResources", "reportTypeMen
 		var reportButton = $("<div>", { "class": "section-top" })
 			.text(resources.boardReportButton)
 			.click(function () {
-				reportTypeMenu.create(menuButton, startReport);
+				reportTypeMenu.create(menuButton, false, startReport);
 			});
 				
 		var compareButton = $("<div>")
