@@ -121,6 +121,28 @@ define([ "historyPopup", "changeLogger", "jquery" ], function ( historyPopup, ch
 		});
 		
 		describe("addChange callback", function () {
+			it("should add a passed in change to the page", function () {
+				var hPopup = historyPopup.create(changes);
+				var desc = "A very long string that is also very specificly something that would not have been rendered previously." + new Date();
+				
+				var contains = function(str) {
+					return hPopup.popup.el.get(0).innerHTML.indexOf(str) != -1;
+				};
+				
+				/* should not contain it before adding it! */
+				expect(contains(desc)).toBe(false);
+				
+				/* add it */
+				hPopup.addChange({ 
+					description: desc,
+					timeStamp: new Date(),
+				});
+				
+				/* now it should contain it */
+				expect(contains(desc)).toBe(true);
+				
+				hPopup.popup.el.remove();
+			});			
 		});
 	});
 });
