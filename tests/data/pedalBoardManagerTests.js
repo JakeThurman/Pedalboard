@@ -591,7 +591,11 @@
 						
 						manager.Move(board.id, rect);
 						
-						expect(manager.GetBoard(board.id).clientRect).toEqual(rect);						
+						var savedRect = manager.GetBoard(board.id).clientRect;
+						
+						expect(savedRect.left).toEqual(rect.left);
+						expect(savedRect.top).toEqual(rect.top);
+						expect(savedRect.width).toEqual(rect.width);					
 					});
 				});
 				
@@ -602,8 +606,11 @@
 						var rect = board.el.get(0).getBoundingClientRect();
 						
 						manager.Resize(board.id, rect);
+						var savedRect = manager.GetBoard(board.id).clientRect;
 						
-						expect(manager.GetBoard(board.id).clientRect).toEqual(rect);						
+						expect(savedRect.left).toEqual(rect.left);
+						expect(savedRect.top).toEqual(rect.top);
+						expect(savedRect.width).toEqual(rect.width);
 					});
 					
 					it("should throw a TypeError if @clientRect is not a ClientRect object", function () {

@@ -14,10 +14,19 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 		var changeCallbacks = {};
 		var allBoardChangeCallbacks = [];
 		
-		/* helper */
+		/* validation helper */
 		function assertBoardIdExists(id) {
 			if (!boards[id]) 
 				throw new Error("A board with id of: \"" + id + "\" does not exist");
+		}
+		
+		/* partial copy helper */
+		function getClientRect(fullRect) {
+			return {
+				left: fullRect.left,
+				top: fullRect.top,
+				width: fullRect.width,
+			};
 		}
 			
 		/* !Data Methods! */
@@ -38,14 +47,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			
 			/* If there is a board, but no clientRect, get the current one */
 			if (helpers.isUndefined(thisBoard.clientRect)) {
-				/* Vanilla js is cool getBoundingClientRect() gets us all the data we need!*/
-				var rect = board.dom.el.get(0).getBoundingClientRect();
-
-				thisBoard.clientRect = {
-					left: rect.left,
-					top: rect.top,
-					width: rect.width,
-				};
+				thisBoard.clientRect = getClientRect(board.dom.el.get(0).getBoundingClientRect());
 			}
 			
 			return thisBoard;
@@ -173,7 +175,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			assertBoardIdExists(boardId);
 			assertClientRectIsValid(clientRect);
 			
-			boards[boardId].clientRect = clientRect;
+			boards[boardId].clientRect = getClientRect(clientRect);
 			log(resources.change_MoveBoard, boards[boardId].data.Name);
 			callChangeCallbacks(boardId);
 		}
@@ -183,7 +185,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			assertBoardIdExists(boardId);
 			assertClientRectIsValid(clientRect);
 			
-			boards[boardId].clientRect = clientRect;
+			boards[boardId].clientRect = getClientRect(clientRect);
 			log(resources.change_ResizeBoard, boards[boardId].data.Name);
 			callChangeCallbacks(boardId);
 		}
