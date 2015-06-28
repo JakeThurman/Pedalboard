@@ -21,13 +21,13 @@
 				/* !Data Functions! */
 				describe("GetBoard", function () {				
 				    it("should return a board with the given id", function () {
-						   /* setup */
-							 var domBoard = manager.Add("Test", $fakeEl);
+						   /* setup */							 var name = "Test";
+							 var domBoard = manager.Add(name, $fakeEl);
 							 var id = domBoard.id;
 							 
 							 /* test */
-							 var output = manager.GetBoard(id);
-							 expect(output.dom).toBe(domBoard);
+							 var output = manager.GetBoard(id);							 
+							 expect(output.id).toEqual(id);							 expect(output.data.Name).toEqual(name);
 							 expect(!helpers.isUndefined(output.clientRect)).toBe(true);
 							 expect(!helpers.isUndefined(output.clientRect.width)).toBe(true);
 						});		
@@ -40,16 +40,16 @@
 				describe("GetBoards", function () {
 				   it("sould return an array of all of the current boards", function () {
 					     /* setup */
-							 var first = manager.Add("first", $fakeEl);
-							 var second = manager.Add("second", $fakeEl);
+							 var first = manager.Add("first", $fakeEl).id;
+							 var second = manager.Add("second", $fakeEl).id;
 							 
 							 /* Call get boards and then select the dom elements from each so that we can easily compare them to our copy */
-							 var doms = helpers.select(manager.GetBoards(), 
+							 var ids = helpers.select(manager.GetBoards(), 
     							 function (board) {
-    							     return board.dom;
+    							     return board.id;
     							 });
 							 
-					     expect(doms).toEqual([first, second]);
+					     expect(ids).toEqual([first, second]);
 					 });
 				});
 				
@@ -168,7 +168,7 @@
 						
 						it("should add the board to the board stack to be retrived with .GetBoard()", function () {
 						    var board = manager.Add("Stack me", $fakeEl);
-								expect(manager.GetBoard(board.id).dom).toBe(board);
+							expect(manager.GetBoard(board.id).id).toBe(board.id);
 						});
 						
 						it("should allow for boards with the same name", function () {

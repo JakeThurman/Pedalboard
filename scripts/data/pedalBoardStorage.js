@@ -25,10 +25,6 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 		}
 		else { /* Get the default board */
 		    return [{
-			    dom: {
-				    el: [],
-					id: "pedal-board-DEFAULT"
-				},
 				data: {
 					Name: resources.defaultPedalBoardName,
 					pedals: [],
@@ -54,13 +50,13 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 			helpers.forEach(methods.GetBoardStorage(), function (board) {
 				/* add the board */
 				var domBoard = manager.Add(board.data.Name, contentContainer);
-						
+				
 				/* TODO: don't hard code this lookup for the content region */
 				var pedalContainer = domBoard.el.find(".pedal-board");
-							
+				
 				/* Place and size the popup as it priviously was */
 				domBoard.el.css(board.clientRect);
-													
+				
 				/* loop through each of the pedal so we can add them to the board */
 				helpers.forEach(board.data.pedals, function (pedal) {
 					manager.AddPedal(pedal, domBoard.id, pedalContainer);

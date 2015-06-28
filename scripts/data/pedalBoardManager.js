@@ -40,9 +40,9 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			
 			/* Selectively copy the board */
 			var thisBoard = {
-				dom: board.dom,
 				data: board.data,
 				clientRect: board.clientRect,
+				id: board.id,
 			};
 			
 			/* If there is a board, but no clientRect, get the current one */
@@ -65,7 +65,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 		/* Are there any boards [where func]? */
 		manager.Any = function (where) {
 			for(var key in boards) {
-				if (!where || where(boards[key])) /* if there is no where statement, or this one counts */
+				if (!where || where(manager.GetBoard(key))) /* if there is no where statement, or this one counts */
 					return true; /* if any return true of the first one */
 			}
 			return false;
@@ -75,7 +75,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 		manager.Multiple = function (where) {
 			var any = false;
 			for (var key in boards) {
-				if (where && !where(boards[key]))
+				if (where && !where(manager.GetBoard(key)))
 					continue;
 			
 				if (any) /* This way we have to set that the first time */
@@ -110,6 +110,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			boards[domboard.id] = { 
 				dom: domboard,
 				data: new classes.PedalBoard(name),
+				id: domboard.id,
 				__pedalEls: [], /* we use this for caching the rendered pedals so that we can easily access them for removing/clearing */
 			};
 						
