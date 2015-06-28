@@ -9,6 +9,9 @@ define([ "_Popup", "textResources", "jquery", "helperMethods", "moment" ], funct
 	
 		var content = $("<div>", { "class": "history-popup" })
 		
+		/* store all of the moment update intervals here so that we can kill them on close */
+		var momentUpdateIntervals = [];
+		
 		function renderChange(change) {
 			var changeDiv = $("<div>");
 			
@@ -33,12 +36,16 @@ define([ "_Popup", "textResources", "jquery", "helperMethods", "moment" ], funct
 					changeDiv.append(renderChange(subChange));
 				});
 			}
-			else {
-				console.log(change.timeStamp);
-				
-				changeDiv.append($("<div>", { "class": "time-stamp" })
-					.text(new moment(change.timeStamp).fromNow()))
-					.addClass("change");
+			else {				
+				changeDiv.addClass("change");
+					
+				var timeStamp = $("<div>", { "class": "time-stamp" })
+					.text(new moment(change.timeStamp).fromNow())
+					.appendTo(changeDiv);
+					
+				setInterval(function () { /* every minute, refresh the "from now" */
+					timeStamp.text(new moment(change.timeStamp).fromNow());
+				}, 60000) /*60,000ms = 1min*/
 			}
 			
 			return changeDiv;
@@ -58,10 +65,17 @@ define([ "_Popup", "textResources", "jquery", "helperMethods", "moment" ], funct
 				});
 		}
 		
+		function close(popup) {
+			helpers.forEach(momentUpdateIntervals, function (interval) {
+				clearInterval(interval);
+			});
+		}
+		
 		var popup = _Popup.create(content, {
 			title: resources.historyPopupTitle,
 			id: "history",
-			init: init
+			init: init,
+			close: close,
 		});
 		
 		return {
