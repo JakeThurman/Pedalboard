@@ -423,3 +423,9 @@ a, a:visited {
 .history-popup  .change > * {
 	display: inline-block;
 }
+
+.pedal-placeholder {
+    border-style: dashed;
+	height: 21px;
+	background-color: #F6F6F6 !important;
+}

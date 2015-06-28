@@ -67,6 +67,7 @@ define(["_Popup", "_OptionMenu", "jquery", "textResources", "pedalRenderer", "pe
 			stop: function (e, ui) {
 				trashCan.remove();
 			},
+			placeholder: "pedal-placeholder single-pedal-data",
 		});
 		
 		menuButton.click(function () {			 
