@@ -31,4 +31,6 @@ define({
 	restoreBatchName: "Restored from save",
 	pedalBoardDragHelpText: "Drag and drop to change order or delete",
 	historyPopupTitle: "History",
+	compareToMenuHelpText: "Compare to which board?",
+	reportInWhatWayHelpText: "Report on what?",
 });

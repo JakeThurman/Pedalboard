@@ -12,7 +12,7 @@
     z-index: 91;
 	margin: 1px;
 	min-height: 135px;
-	min-width: 270px;
+	min-width: 290px;
 }
 
 .output-box > .header > .fa-bars {
@@ -343,6 +343,10 @@ a, a:visited {
 .options-menu > .section > *:not(.no-hover):hover {
     background-color: #4183c4;
     color: #fff;
+}
+
+.options-menu > .help-text {
+	padding: 5px;
 }
 
 .fa-trash.trash-hover {

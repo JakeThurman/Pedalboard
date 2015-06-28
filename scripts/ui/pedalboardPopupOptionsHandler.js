@@ -1,4 +1,4 @@
-define(["_OptionMenu", "jquery", "addPedalMenu", "textResources", "reportTypeMenu"], function (_OptionMenu, $, addPedalMenu, resources, reportTypeMenu) {
+define(["_OptionMenu", "jquery", "addPedalMenu", "textResources", "reportTypeMenu", "compareToMenu"], function (_OptionMenu, $, addPedalMenu, resources, reportTypeMenu, compareToMenu) {
     var methods = {};
 
 	/*
@@ -42,7 +42,7 @@ define(["_OptionMenu", "jquery", "addPedalMenu", "textResources", "reportTypeMen
 		var compareButton = $("<div>")
 			.text(resources.boardCompareButton)
 			.click(function () {
-				reportTypeMenu.create(menuButton, startCompare);
+				compareToMenu.create(id, menuButton, manager, startCompare);
 			});;
 		
 		/* ! Setting up which options are valid and adding them ! */
@@ -57,8 +57,8 @@ define(["_OptionMenu", "jquery", "addPedalMenu", "textResources", "reportTypeMen
 			reportButton.appendTo(reportSection);
 			useReportSection = true;
 		}
-		/* if there are multiple boards with multiple pedals, add the compare button */
-		if (manager.Multiple(function (pedalboard) { return manager.MultiplePedals(pedalboard.dom.id) }))
+		/* if there are multiple boards with any pedals, add the compare button */
+		if (manager.Multiple(function (pedalboard) { return manager.AnyPedals(pedalboard.id) }))
 			compareButton.appendTo(reportSection);
 		
 		/* delete section */
@@ -74,7 +74,10 @@ define(["_OptionMenu", "jquery", "addPedalMenu", "textResources", "reportTypeMen
 			? addSection.add(reportSection).add(deleteSection)
 			: addSection.add(deleteSection);
 		
-		_OptionMenu.create(options, menuButton);
+		return _OptionMenu.create(options, menuButton)
+			.click(function () {
+				$(this).remove();
+			});
     }
 		
 	return methods;

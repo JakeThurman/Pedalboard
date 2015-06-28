@@ -25,6 +25,7 @@ requirejs.config({
 			"pedalRenderer":                 "ui/pedalRenderer",
 			"historyPopup":                  "ui/historyPopup",
 			"reportTypeMenu":                "ui/reportTypeMenu",
+			"compareToMenu":                 "ui/compareToMenu", 
 			
 			/* Data */
 			"pedalBoardClasses":             "data/pedalBoardClasses",
@@ -33,6 +34,9 @@ requirejs.config({
 			"pedalDataAccess":               "data/pedalDataAccess",
 			"pedalsGetter":                  "data/pedalsGetter",
 			"changeLogger":                  "data/changeLogger",
+			
+			/*reporting*/
+			"reportTypes":                   "reporting/reportTypes",
 	},
 	config: {
 		moment: {
