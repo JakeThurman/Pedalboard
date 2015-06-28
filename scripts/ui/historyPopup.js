@@ -20,6 +20,9 @@ define([ "_Popup", "textResources", "jquery", "helperMethods", "moment" ], funct
 					.appendTo(changeDiv);
 						
 			if (change.isBatch) {
+				/* so we can lazily render batch changes we need, but not multiple times */
+				var renderedSubChanges = false;
+				
 				var expander = $("<i>", { "class": "float-left fa fa-plus-square" });
 				
 				expander.add(description)
@@ -27,14 +30,19 @@ define([ "_Popup", "textResources", "jquery", "helperMethods", "moment" ], funct
 						changeDiv.toggleClass("expanded");
 						expander.toggleClass("fa-plus-square")
 							.toggleClass("fa-minus-square");
+							
+						/* lazily render sub changes */
+						if (!renderedSubChanges) {
+							helpers.forEach(change.changes, function (subChange) {
+								changeDiv.append(renderChange(subChange));
+							});
+							
+							renderedSubChanges = true;
+						}
 					});
 				
 				changeDiv.prepend(expander)
 					.addClass("batch");
-					
-				helpers.forEach(change.changes, function (subChange) {
-					changeDiv.append(renderChange(subChange));
-				});
 			}
 			else {				
 				changeDiv.addClass("change");
