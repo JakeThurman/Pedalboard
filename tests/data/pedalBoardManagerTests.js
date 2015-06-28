@@ -114,33 +114,29 @@ define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], 
 				
 				describe("AnyPedals", function () {
 				    it("should return true if there are any pedals on a given board", function () {
-						    var board = manager.Add("Test 1", $fakeEl);
-								var id = board.options.id
-								
-								/* Random pedal data copied from pedalsGetter.js */
-								manager.AddPedal(dummyPedal, id);
-										
-								expect(manager.AnyPedals(id)).toBe(true);
-						});
-				
-						it("should return false if there are no pedals on the given board", function () {
-						    var board = manager.Add("Test 1", $fakeEl);
-								var id = board.id
-										
-								expect(manager.AnyPedals(id)).toBe(false);
-						});
+						var board = manager.Add("Test 1", $fakeEl);
 						
-						it("should return false if the given board does not exists", function () {
-								expect(manager.AnyPedals("This-is not a_real board.,.id: " + new Date())).toBe(false);
-						});
+						manager.AddPedal(dummyPedal, board.id);
+								
+						expect(manager.AnyPedals(board.id)).toBe(true);
+					});
+			
+					it("should return false if there are no pedals on the given board", function () {
+						var board = manager.Add("Test 1", $fakeEl);
+						expect(manager.AnyPedals(board.id)).toBe(false);
+					});
+					
+					it("should return false if the given board does not exists", function () {
+						expect(manager.AnyPedals("This-is not a_real board.,.id: " + new Date())).toBe(false);
+					});
 				});
 				
 				/* !Board Functions! */
 				/*(name, contentConatiner) */
 				describe("Add", function () {
 				    it("should create a dom element for the board and append it to the passed in param", function () {
-								var temp = $("<div>");
-								var board = manager.Add("Test 1", temp);
+							var temp = $("<div>");
+							var board = manager.Add("Test 1", temp);
     						expect(board.el.get(0).parentNode).toBe(temp.get(0));
 						});
 						

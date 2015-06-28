@@ -71,7 +71,7 @@ define(["_Popup", "_OptionMenu", "jquery", "textResources", "pedalRenderer", "pe
 		});
 		
 		menuButton.click(function () {			 
-			pedalboardPopupOptionsHandler.handle(popup.options.id, menuButton, content, manager);
+			pedalboardPopupOptionsHandler.handle(popup.id, menuButton, content, manager);
 		});
 		
 		function init(popup) {

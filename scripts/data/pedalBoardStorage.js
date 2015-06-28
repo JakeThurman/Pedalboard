@@ -27,9 +27,7 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 		    return [{
 			    dom: {
 				    el: [],
-					options: {
-						id: "pedal-board-DEFAULT"
-					}
+					id: "pedal-board-DEFAULT"
 				},
 				data: {
 					Name: resources.defaultPedalBoardName,
@@ -65,7 +63,7 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 													
 				/* loop through each of the pedal so we can add them to the board */
 				helpers.forEach(board.data.pedals, function (pedal) {
-					manager.AddPedal(pedal, domBoard.options.id, pedalContainer);
+					manager.AddPedal(pedal, domBoard.id, pedalContainer);
 				});
 			});
 		});

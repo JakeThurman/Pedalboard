@@ -25,7 +25,6 @@ define([ "jquery" ], function ( $ ) {
 	//Class		
 	function _Popup(el, options) {
 		this.el = el;
-		this.options = { id: options.id }; /*!deprecated!*/
 		this.id = options.id;
 	}
 	/*	Content [JQuery Array]:	
