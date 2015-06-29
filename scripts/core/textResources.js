@@ -16,6 +16,7 @@ define({
 	saveBoardsToStorageButton: "Save",
 	pedalBoardDragHelpText: "Drag and drop to change order or delete",
 	historyPopupTitle: "History",
+	pedalboardNoPedalsHelpText: "Add The First Pedal To This Board!",
 	
 	/* change log resources */
 	change_AddBoard: "Added pedalboard \"{0}\"",

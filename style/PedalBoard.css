@@ -468,6 +468,20 @@ a, a:visited {
 	border-top: 1px dashed #aaa;
 }
 
+.no-pedals-help-text {
+	text-align: right;
+	font-style: italic;
+}
+
+.fa-level-up {
+	margin-left: 5px;
+}
+
+.fa-level-up:before {
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
 .screen-block {
 	z-index: 1001;
 	opacity: 0.4;

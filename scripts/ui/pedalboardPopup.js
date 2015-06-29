@@ -4,7 +4,7 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 	/*Make sure the window nextNewPedalBoardIdoardId value is setup*/
 	if (window && !window.nextNewPedalBoardId)
 		window.nextNewPedalBoardId = 1;
-		
+	
 	/*Params:
 	 *  @title:    the inital title for the pedal board
 	 *  @appendTo: the main dom object to append and limit this board to.
@@ -44,7 +44,7 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 					manager.Resize(popup.id, popup.el.get(0).getBoundingClientRect());
 				}
 			});
-			 
+		
 		var deleteAction  = function( event, ui ) {
 			var pedalId = pedalRenderer.getId(ui.draggable);
 			ui.draggable.remove();
@@ -56,6 +56,7 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 		/* Make the pedals sortable */
 		content.sortable({
 			containment: popup.el,
+			items: ".single-pedal-data:not(.non-sortable)",
 			axis: "y",
 			start: function (e, ui) {
 				trashCan.appendTo(content)
@@ -84,9 +85,24 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 				.css("position","absolute");
 		}
 		
+		/* create a help menu */
+		var addFirstPedalHelp = $("<div>", { "class": "no-pedals-help-text single-pedal-data non-sortable" })
+			.text(resources.pedalboardNoPedalsHelpText)
+			.appendTo(content);
+		
+		$("<i>", { "class": "fa fa-level-up float-right" })
+			.appendTo(addFirstPedalHelp);
+		
 		/* add a change callback to decide if the help text should be hidden */
 		manager.AddChangeCallback(popup.id, function () {
-			helpText.toggle(manager.AnyPedals(popup.id));
+			if (manager.AnyPedals(popup.id)) {
+				helpText.show();
+				addFirstPedalHelp.remove();
+			}
+			else {
+				helpText.hide();
+				addFirstPedalHelp.appendTo(content);
+			}
 		});
 		
 		/* return the popup */
