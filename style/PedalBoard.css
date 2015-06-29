@@ -88,11 +88,13 @@
 }
 
 .single-pedal-data:first-child {
-	border-radius: 5px 5px 0px 0px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
 }
 
 .single-pedal-data:last-child {
-	border-radius: 0px 0px 5px 5px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
 }
 
 .output-box > .header > .add,
@@ -239,6 +241,10 @@ input {
 
 .float-left {
 	float: left;
+}
+
+.display-none {
+	display: none;
 }
 
 .shadowed {
@@ -458,23 +464,18 @@ a, a:visited {
 }
 
 .pedal-placeholder {
-	border: 1px dashed #aaa !important;
-	height: 26px;
+	height: 25px;
 	background-color: #F6F6F6 !important;
-	border-bottom-width: 0 !important;
-}
-
-.pedal-placeholder + .single-pedal-data {
-	border-top: 1px dashed #aaa;
 }
 
 .no-pedals-help-text {
 	text-align: right;
-	font-style: italic;
+	cursor: pointer;
 }
 
 .fa-level-up {
 	margin-left: 5px;
+	margin-right: 4px;
 }
 
 .fa-level-up:before {

@@ -11,7 +11,7 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 	 *  @manager:  the pedalBoardManager.js instance that created this
 	 */
 	methods.create =  function (title, appendTo, manager) {		
-		var content = $("<div>", { "class": "pedal-board" });
+		var content = $("<div>", { "class": "pedal-board display-none" });
 		
 		var helpText = $("<div>", { "class": "help-text" })
 			.text(resources.pedalBoardDragHelpText)
@@ -27,7 +27,7 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 			header: menuButton,
 			init: init
 		});
-			 
+		
 		popup.el.draggable({ 
 				handle: ".header",
 				stop: function () {
@@ -85,10 +85,13 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 				.css("position","absolute");
 		}
 		
-		/* create a help menu */
-		var addFirstPedalHelp = $("<div>", { "class": "no-pedals-help-text single-pedal-data non-sortable" })
+		/* add help text */
+		var addFirstPedalHelp = $("<div>", { "class": "no-pedals-help-text non-sortable" })
 			.text(resources.pedalboardNoPedalsHelpText)
-			.appendTo(content);
+			.insertBefore(content)
+			.click(function () {
+				menuButton.click();
+			});
 		
 		$("<i>", { "class": "fa fa-level-up float-right" })
 			.appendTo(addFirstPedalHelp);
@@ -96,12 +99,16 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 		/* add a change callback to decide if the help text should be hidden */
 		manager.AddChangeCallback(popup.id, function () {
 			if (manager.AnyPedals(popup.id)) {
-				helpText.show();
+				helpText.add(content)
+					.removeClass("display-none");
+				
 				addFirstPedalHelp.remove();
 			}
 			else {
-				helpText.hide();
-				addFirstPedalHelp.appendTo(content);
+				helpText.add(content)
+					.addClass("display-none");
+				
+				addFirstPedalHelp.insertBefore(content);
 			}
 		});
 		
