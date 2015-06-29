@@ -22,6 +22,7 @@ The current included JS library dependencies (as versioned in *[versions.txt](ve
 - [Jasmine](http://jasmine.github.io/)
 - [Chart.js](http://www.chartjs.org)
 - [Font Awesome](http://fortawesome.github.io/Font-Awesome/)
+- [Moment](http://momentjs.com/)
 
 ## Testing
 This code is covered under strong automated unit tests to ensure functionality.
