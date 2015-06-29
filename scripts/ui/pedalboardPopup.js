@@ -108,7 +108,10 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 				helpText.add(content)
 					.addClass("display-none");
 				
-				addFirstPedalHelp.insertBefore(content);
+				addFirstPedalHelp.insertBefore(content)
+					.click(function () {
+						menuButton.click();
+					});
 			}
 		});
 		
