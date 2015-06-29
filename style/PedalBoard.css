@@ -5,13 +5,12 @@
 }
 
 .output-box {
-	background-color:#F6F6F6;
+	background-color: #f8f8f8;
 	display: inline-block;
     border: 1px solid black;
 	position: absolute;
     z-index: 91;
 	margin: 1px;
-	min-height: 135px;
 	min-width: 290px;
 }
 
@@ -67,20 +66,33 @@
 }
 
 .single-pedal-data {
-	background-color: #eee;
-	border-radius: 5px;
-	border: 1px solid #ddd;
-	padding: 4px;
+	padding: 6px;
 	cursor: pointer;
 }
 
-.single-pedal-data > .price{
+.single-pedal-data > .price {
 	display: inline-block;
 	min-width: 39px;
 }
 
-.single-pedal-data:not(:last-child) {
-	margin-bottom: 4px;
+.single-pedal-data:nth-child(odd) {
+	background-color: rgb(238, 238, 238);
+}
+
+.single-pedal-data:nth-child(even) {
+	background-color: rgb(249, 249, 249);
+}
+
+.single-pedal-data:not(:first-child) {
+	border-top: 1px solid rgb(221, 221, 221);
+}
+
+.single-pedal-data:first-child {
+	border-radius: 5px 5px 0px 0px;
+}
+
+.single-pedal-data:last-child {
+	border-radius: 0px 0px 5px 5px;
 }
 
 .output-box > .header > .add,
@@ -388,7 +400,8 @@ a, a:visited {
 }
 
 .pedal-board {
-	min-height: 200px;
+	border-radius: 5px;
+	border: 1px solid #ddd;
 }
 
 .help-text {
@@ -445,8 +458,8 @@ a, a:visited {
 }
 
 .pedal-placeholder {
-    border-style: dashed;
-	height: 21px;
+	border: 1px dashed black !important;
+	height: 26px;
 	background-color: #F6F6F6 !important;
 }
 
