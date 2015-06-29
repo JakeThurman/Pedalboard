@@ -74,8 +74,8 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 			pedalboardPopupOptionsHandler.handle(popup.id, menuButton, content, manager, 
 				function (reportType) { /* startReport */
 					reporter.report(manager, popup.id, reportType);
-				}, function (compareBoardId, reportType) { /* startCompare */
-					comparer.compare(manager, popup.id, reportType, compareBoardId);
+				}, function (compareBoardId, compareType) { /* startCompare */
+					comparer.compare(manager.GetBoard(popup.id).data, manager.GetBoard(compareBoardId).data, compareType);
 				});
 		});
 		

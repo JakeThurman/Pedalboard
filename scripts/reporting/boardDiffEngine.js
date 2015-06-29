@@ -13,7 +13,7 @@ define([ "helperMethods", "pedalBoardClasses" ], function (helpers, classes) {
 		return helpers.where(main.pedals, function(pedal) {
 			return otherBoardPedalIds.indexOf(pedal.id) === -1; //Where the other board does not contain this pedal
 		});
-	}
+	};
 	
 	return methods;
 });

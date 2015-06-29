@@ -1,16 +1,13 @@
-define([ "reportTypes", "reportDataHelpers", "boardDiffEngine", "domReady!" ], function (reportTypes, reportDataHelpers, boardDiffEngine) {
+define([ "reportTypes", "reportDataHelpers", "boardDiffEngine", "jquery", "Chart", "domReady!" ], function (reportTypes, reportDataHelpers, boardDiffEngine, $, Chart) {
 	var methods = {};
 	
 	Chart.defaults.global.responsive = true;
 	Chart.defaults.global.maintainAspectRatio = false;
 		
-	methods.compare = function (manager, boardId, type, compareBoardId) {
-		/* get the unique pedals of each board to show the reports for */
-		var a = manager.GetBoard(boardId).data;
-		var b = manager.GetBoard(compareBoardId).data;
-		
-		var aMinusB = boardDiffEngine.GetUniquePedals(a, b); 
-		var bMinusA = boardDiffEngine.GetUniquePedals(b, a);
+	methods.compare = function (boardA, boardB, type) {
+		/* get the unique pedals of each board to show the reports for */		
+		var aMinusB = boardDiffEngine.GetUniquePedals(boardA, boardB); 
+		var bMinusA = boardDiffEngine.GetUniquePedals(boardB, boardA);
 		
 		/* set up the data */		
 		var aMinusBData;
@@ -33,11 +30,34 @@ define([ "reportTypes", "reportDataHelpers", "boardDiffEngine", "domReady!" ], f
 			bMinusAData = reportDataHelpers.getPriceData(bMinusA);
 		}
 		else
-			throw new Error("Type param is not valid or not implemented!")
+			throw new Error("compareType param is not valid or not implemented!")
 		
 		/* set up the display */
-		reportDataHelpers.chart(aMinusBData, "left-side");
-		reportDataHelpers.chart(aMinusBData, "right-side");
+		var aMinusBCanvas = document.createElement("canvas");
+		var bMinusACanvas = document.createElement("canvas");
+		
+		var aMinusBContainer = $("<div>", { "class": "above-screen-block report-container left-side" })
+			.append(aMinusBCanvas)
+			.appendTo(document.body);
+		
+		var bMinusAContainer = $("<div>", { "class": "above-screen-block report-container right-side" })
+			.append(bMinusACanvas)
+			.appendTo(document.body);
+		
+		var aMinusBChart;
+		var bMinusAChart;
+		var blocker = $("<div>", { "class": "screen-block" })
+			.appendTo(document.body)
+			/* when any of them are clicked on, close it all */
+			.add(aMinusBCanvas).add(bMinusACanvas)
+				.click(function () {
+					blocker.add(aMinusBContainer).add(bMinusAContainer).remove();
+					aMinusBChart.destroy();
+					bMinusAChart.destroy();
+				});
+		
+		aMinusBChart = new Chart(aMinusBCanvas.getContext("2d")).Doughnut(aMinusBData);
+		bMinusAChart = new Chart(bMinusACanvas.getContext("2d")).Doughnut(bMinusAData);
 	};
 	
 	return methods;

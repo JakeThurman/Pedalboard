@@ -1,4 +1,4 @@
-define([ "helperMethods", "Chart", "jquery" ], function ( helpers, Chart, $ ) {
+define([ "helperMethods" ], function (helpers) {
 	"use strict";
 	
 	var methods = {};
@@ -22,25 +22,6 @@ define([ "helperMethods", "Chart", "jquery" ], function ( helpers, Chart, $ ) {
 			function (pedal) { return pedal.price; }, 
 			"#F7464A", "#FF5A5E");
 	};
-	
-	methods.chart = function(data, canvasCssClass) {
-		var canvas = document.createElement("canvas");
-		canvas.className = "report " + canvasCssClass;
-		
-		var reportContainer = $("<div>", { "class": "above-screen-block report-container" })
-			.append(canvas)
-			.appendTo(document.body);
-		
-		var myChart;
-		var blocker = $("<div>", { "class": "screen-block" })
-			.appendTo(document.body)
-			.add(canvas).click(function () {
-				blocker.add(reportContainer).remove();
-				myChart.destroy();
-			});
-		
-		myChart = new Chart(canvas.getContext("2d")).Doughnut(data);
-	}
 	
 	return methods;
 });

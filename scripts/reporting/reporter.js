@@ -1,4 +1,4 @@
-define([ "reportTypes", "reportDataHelpers", "domReady!" ], function (reportTypes, reportDataHelpers) {
+define([ "reportTypes", "reportDataHelpers", "jquery", "Chart", "domReady!" ], function (reportTypes, reportDataHelpers, $, Chart) {
 	var methods = {};
 	
 	Chart.defaults.global.responsive = true;
@@ -19,7 +19,21 @@ define([ "reportTypes", "reportDataHelpers", "domReady!" ], function (reportType
 			throw new Error("Type param is not valid or not implemented!")
 		
 		/* set up the display */
-		reportDataHelpers.chart(data);
+		var canvas = document.createElement("canvas");
+		
+		var reportContainer = $("<div>", { "class": "above-screen-block report-container full-size" })
+			.append(canvas)
+			.appendTo(document.body);
+		
+		var myChart;
+		var blocker = $("<div>", { "class": "screen-block" })
+			.appendTo(document.body)
+			.add(canvas).click(function () {
+				blocker.add(reportContainer).remove();
+				myChart.destroy();
+			});
+		
+		myChart = new Chart(canvas.getContext("2d")).Doughnut(data);
 	};
 	
 	return methods;

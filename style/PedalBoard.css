@@ -468,9 +468,22 @@ a, a:visited {
 .report-container {
 	position: fixed;
 	top: 10%;
-	left: 10%;
 	height: 80%;
+}
+
+.report-container.full-size {
+	left: 10%;
 	width: 80%;
+}
+
+.report-container.left-side {
+	left: 10%;
+	width: 35%;
+}
+
+.report-container.right-side {
+	right: 10%;
+	width: 35%;
 }
 
 .report {
