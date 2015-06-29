@@ -458,9 +458,14 @@ a, a:visited {
 }
 
 .pedal-placeholder {
-	border: 1px dashed black !important;
+	border: 1px dashed #aaa !important;
 	height: 26px;
 	background-color: #F6F6F6 !important;
+	border-bottom-width: 0 !important;
+}
+
+.pedal-placeholder + .single-pedal-data {
+	border-top: 1px dashed #aaa;
 }
 
 .screen-block {
