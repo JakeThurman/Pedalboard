@@ -3,6 +3,13 @@ define([ "_OptionMenu", "jquery", "textResources", "reportTypes" ], function (_O
 	
 	var methods = {};
 	
+	/* I have to add this to avoid a weird JavaScript bug causing key to be the wrong value when called from inside the loop */
+	function onclickCallXWithY(el, x, y) {
+		el.click(function () {
+			x(y);
+		});
+	}
+	
 	methods.create = function (link, isCompare, startAction) {
 		var options = $("<div>", { "class": "help-text no-hover" })
 			.text(resources.reportInWhatWayHelpText);;
@@ -15,10 +22,10 @@ define([ "_OptionMenu", "jquery", "textResources", "reportTypes" ], function (_O
 			if (!type[isKey])
 				continue;
 			
-			var newOption = $("<div>").text(resources[type.resource])
-				.click(function () {
-					startAction(type);
-				});
+			var newOption = $("<div>").text(resources[type.resource]);
+			
+			/* I have to add this to avoid a weird JavaScript bug causing key to be the wrong value when called from inside the loop */
+			onclickCallXWithY(newOption, startAction, type);
 			
 			options = options.add(newOption);
 		}

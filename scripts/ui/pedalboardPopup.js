@@ -1,4 +1,4 @@
-define(["_Popup", "_OptionMenu", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOptionsHandler", "jquery-ui"], function (_Popup, _OptionMenu, $, resources, pedalRenderer, pedalboardPopupOptionsHandler) {
+define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOptionsHandler", "reporter", "jquery-ui"], function (_Popup, $, resources, pedalRenderer, pedalboardPopupOptionsHandler, reporter) {
 	var methods = {};
 	
 	/*Make sure the window nextNewPedalBoardIdoardId value is setup*/
@@ -73,9 +73,9 @@ define(["_Popup", "_OptionMenu", "jquery", "textResources", "pedalRenderer", "pe
 		menuButton.click(function () {			 
 			pedalboardPopupOptionsHandler.handle(popup.id, menuButton, content, manager, 
 				function (reportType) { /* startReport */
-					
-				}, function (boardId, reportType) { /* startCompare */
-						
+					reporter.report(manager, popup.id, reportType);
+				}, function (compareBoardId, reportType) { /* startCompare */
+					reporter.report(manager, popup.id, reportType, compareBoardId);
 				});
 		});
 		

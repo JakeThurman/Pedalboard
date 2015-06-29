@@ -37,6 +37,7 @@ requirejs.config({
 			
 			/*reporting*/
 			"reportTypes":                   "reporting/reportTypes",
+			"reporter":                      "reporting/reporter",
 	},
 	config: {
 		moment: {
