@@ -1,4 +1,4 @@
-define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOptionsHandler", "reporter", "jquery-ui"], function (_Popup, $, resources, pedalRenderer, pedalboardPopupOptionsHandler, reporter) {
+define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOptionsHandler", "reporter", "comparer", "jquery-ui"], function (_Popup, $, resources, pedalRenderer, pedalboardPopupOptionsHandler, reporter, comparer) {
 	var methods = {};
 	
 	/*Make sure the window nextNewPedalBoardIdoardId value is setup*/
@@ -75,7 +75,7 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 				function (reportType) { /* startReport */
 					reporter.report(manager, popup.id, reportType);
 				}, function (compareBoardId, reportType) { /* startCompare */
-					reporter.report(manager, popup.id, reportType, compareBoardId);
+					comparer.compare(manager, popup.id, reportType, compareBoardId);
 				});
 		});
 		

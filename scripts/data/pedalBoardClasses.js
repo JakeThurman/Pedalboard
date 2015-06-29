@@ -44,22 +44,6 @@ define([ "helperMethods" ], function (helpers) {
         this.Clear = function () {
             thisBoard.pedals = [];
         };
-				
-        //returns a new pedalboard without any pedals in both this PedalBoard object and a passed in PedalBoard object
-        this.RemoveOverlap = function(other) {
-            if (!(other instanceof classes.PedalBoard))
-                throw "parameter must be another pedalboard object";
-            
-			var otherBoardPedalIds = helpers.select(other.pedals, function (pedal) { 
-				return pedal.id; 
-			});	
-			
-			var onlyMyPedals = helpers.where(thisBoard.pedals, function(pedal) {
-				return otherBoardPedalIds.indexOf(pedal.id) === -1; //Where the other board does not contain this pedal
-			});
-			
-			return new classes.PedalBoard(thisBoard.Name, onlyMyPedals);
-        };
     
         //Returns the total cost of all of the pedals on this pedalboard
         this.TotalCost = function() {
