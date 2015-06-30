@@ -14,8 +14,7 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 		var content = $("<div>", { "class": "pedal-board display-none" });
 		
 		var helpText = $("<div>", { "class": "help-text" })
-			.text(resources.pedalBoardDragHelpText)
-			.css("display", "none");
+			.text(resources.pedalBoardDragHelpText);
 		
 		var menuButton = $("<i>", { "class": "fa fa-bars" });
 					 
