@@ -103,10 +103,9 @@ define([ "helperMethods" ], function (helpers) {
 		//This will be appended to by parent containers
 		this.fullName = this.name;
 	};
-		
-	//I may not use this.
+	
 	classes.PedalType = function(pedalTypeData) {
-	this.name = pedalTypeData.name;
+		this.name = pedalTypeData.name;
 		this.id = pedalTypeData.id;
 	};
 
