@@ -39,9 +39,9 @@ define([ "helperMethods", "pedalDataAccess" ], function (helpers, pedalDataAcces
 	
 	methods.getPriceData = function(pedals) {
 		return methods.getData(pedals, 
-			function (pedal) { return pedal.name; },  /* getName  */
+			function (pedal) { return pedal.displayName || pedal.name; },  /* getName */
 			function (pedal) { return pedal.price; }, /* getValue */
-			function (pedal) { return pedal.color; });/* getColor */
+			function (pedal) { return pedal.color; }); /* getColor */
 	};
 	
 	methods.getTypeData = function(pedals) {

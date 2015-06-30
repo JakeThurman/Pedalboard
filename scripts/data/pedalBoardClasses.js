@@ -70,8 +70,13 @@ define([ "helperMethods" ], function (helpers) {
 			else /* OH NO! This is a pedal brand! */
 				throw "Nothing may contain pedal brands. They are the top level. Failed on container id = " + pedalContainerData.id;
 			
-			/* Prepend the container name to the full name */
+			/* Prepend the container name to the full name & display name */
+			if (pedalContainerData.identifier === 1) /* only add to the display name from lines */
+				pedal.displayName = (pedalContainerData.displayName || pedalContainerData.name) + " " + pedal.displayName;
+			
 			pedal.fullName = (pedalContainerData.fullName || pedalContainerData.name) + " " + pedal.fullName;
+			
+			/* add the pedal */
 			pedals.push(pedal);
 		});
 		return pedals;
@@ -102,6 +107,8 @@ define([ "helperMethods" ], function (helpers) {
 		
 		/* This will be appended to by parent containers */
 		this.fullName = this.name;
+		/* This will be the name as full name but without the brand name */
+		this.displayName = this.name;
 	};
 	
 	classes.PedalType = function(pedalTypeData) {
