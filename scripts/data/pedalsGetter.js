@@ -10,7 +10,7 @@ define(function () {
 	methods.get = function () {
 		var values = {};
 		
-		values.PedalTypes: [{ 
+		values.PedalTypes = [{ 
 				name: "Reverb",
 				id: 1,
 			},
