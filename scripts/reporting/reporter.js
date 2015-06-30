@@ -13,9 +13,9 @@ define([ "reportTypes", "reportDataHelpers", "jquery", "Chart", "domReady!" ], f
 		if (type.id === reportTypes.price.id)
 			data = reportDataHelpers.getPriceData(board.pedals);
 		else if (type.id == reportTypes.pedalType.id)
-			data = reportDataHelpers.getPriceData(board.pedals);
+			data = reportDataHelpers.getTypeData(board.pedals);
 		else if (type.id == reportTypes.color.id)
-			data = reportDataHelpers.getPriceData(board.pedals);
+			data = reportDataHelpers.getColorData(board.pedals);
 		else
 			throw new Error("Type param is not valid or not implemented!")
 		

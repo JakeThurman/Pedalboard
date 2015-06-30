@@ -24,12 +24,12 @@ define([ "reportTypes", "reportDataHelpers", "boardDiffEngine", "jquery", "Chart
 			bMinusAData = reportDataHelpers.getPriceData(bMinusA);
 		}
 		else if (type.id == reportTypes.pedalType.id) {
-			aMinusBData = reportDataHelpers.getPriceData(aMinusB);
-			bMinusAData = reportDataHelpers.getPriceData(bMinusA);
+			aMinusBData = reportDataHelpers.getTypeData(aMinusB);
+			bMinusAData = reportDataHelpers.getTypeData(bMinusA);
 		}
 		else if (type.id == reportTypes.color.id) {
-			aMinusBData = reportDataHelpers.getPriceData(aMinusB);
-			bMinusAData = reportDataHelpers.getPriceData(bMinusA);
+			aMinusBData = reportDataHelpers.getColorData(aMinusB);
+			bMinusAData = reportDataHelpers.getColorData(bMinusA);
 		}
 		else
 			throw new Error("compareType param is not valid or not implemented!")
