@@ -39,7 +39,7 @@ define(["pedalBoardClasses", "pedalsGetter", "helperMethods"], function (classes
 		window.pedalBoardDataAccessCache = {
 			brands: allPedalBrands,
 			allPedals: allPedals,
-			types: helpers.selct(pedalsData.PedalTypes, function (type) {
+			types: helpers.select(pedalsData.PedalTypes, function (type) {
 				return new classes.PedalType(type);
 			}),
 		};
