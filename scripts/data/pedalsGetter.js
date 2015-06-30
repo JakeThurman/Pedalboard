@@ -57,6 +57,7 @@ define(function () {
 					id : 2,
 					pedals: [{
 						name: "(Mini)",
+						color: "#B32F26",
 						id: 1,
 						identifier: 2,
 						price: 99.99,
@@ -65,6 +66,7 @@ define(function () {
 				},
 				{
 					name: "ND-1 Nova Delay",
+					color: "#3A3536",
 					id: 2,
 					price: 169.99,
 					identifier: 2,
@@ -72,6 +74,7 @@ define(function () {
 				},
 				{
 					name: "Ditto Looper",
+					color: "#45403D",
 					identifier: 2,
 					price: 99.99,
 					type: 9,
@@ -84,6 +87,7 @@ define(function () {
 				id: 3,
 				pedals: [{
 					name: "CH1 Chorus", 
+					color: "#88B7DB",
 					price: 99,
 					identifier: 2,
 					type: 3,
@@ -96,6 +100,7 @@ define(function () {
 				id: 4,
 				pedals: [{
 					name: "SN10 Pedal Tuner",
+					color: "#E4E4E3",
 					price: 32.69,
 					type: 7,
 					identifier: 2,
@@ -108,6 +113,7 @@ define(function () {
 				id: 5,
 				pedals: [{
 					name: "Crybaby Wah",
+					color: "#282826",
 					price: 79.99,
 					type: 8,
 					identifier: 2,
@@ -120,6 +126,7 @@ define(function () {
 				id: 6,
 				pedals: [{
 					name: "Volume Pedal JR",
+					color: "#C6CCCC",
 					price: 67.65,
 					type: 8,
 					identifier: 2,
@@ -132,6 +139,7 @@ define(function () {
 				id: 7,
 				pedals: [{
 					name: "Blue Sky",
+					color: "#4DA5BD",
 					price: 299,
 					type: 1,
 					identifier: 2,
@@ -139,6 +147,7 @@ define(function () {
 				},
 				{
 					name: "Mobius",
+					color: "#286FC1",
 					price: 449,
 					type: 3,
 					identifier: 2,
@@ -151,6 +160,7 @@ define(function () {
 				id: 8,
 				pedals: [{
 					name: "Kingdom Transparent Overdrive",
+					color: "#EBEDE9",
 					price: 159,
 					type: 6,
 					identifier: 2,
@@ -158,6 +168,7 @@ define(function () {
 				},
 				{
 					name: "Refinery",
+					color: "#DC2D34",
 					price: 169,
 					type: 4,
 					identifier: 2,
@@ -170,6 +181,7 @@ define(function () {
 				id: 9,
 				pedals: [{
 					name: "Deep Six",
+					color: "#A6D5D2",
 					type: 4,
 					price: 199,
 					identifier: 2,
@@ -186,6 +198,7 @@ define(function () {
 					id: 11,
 					pedals: [{
 						name: "Chameleon",
+						color: "#4FBB7F",
 						price: 149, 
 						type: 5,
 						identifier: 2,
@@ -193,6 +206,7 @@ define(function () {
 					},
 					{
 						name: "Jr.",
+						color: "#D2282A",
 						price: 105,
 						type: 5,
 						identifier: 2,
@@ -206,6 +220,7 @@ define(function () {
 				id: 12,
 				pedals: [{
 					name: "Soul Food Overdrive",
+					color: "#DCC591",
 					price: 78.20,
 					type: 6,
 					identifier: 2,
@@ -218,6 +233,7 @@ define(function () {
 				id: 13,
 				pedals: [{
 					name: "Tube Screamer",
+					color: "#3B9955",
 					price: 99.99,
 					type: 6,
 					identifier: 2,
@@ -230,6 +246,7 @@ define(function () {
 				id: 14,
 				pedals: [{
 					name: "RD1 Rock Distortion",
+					color: "#181818",
 					price: 24.99,
 					type: 6,
 					id: 17,
@@ -242,7 +259,7 @@ define(function () {
 				id: 15,
 				pedals: [{
 					name: "OCD - Obsesive Compulsive Drive",
-					color: "white",
+					color: "#E6E2D9",
 					price: 127.20,
 					type: 6,
 					identifier: 2,
