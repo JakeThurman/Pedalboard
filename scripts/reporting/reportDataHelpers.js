@@ -21,7 +21,7 @@ define([ "helperMethods" ], function (helpers) {
 		}
 
 		return rgb;
-	} 
+	}
 	
 	methods.getData = function(pedals, getName, getValue, getColor) {
 		var output = [];

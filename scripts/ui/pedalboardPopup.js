@@ -73,7 +73,7 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 		menuButton.click(function () {			 
 			pedalboardPopupOptionsHandler.handle(popup.id, menuButton, content, manager, 
 				function (reportType) { /* startReport */
-					reporter.report(manager, popup.id, reportType);
+					reporter.report(manager.GetBoard(popup.id).data, reportType);
 				}, function (compareBoardId, compareType) { /* startCompare */
 					comparer.compare(manager.GetBoard(popup.id).data, manager.GetBoard(compareBoardId).data, compareType);
 				});

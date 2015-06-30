@@ -1,4 +1,6 @@
 define([ "helperMethods", "pedalBoardClasses" ], function (helpers, classes) {
+	"use strict";
+	
 	var methods = {};
 	
 	//returns a new pedalboard without any pedals in both this PedalBoard object and a passed in PedalBoard object

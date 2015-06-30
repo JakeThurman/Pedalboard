@@ -1,20 +1,21 @@
 define([ "reportTypes", "reportDataHelpers", "jquery", "Chart", "domReady!" ], function (reportTypes, reportDataHelpers, $, Chart) {
+	"use strict";
+	
 	var methods = {};
 	
 	Chart.defaults.global.responsive = true;
 	Chart.defaults.global.maintainAspectRatio = false;
 	
-	methods.report = function (manager, boardId, type) {
-				
+	methods.report = function (board, type) {
 		/* set up the data */		
 		var data;
 		
 		if (type.id === reportTypes.price.id)
-			data = reportDataHelpers.getPriceData(manager.GetBoard(boardId).data.pedals);
+			data = reportDataHelpers.getPriceData(board.pedals);
 		else if (type.id == reportTypes.pedalType.id)
-			data = reportDataHelpers.getPriceData(manager.GetBoard(boardId).data.pedals);
+			data = reportDataHelpers.getPriceData(board.pedals);
 		else if (type.id == reportTypes.color.id)
-			data = reportDataHelpers.getPriceData(manager.GetBoard(boardId).data.pedals);
+			data = reportDataHelpers.getPriceData(board.pedals);
 		else
 			throw new Error("Type param is not valid or not implemented!")
 		

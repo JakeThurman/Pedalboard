@@ -1,4 +1,6 @@
 define(function () {
+	"use strict";
+	
 	//PedalType Parser,
 	// Pedal.identifier is an enum
 	// 0 = board,

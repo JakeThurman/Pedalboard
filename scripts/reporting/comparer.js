@@ -1,4 +1,6 @@
 define([ "reportTypes", "reportDataHelpers", "boardDiffEngine", "jquery", "Chart", "domReady!" ], function (reportTypes, reportDataHelpers, boardDiffEngine, $, Chart) {
+	"use strict";
+	
 	var methods = {};
 	
 	Chart.defaults.global.responsive = true;
