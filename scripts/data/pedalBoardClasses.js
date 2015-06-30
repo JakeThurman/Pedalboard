@@ -18,12 +18,12 @@ define([ "helperMethods" ], function (helpers) {
 			});
 				
 			var pedalToRemove = helpers.single(pedalsWithThisId,
-				function() {// more than one result
-					//Figure out which one to remove
+				function() {/* more than one result */
+					/* Figure out which one to remove */
 					console.log("TODO: handle choosing which to delete.");
 					return pedalsWithThisId[0];
 				},
-				function() {// zero results
+				function() {/* zero results */
 					throw "There were no pedals with id of: " + pedalId;
 				}
 			);
@@ -45,7 +45,7 @@ define([ "helperMethods" ], function (helpers) {
             thisBoard.pedals = [];
         };
     
-        //Returns the total cost of all of the pedals on this pedalboard
+        /* Returns the total cost of all of the pedals on this pedalboard */
         this.TotalCost = function() {
             var total = 0;
             helpers.forEach(thisBoard.pedals, function(pedal) {
@@ -60,24 +60,24 @@ define([ "helperMethods" ], function (helpers) {
 		helpers.forEach(pedalContainerData.pedals, function (pedalData) {
 			var pedal;
 			
-			//Create a pedal of correct class
-			if (pedalData.identifier === 2)//Is a pedal
+			/* Create a pedal of correct class */
+			if (pedalData.identifier === 2)/* Is a pedal */
 				pedal = new classes.Pedal(pedalData);
-			else if (pedalData.identifier === 1) {//This is a pedal line
+			else if (pedalData.identifier === 1) {/* This is a pedal line */
 				pedalData.fullName = (pedalContainerData.fullName || pedalContainerData.name) + " " + pedalData.name;
 				pedal = new classes.PedalLine(pedalData);
 			}
-			else //OH NO! This is a pedal brand!
+			else /* OH NO! This is a pedal brand! */
 				throw "Nothing may contain pedal brands. They are the top level. Failed on container id = " + pedalContainerData.id;
 			
-			//Prepend the container name to the full name
+			/* Prepend the container name to the full name */
 			pedal.fullName = (pedalContainerData.fullName || pedalContainerData.name) + " " + pedal.fullName;
 			pedals.push(pedal);
 		});
 		return pedals;
 	}
 		
-	//Same as a PedalBrand, but can be contained by a brand.
+	/* Same as a PedalBrand, but can be contained by a brand. */
 	classes.PedalLine = function (pedalLineData) {
 		for (var key in pedalLineData) {
 			if (key === "pedals")
@@ -100,7 +100,7 @@ define([ "helperMethods" ], function (helpers) {
 		for (var key in pedalData)
 			this[key] = pedalData[key];
 		
-		//This will be appended to by parent containers
+		/* This will be appended to by parent containers */
 		this.fullName = this.name;
 	};
 	
