@@ -1,5 +1,16 @@
-define([ "helperMethods" ], function (helpers) {
+define([ "helperMethods", "textResources" ], function (helpers, resources) {
 	"use strict";	
+	function correctHexValue(hex) {
+		/* validate hex string -> convert #fff to #ffffff */
+		hex = String(hex).replace(/[^0-9a-f]/gi, '');
+		
+		if (hex.length !== 3 && hex.length !== 6)
+			throw new Error("This does not seem to be a valid hex string: " + hex);
+		if (hex.length !== 6)
+			return hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+		
+		return hex;
+	}
 	
 	var methods = {};
 	
@@ -8,9 +19,7 @@ define([ "helperMethods" ], function (helpers) {
 		/* Function to convert HEX to RGB */
 		function hex2rgb( colour ) {
 			var r,g,b;
-			if ( colour.charAt(0) == '#' ) {
-				colour = colour.substr(1);
-			}
+			colour = correctHexValue(colour);
 
 			r = colour.charAt(0) + colour.charAt(1);
 			g = colour.charAt(2) + colour.charAt(3);
@@ -53,18 +62,14 @@ define([ "helperMethods" ], function (helpers) {
 
 		/* Return the HEX code */
 		return {
-			name: color_names[index],
-			color: base_colors[index]
+			name: resources[color_names[index]],
+			color: "#" + base_colors[index]
 		};
 	}
 	
 	/* function content taken from http://www.sitepoint.com/javascript-generate-lighter-darker-color/ */
 	methods.highlight = function(hex, luminance) {
-		/* validate hex string -> convert #fff to #ffffff */
-		hex = String(hex).replace(/[^0-9a-f]/gi, '');
-		if (hex.length < 6) {
-			hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
-		}
+		hex = correctHexValue(hex);
 		luminance = luminance || 0;
 
 		/* convert to decimal and change luminosity */

@@ -15,8 +15,8 @@
 		
   <script>
 	    require([ "scripts/requireConfig" ], function () {
-					/* Load all of the tests as if they were dependencies */
-			    require([ 
+			/* Load all of the tests as if they were dependencies */
+			require([ 
 					/* core tests */
 					"../tests/core/helperMethodTests",
 					"../tests/core/stringReplacerTests",
@@ -31,15 +31,16 @@
 					/* reporting tests */
 					"../tests/reporting/boardDiffEngineTests",
 					"../tests/reporting/reporterTests",
+					"../tests/reporting/colorEffectsTests",
 					
 					/* utility */
 					"domReady!"
-				  ], 
-					function () {
-						/* Once they've all loaded, trigger jasmine */
-						window.onload();
-					});
-			});
+				], 
+				function () {
+					/* Once they've all loaded, trigger jasmine */
+					window.onload();
+				});
+		});
 	</script>	
 </head>
 <body>

@@ -1,4 +1,4 @@
-define([ "reportTypes", "boardDiffEngine", "colorEffects", "jquery", "Chart", "helperMethods", "pedalDataAccess", "pedalBoardClasses", "textResources", "domReady!" ], function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDataAccess, classes, resources) {
+define([ "reportTypes", "boardDiffEngine", "colorEffects", "jquery", "Chart", "helperMethods", "pedalDataAccess", "pedalBoardClasses", "domReady!" ], function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDataAccess, classes) {
 	"use strict";
 		
 	Chart.defaults.global.responsive = true;
@@ -63,13 +63,13 @@ define([ "reportTypes", "boardDiffEngine", "colorEffects", "jquery", "Chart", "h
 		var allColors = helpers.distinct(pedalColors, function (item) { return item.color; });
 		
 		return getData(allColors, 
-			function (color) { return resources[color.name]; },/* getName */
+			function (color) { return color.name; },/* getName */
 			function (color) { /* getValue */ 
 				return helpers.where(pedalColors, function (pedalColor) {
 					return pedalColor.color === color.color;
 				}).length; /* get the number of pedals on the board of this color */ 
 			},
-			function (color) { return "#" + color.color; }); /* getColor */
+			function (color) { return color.color; }); /* getColor */
 	}
 	
 	/* ! Public Functions ! */
