@@ -1,12 +1,15 @@
 define(function () {
 	"use strict";
 	
-	//PedalType Parser,
-	// Pedal.identifier is an enum
-	// 0 = board,
-	// 1 = line,
-	// 2 = pedal,
-
+	/*
+	 * Pedal.identifier is an enum
+	 * 0 = board,
+	 * 1 = line,
+	 * 2 = pedal,
+	 */
+	 
+	/* top pedal id = 19 */
+	
 	var methods = {};
 	
 	methods.get = function () {
@@ -148,7 +151,7 @@ define(function () {
 					id: 8,
 				},
 				{
-					name: "Mobius",
+					name: "Möbius",
 					color: "#286FC1",
 					price: 449,
 					type: 3,
@@ -260,12 +263,25 @@ define(function () {
 				identifier: 0,
 				id: 15,
 				pedals: [{
-					name: "OCD - Obsesive Compulsive Drive",
+					name: "OCD - Obsessive Compulsive Drive",
 					color: "#E6E2D9",
 					price: 127.20,
 					type: 6,
 					identifier: 2,
 					id: 18,
+				}]
+			},
+			{
+				name: "EarthQuaker Devices",
+				identifier: 0,
+				id: 16,
+				pedals: [{
+					name: "Rainbow Machine",
+					color: "#CB447F",
+					price: 225,
+					type: 3,
+					identifier: 2,
+					id: 19,
 				}]
 			}];
 			
