@@ -38,8 +38,6 @@ requirejs.config({
 			/*reporting*/
 			"reportTypes":                   "reporting/reportTypes",
 			"reporter":                      "reporting/reporter",
-			"comparer":                      "reporting/comparer",
-			"reportDataHelpers":             "reporting/reportDataHelpers",
 			"boardDiffEngine":               "reporting/boardDiffEngine",
 	},
 	config: {
