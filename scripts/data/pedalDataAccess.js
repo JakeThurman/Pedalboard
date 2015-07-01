@@ -1,4 +1,6 @@
 define(["pedalBoardClasses", "pedalsGetter", "helperMethods"], function (classes, pedalsGetter, helpers) {
+		"use strict";
+
 		if (window && window.pedalBoardDataAccessCache)
 			 return window.pedalBoardDataAccessCache;
 		
