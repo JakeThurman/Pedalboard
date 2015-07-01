@@ -39,6 +39,7 @@ requirejs.config({
 			"reportTypes":                   "reporting/reportTypes",
 			"reporter":                      "reporting/reporter",
 			"boardDiffEngine":               "reporting/boardDiffEngine",
+			"colorEffects":                  "reporting/colorEffects",
 	},
 	config: {
 		moment: {
