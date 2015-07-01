@@ -34,8 +34,7 @@ define([ "reportTypes", "reportDataHelpers", "jquery", "Chart", "domReady!" ], f
 				myChart.destroy();
 			});
 		
-		myChart = new Chart(canvas.getContext("2d")).Doughnut(data);
+		myChart = new Chart(canvas.getContext("2d")).Doughnut(data, type.options);
 	};
-	
 	return methods;
 });

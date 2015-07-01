@@ -58,8 +58,8 @@ define([ "reportTypes", "reportDataHelpers", "boardDiffEngine", "jquery", "Chart
 					bMinusAChart.destroy();
 				});
 		
-		aMinusBChart = new Chart(aMinusBCanvas.getContext("2d")).Doughnut(aMinusBData);
-		bMinusAChart = new Chart(bMinusACanvas.getContext("2d")).Doughnut(bMinusAData);
+		aMinusBChart = new Chart(aMinusBCanvas.getContext("2d")).Doughnut(aMinusBData, type.options);
+		bMinusAChart = new Chart(bMinusACanvas.getContext("2d")).Doughnut(bMinusAData, type.options);
 	};
 	
 	return methods;
