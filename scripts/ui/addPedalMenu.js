@@ -51,7 +51,10 @@ define([ "pedalDataAccess", "textResources", "helperMethods", "jquery", "jquery-
 		var searchBox = $("<input>", { type: "text", placeholder: resources.pedalSearchPlaceholder, 'class': "pedal-search" })
 			.appendTo(container)
 			.autocomplete({ /* The search box should autocomplete pedal names */
-				source: allPedalNames
+				source: function(request, response) {
+					var results = $.ui.autocomplete.filter(allPedalNames, request.term);
+					response(results.slice(0, 10));
+				}
 			});
 		
 		var addIcon = $("<i>", { "class": "fa fa-plus float-right" })
