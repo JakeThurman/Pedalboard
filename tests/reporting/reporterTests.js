@@ -35,10 +35,18 @@ define([ "reporter", "reportTypes", "pedalBoardClasses" ], function (reporter, t
 				var expectedName = "name-test";
 				var value = 2.2;
 				
+				var secondItemLabel = "hard-coded";
+				var expectedSecondLabel = "hard-coded-test";
+				var secondItemValue = 2;
+				
 				expect(function () {
 					result = getData([{ 
 							name: name,
 							num: value, 
+						},
+						{
+							name: secondItemLabel,
+							num: secondItemValue,
 						}], 
 						function (item) {
 							return item.name + nameConcat;
@@ -54,6 +62,48 @@ define([ "reporter", "reportTypes", "pedalBoardClasses" ], function (reporter, t
 				expect(result[0].color).toEqual(color);
 				expect(result[0].value).toEqual(value);
 				expect(result[0].label).toEqual(expectedName);
+				
+				expect(result[1].label).toEqual(expectedSecondLabel);
+				expect(result[1].value).toEqual(secondItemValue);
+				expect(result[1].color).toEqual(color);
+			});
+		});
+		
+		/* getPriceData(pedals) */
+		describe("getPriceData", function () {
+			var getPriceData = reporter.__privates.getPriceData;
+			
+			it("should loop on the given \"pedal\" collection and get the displayName, price and color of each", function () {
+				var result;
+				
+				var color1 = "#abcdef";
+				var name1  = "name_1";
+				var price1 = 2.2;
+				
+				var color2 = "#a18b8c";
+				var name2  = "name_2";
+				var price2 = -100.8;
+				
+				expect(function () {
+					result = getPriceData([{ 
+							color: color1,
+							price: price1,
+							name:  name1,
+						},
+						{
+							color: color2,
+							price: price2,
+							name:  name2,
+						}]);
+				}).not.toThrow();
+				
+				expect(result[0].color).toEqual(color1);
+				expect(result[0].value).toEqual(price1);
+				expect(result[0].label).toEqual(name1 );
+				
+				expect(result[1].color).toEqual(color2);
+				expect(result[1].value).toEqual(price2);
+				expect(result[1].label).toEqual(name2 );
 			});
 		});
 	});
