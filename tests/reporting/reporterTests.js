@@ -1,4 +1,4 @@
-define([ "reporter", "reportTypes", "pedalBoardClasses" ], function (reporter, types, classes) {
+define([ "reporter", "reportTypes", "pedalBoardClasses", "pedalDataAccess" ], function (reporter, types, classes, pedalDataAccess) {
 	"use strict";
 	describe("reporting/reporter.js", function () {
 		describe("report", function () {
@@ -97,6 +97,8 @@ define([ "reporter", "reportTypes", "pedalBoardClasses" ], function (reporter, t
 						}]);
 				}).not.toThrow();
 				
+				expect(result.length).toEqual(2);
+				
 				expect(result[0].color).toEqual(color1);
 				expect(result[0].value).toEqual(price1);
 				expect(result[0].label).toEqual(name1 );
@@ -105,6 +107,46 @@ define([ "reporter", "reportTypes", "pedalBoardClasses" ], function (reporter, t
 				expect(result[1].value).toEqual(price2);
 				expect(result[1].label).toEqual(name2 );
 			});
+		});
+		
+		describe("getTypeData", function () {
+			var getTypeData = reporter.__privates.getTypeData;
+
+			it("should return data about pedal types", function () {
+				var result;
+				
+				var color1 = "#abcdef";
+				var name1  = "name_1";
+				var price1 = 2.2;
+				
+				var color2 = "#a18b8c";
+				var name2  = "name_2";
+				var price2 = -100.8;
+				
+				/* Just take the first one, this should really be mocked out anyway */
+				var myType = pedalDataAccess.types[0];
+				
+				expect(function () {
+					result = getTypeData([{ 
+							color: color1,
+							price: price1,
+							name:  name1,
+							type: myType.id
+						},
+						{
+							color: color2,
+							price: price2,
+							name:  name2,
+							type: myType.id
+						}]);
+				}).not.toThrow();
+				
+				expect(result.length).toEqual(1);
+				
+				expect(result[0].color).toEqual(color1);
+				expect(result[0].value).toEqual(2 /* 2 pedals with this id */);
+				expect(result[0].label).toEqual(myType.name);
+			}); 
 		});
 	});
 });
