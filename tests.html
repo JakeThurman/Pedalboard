@@ -15,13 +15,23 @@
 		
   <script>
 	    require([ "scripts/requireConfig" ], function () {
-					//Load all of the tests as if they were dependencies
+					/* Load all of the tests as if they were dependencies */
 			    require([ 
+					/* core tests */
 					"../tests/core/helperMethodTests",
 					"../tests/core/stringReplacerTests",
+					
+					/* data tests */
 					"../tests/data/pedalBoardManagerTests",
 					"../tests/data/changeLoggerTests",
+					
+					/* ui tests */
 					"../tests/ui/historyPopupTests",
+					
+					/* reporting tests */
+					"../tests/reporting/boardDiffEngineTests",
+					
+					/* utility */
 					"domReady!"
 				  ], 
 					function () {
