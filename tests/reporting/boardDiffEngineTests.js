@@ -1,5 +1,6 @@
 define([ "boardDiffEngine", "pedalBoardClasses" ], function (boardDiffEngine, classes) {
-	describe("boardDiffEngine", function () {
+	"use strict";
+	describe("reporting/boardDiffEngine.js", function () {
 		describe("GetUniquePedals", function () {
 			it("should throw an exception if one or both of the boards are not instances of the PedalBoard class", function () {
 				var testMain = new classes.PedalBoard("Main");

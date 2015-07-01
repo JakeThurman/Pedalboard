@@ -165,7 +165,6 @@ define([ "reportTypes", "boardDiffEngine", "jquery", "Chart", "helperMethods", "
 	
 	methods.report = function (board, type) {
 		assertIsPedalBoard(board);
-		
 		/* set up the data */		
 		var data;
 		
@@ -253,6 +252,15 @@ define([ "reportTypes", "boardDiffEngine", "jquery", "Chart", "helperMethods", "
 		
 		aMinusBChart = new Chart(aMinusBCanvas.getContext("2d")).Doughnut(aMinusBData, type.options);
 		bMinusAChart = new Chart(bMinusACanvas.getContext("2d")).Doughnut(bMinusAData, type.options);
+	};
+	
+	/* return internal functions in a "private" object of the class for the sake of unit testing */
+	methods.__privates = {
+		getData: getData,
+		getPriceData: getPriceData,
+		getTypeData: getTypeData,
+		getColorData: getColorData,
+		distinctColor: distinctColor,
 	};
 	
 	return methods;
