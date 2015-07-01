@@ -144,8 +144,60 @@ define([ "reporter", "reportTypes", "pedalBoardClasses", "pedalDataAccess" ], fu
 				expect(result.length).toEqual(1);
 				
 				expect(result[0].color).toEqual(color1);
-				expect(result[0].value).toEqual(2 /* 2 pedals with this id */);
+				expect(result[0].value).toEqual(2 /* 2 pedals of this type */);
 				expect(result[0].label).toEqual(myType.name);
+			}); 
+		});
+		
+		describe("getColorData", function () {
+			var getColorData = reporter.__privates.getColorData;
+
+			it("should give back an item for each distinct color after they are rounded", function () {
+				var result;
+				
+				var color1 = "#abcdef";
+				var name1  = "name_1";
+				var price1 = 2.2;
+				
+				
+				var color2 = "#a18b8e"; /*close enogh to 3 that this should round with it*/
+				var name2  = "name_2";
+				var price2 = -100.8;
+				
+				var color3 = "#a18b8c";
+				var name3  = "name_2";
+				var price3 = -100.8;
+				
+				/* Just take the first one, this should really be mocked out anyway */
+				var myType = pedalDataAccess.types[0];
+				
+				expect(function () {
+					result = getColorData([{ 
+							color: color1,
+							price: price1,
+							name:  name1,
+						},
+						{
+							color: color2,
+							price: price2,
+							name:  name2,
+						},
+						{
+							color: color3,
+							price: price3,
+							name:  name3,
+						}]);
+				}).not.toThrow();
+				
+				expect(result.length).toEqual(2);
+				
+				expect(result[0].color).toEqual("#cccccc"); /* the color pedal 1 should be rounded to */
+				expect(result[0].value).toEqual(1 /* only one pedals with this color */);
+				expect(result[0].label).not.toBeUndefined();
+				
+				expect(result[1].color).toEqual("#999999"); /* the color pedals 2 and 3 should be rounded to */
+				expect(result[1].value).toEqual(2 /* 2 pedals with this color  */);
+				expect(result[1].label).not.toBeUndefined();
 			}); 
 		});
 	});
