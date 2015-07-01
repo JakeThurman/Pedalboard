@@ -1,4 +1,4 @@
-define([ "helperMethods", "pedalDataAccess" ], function (helpers, pedalDataAccess) {
+define([ "helperMethods", "pedalDataAccess", "textResources" ], function (helpers, pedalDataAccess, resources) {
 	"use strict";
 	
 	var methods = {};
@@ -89,7 +89,8 @@ define([ "helperMethods", "pedalDataAccess" ], function (helpers, pedalDataAcces
 			return [r, g, b];
 		}
 		
-		var base_colors=["660000","990000","cc0000","cc3333","ea4c88","993399","663399","333399","0066cc","0099cc","66cccc","77cc33","669900","336600","666600","999900","cccc33","ffff00","ffcc33","ff9900","ff6600","cc6633","996633","663300","000000","999999","cccccc","ffffff"];
+		var color_names = ["color_DarkRed","color_DarkRed","color_Red","color_Red","color_Pink","color_LightPurple","color_Purple","color_DarkBlue","color_Blue","color_Blue","color_Turquoise","color_LightGreen","color_Green","color_DarkGreen","color_YellowBrown","color_DarkYelow","color_Yellow","color_LightYellow","color_LightOrange","color_Orange","color_Orange","color_DarkOrange","color_LightBrown","color_Brown","color_Black","color_Gray","color_LightGray","color_White"];
+		var base_colors = ["660000","990000","cc0000","cc3333","ea4c88","993399","663399","333399","0066cc","0099cc","66cccc","77cc33","669900","336600","666600","999900","cccc33","ffff00","ffcc33","ff9900","ff6600","cc6633","996633","663300","000000","999999","cccccc","ffffff"];
 
 		/* Convert to RGB, then R, G, B */
 		var color_rgb = hex2rgb(color);
@@ -118,15 +119,21 @@ define([ "helperMethods", "pedalDataAccess" ], function (helpers, pedalDataAcces
 		var index = differenceArray.indexOf(lowest);
 
 		/* Return the HEX code */
-		return base_colors[index];
+		return {
+			name: color_names[index],
+			color: base_colors[index]
+		};
 	}
 	
 	/* TODO: export to helper methods */
-	function distinct(collection) {
+	function distinctColor(collection) {
 		var distinctItems = [];
+		var colors = [];
 		helpers.forEach(collection, function (item) {
-			if (distinctItems.indexOf(item) === -1)
+			if (colors.indexOf(item.color) === -1) {
 				distinctItems.push(item);
+				colors.push(item.color)
+			}
 		});
 		return distinctItems;
 	}
@@ -136,16 +143,16 @@ define([ "helperMethods", "pedalDataAccess" ], function (helpers, pedalDataAcces
 			return roundColor(pedal.color);
 		});
 		
-		var allColors = distinct(pedalColors);
+		var allColors = distinctColor(pedalColors);
 		
 		return methods.getData(allColors, 
-			function (color) { return color; },/* getName */
+			function (color) { return resources[color.name]; },/* getName */
 			function (color) { /* getValue */ 
 				return helpers.where(pedalColors, function (pedalColor) {
-					return pedalColor === color;
+					return pedalColor.color === color.color;
 				}).length; /* get the number of pedals on the board of this color */ 
 			},
-			function (color) { return "#" + color; }); /* getColor */
+			function (color) { return "#" + color.color; }); /* getColor */
 	};
 	
 	return methods;
