@@ -385,5 +385,83 @@ define([ "helperMethods" ], function ( helpers, undef ) {
 				expect(helpers.clone(func)).toEqual(func);
 			});
 		});
+		
+		describe("distinct", function () {
+			it("should be able to distinct with a select action", function () {
+				var data = [{
+					x: true, 
+					y: true,
+				},
+				{
+					x: true, 
+					y: false,
+				},
+				{
+					x: false, 
+					y: false,
+				},
+				{
+					x: false, 
+					y: true,
+				}];
+				
+				var expected = [{
+					x: true, 
+					y: true,
+				},
+				{
+					x: false, 
+					y: false,
+				}];
+				
+				var result = helpers.distinct(data, function (item) {
+					return item.x;
+				});
+				
+				expect(result).toEqual(expected);
+			});
+			
+			it("should be able to distinct without a select action", function () {
+				var data     = [1, 2, 3, 2, 3, 2, 1, 3, 2, 3, 3, 3, 3, 1, 3, 4, 1, 2, 2];
+				var expected = [1, 2, 3, 4];
+				
+				var result = helpers.distinct(data);
+				
+				expect(result).toEqual(expected);
+			});
+			
+			it("should return an empty array for a given empty array", function () {
+				var result = helpers.distinct([]);
+				expect(result).toEqual([]);
+			});
+			
+			it("should throw a type error if collection is an object (not of type array)", function () {
+				var thrower = function () {
+					helpers.distinct({ test: 2, another: 2, something: 2 });
+				};
+				expect(thrower).toThrowError(TypeError);
+			});
+			
+			it("should throw a type error if collection is an function", function () {
+				var thrower = function () {
+					helpers.distinct(function () { return "test"; });
+				};
+				expect(thrower).toThrowError(TypeError);
+			});
+			
+			it("should throw a type error if collection is an number", function () {
+				var thrower = function () {
+					helpers.distinct(12);
+				};
+				expect(thrower).toThrowError(TypeError);
+			});
+			
+			it("should throw a type error if collection is an string", function () {
+				var thrower = function () {
+					helpers.distinct("Throw something please.");
+				};
+				expect(thrower).toThrowError(TypeError);
+			});
+		});
 	});
 });

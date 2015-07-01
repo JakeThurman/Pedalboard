@@ -135,5 +135,28 @@ define(function () {
 				return newObject;
 			};
 			
+			/* 
+			 * Gets a distinct set of items, distinct on the item returned from selector, or the full item if it is undefined 
+			 * NOTE: If you are using the distinct on selector: it will ALWAYS take the first item that it matches as distinct.
+			 */
+			helpers.distinct = function(collection, distinctOnSelector) {
+				if (!helpers.isArray(collection))
+					throw new TypeError("Collection must be an array for distinct. value was: " + collection);
+			
+				var distinctItems = [];
+				var distincts = [];
+				var hasSelector = !helpers.isUndefined(distinctOnSelector);
+				
+				helpers.forEach(collection, function (item) {
+					var distinctOn = hasSelector ? distinctOnSelector(item) : item;
+					if (distincts.indexOf(distinctOn) === -1) {
+						distinctItems.push(item);
+						distincts.push(distinctOn)
+					}
+				});
+				
+				return distinctItems;
+			};
+			
 			return helpers;
 });

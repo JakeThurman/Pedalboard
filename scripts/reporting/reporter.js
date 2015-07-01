@@ -131,24 +131,12 @@ define([ "reportTypes", "boardDiffEngine", "jquery", "Chart", "helperMethods", "
 		};
 	}
 	
-	function distinctColor(collection) {
-		var distinctItems = [];
-		var colors = [];
-		helpers.forEach(collection, function (item) {
-			if (colors.indexOf(item.color) === -1) {
-				distinctItems.push(item);
-				colors.push(item.color)
-			}
-		});
-		return distinctItems;
-	}
-	
 	function getColorData(pedals) {
 		var pedalColors = helpers.select(pedals, function (pedal) {
 			return roundColor(pedal.color);
 		});
 		
-		var allColors = distinctColor(pedalColors);
+		var allColors = helpers.distinct(pedalColors, function (item) { return item.color; });
 		
 		return getData(allColors, 
 			function (color) { return resources[color.name]; },/* getName */
@@ -260,7 +248,6 @@ define([ "reportTypes", "boardDiffEngine", "jquery", "Chart", "helperMethods", "
 		getPriceData: getPriceData,
 		getTypeData: getTypeData,
 		getColorData: getColorData,
-		distinctColor: distinctColor,
 	};
 	
 	return methods;
