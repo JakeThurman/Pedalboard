@@ -8,7 +8,7 @@ define(function () {
 	 * 2 = pedal,
 	 */
 	 
-	/* top pedal id      = 75 */
+	/* top pedal id      = 76 */
 	/* top brand/line id = 18 */
 	
 	var methods = {};
@@ -535,7 +535,7 @@ define(function () {
 				{
 					name: "Superego",
 					color: "#5C6650",
-					id: 23,
+					id: 76,
 					price: 214,
 					type: 3,
 					identifier: 2,					
