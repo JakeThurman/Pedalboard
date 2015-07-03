@@ -322,12 +322,11 @@ svg, img {
 	right: -1px;
 }
 
-.options-menu:before {
+.options-menu::before {
     border-color: transparent transparent #fff transparent;
     border-style: solid;
     border-width: 9px;
     content: " ";
-    left: 50%;
     margin-left: -9px;
     position: absolute;
     top: -18px;
@@ -382,13 +381,13 @@ a, a:visited {
 	background-color: #ee6;
 }
 
-.fa-trash:before {
+.fa-trash::before {
 	line-height: 31px;
 	vertical-align: middle;
 	font-size: 1.5em;
 }
 
-.fa-plus:before {
+.fa-plus::before {
 	vertical-align: middle;
 	font-size: 1.5em;
 	line-height: 36px;
@@ -478,7 +477,7 @@ a, a:visited {
 	margin-right: 4px;
 }
 
-.fa-level-up:before {
+.fa-level-up::before {
 	font-size: 1.2em;
 	font-weight: bold;
 }
@@ -522,4 +521,61 @@ a, a:visited {
 .report {
 	width: 100%;
 	height: 100%;
+}
+
+.report-title-container {
+	position: fixed;
+    top: 0;
+    height: 36px;
+    left: 0;
+    line-height: 36px;
+    width: 100%;
+    background-color: #486D53;
+}
+
+.report-title {
+	text-align: center;
+    color: #fff;
+    font-size: 1.5em;
+	height: 100%;
+    padding: 0 7px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.report-title.left-side {
+	width: 50%;
+	float: left;
+}
+
+.report-title.right-side {
+	width: 50%;
+	float: right;
+}
+
+.tooltip::before,
+.tooltip::after {
+    position:absolute;
+    z-index: 999;
+    opacity: 0;
+    transition:opacity 0.2s ease-out; 
+}
+
+.tooltip:hover::before,
+.tooltip:hover::after {
+    opacity: 0.9;
+}
+
+.tooltip::before {
+    content: attr(data-tooltip); 
+    font-size: 10px;
+	border-radius: 5px;
+    line-height: 24px;
+    height: 24px;
+    white-space:nowrap;
+    background:#000;
+    color:#e0e0e0;
+    padding:0px 7px;
+    bottom: -21px;
 }

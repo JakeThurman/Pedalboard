@@ -1,4 +1,5 @@
-define([ "reportTypes", "boardDiffEngine", "colorEffects", "jquery", "Chart", "helperMethods", "pedalDataAccess", "pedalBoardClasses", "domReady!" ], function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDataAccess, classes) {
+define([ "reportTypes", "boardDiffEngine", "colorEffects", "jquery", "Chart", "helperMethods", "pedalDataAccess", "pedalBoardClasses", "stringReplacer", "textResources", "domReady!" ], 
+function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDataAccess, classes, stringReplacer, resources) {
 	"use strict";
 		
 	Chart.defaults.global.responsive = true;
@@ -76,7 +77,13 @@ define([ "reportTypes", "boardDiffEngine", "colorEffects", "jquery", "Chart", "h
 	var methods = {};
 	
 	methods.report = function (board, type) {
-		assertIsPedalBoard(board);
+		assertIsPedalBoard(board);
+				/* Set up the title & other information */
+		var title = stringReplacer.replace(resources.reportBoardTitle, [ resources[type.resource], board.Name ]);
+		
+		var title = $("<div>", { "class": "report-title-container above-screen-block shadowed" })
+			.append($("<div>", { "class" : "report-title tooltip", "data-tooltip": title }).text(title));
+		
 		/* set up the data */		
 		var data;
 		
@@ -93,23 +100,35 @@ define([ "reportTypes", "boardDiffEngine", "colorEffects", "jquery", "Chart", "h
 		var canvas = document.createElement("canvas");
 		
 		var reportContainer = $("<div>", { "class": "above-screen-block report-container full-size" })
-			.append(canvas)
-			.appendTo(document.body);
+			.append(canvas);
 		
 		var myChart;
-		var blocker = $("<div>", { "class": "screen-block" })
+		var blocker = $("<div>", { "class": "screen-block" });
+		
+		/* append everything to the body */
+		blocker.add(reportContainer).add(title)
 			.appendTo(document.body)
-			.add(canvas).click(function () {
-				blocker.add(reportContainer).remove();
+		/* when one of them gets clicked close it all */
+			.click(function () {
+				blocker.add(reportContainer).add(title).remove();
 				myChart.destroy();
 			});
-		
+					
 		myChart = new Chart(canvas.getContext("2d")).Doughnut(data, type.options);
 	}
 	
 	methods.compare = function (boardA, boardB, type) {
 		assertIsPedalBoard(boardA);
 		assertIsPedalBoard(boardB);
+		
+		/* Set up the title & other information */
+		var typeName = resources[type.resource];
+		var aMinusBTitle = stringReplacer.replace(resources.reportBoardDiffTitle, [ typeName, boardA.Name, boardB.Name ]);
+		var bMinusATitle = stringReplacer.replace(resources.reportBoardDiffTitle, [ typeName, boardB.Name, boardA.Name ]);
+		
+		var title = $("<div>", { "class": "report-title-container above-screen-block shadowed" })
+			.append($("<div>", { "class" : "report-title left-side tooltip", "data-tooltip": aMinusBTitle }).text(aMinusBTitle))
+			.append($("<div>", { "class" : "report-title right-side tooltip", "data-tooltip": bMinusATitle }).text(bMinusATitle));
 		
 		/* get the unique pedals of each board to show the reports for */		
 		var aMinusB = boardDiffEngine.GetUniquePedals(boardA, boardB); 
@@ -139,25 +158,25 @@ define([ "reportTypes", "boardDiffEngine", "colorEffects", "jquery", "Chart", "h
 		var bMinusACanvas = document.createElement("canvas");
 		
 		var aMinusBContainer = $("<div>", { "class": "above-screen-block report-container left-side" })
-			.append(aMinusBCanvas)
-			.appendTo(document.body);
+			.append(aMinusBCanvas);
 		
 		var bMinusAContainer = $("<div>", { "class": "above-screen-block report-container right-side" })
-			.append(bMinusACanvas)
-			.appendTo(document.body);
+			.append(bMinusACanvas);
 		
 		var aMinusBChart;
 		var bMinusAChart;
-		var blocker = $("<div>", { "class": "screen-block" })
-			.appendTo(document.body)
-			/* when any of them are clicked on, close it all */
-			.add(aMinusBCanvas).add(bMinusACanvas)
-				.click(function () {
-					blocker.add(aMinusBContainer).add(bMinusAContainer).remove();
-					aMinusBChart.destroy();
-					bMinusAChart.destroy();
-				});
+		var blocker = $("<div>", { "class": "screen-block" });
 		
+		/* attach stuff to the body */
+		blocker.add(aMinusBContainer).add(bMinusAContainer).add(title)
+			.appendTo(document.body)
+		/* when any of them are clicked on, close it all */
+			.click(function () {
+				blocker.add(aMinusBContainer).add(bMinusAContainer).add(title).remove();
+				aMinusBChart.destroy();
+				bMinusAChart.destroy();
+			});
+	
 		aMinusBChart = new Chart(aMinusBCanvas.getContext("2d")).Doughnut(aMinusBData, type.options);
 		bMinusAChart = new Chart(bMinusACanvas.getContext("2d")).Doughnut(bMinusAData, type.options);
 	};
