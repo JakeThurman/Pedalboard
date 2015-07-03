@@ -13,7 +13,6 @@ define(function () {
 		price: new ReportType("price", "reportType_Price", true, true, {
 			tooltipTemplate: "<%= label %>: $<%= value %>"
 		}),
-		diff: new ReportType("diff", "reportType_Diff", true, false, {}),
 		pedalType: new ReportType("pedalType", "reportType_PedalType", true, true, {}),
 		color: new ReportType("color", "reportType_Color", true, true, {}),
 	};

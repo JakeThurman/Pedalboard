@@ -123,10 +123,6 @@ define([ "reportTypes", "boardDiffEngine", "colorEffects", "jquery", "Chart", "h
 			aMinusBData = getPriceData(aMinusB);
 			bMinusAData = getPriceData(bMinusA);
 		}
-		else if (type.id == reportTypes.diff.id) {
-			aMinusBData = getPriceData(aMinusB);
-			bMinusAData = getPriceData(bMinusA);
-		}
 		else if (type.id == reportTypes.pedalType.id) {
 			aMinusBData = getTypeData(aMinusB);
 			bMinusAData = getTypeData(bMinusA);
