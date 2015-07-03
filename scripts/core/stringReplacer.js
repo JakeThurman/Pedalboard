@@ -1,17 +1,15 @@
-define([ "helperMethods", "textResources" ], function ( helpers, resources ) {
+define([ "helperMethods", "textResources" ], function ( helpers ) {
     var replacer = {};
 	
 	/*
 	 * replaces instances of /{[a-zA-Z0-9]+}/ in the string @str
 	 * by looking up the value inside the braces as indexed from object or array @lookup
 	 *   -> @str can also be a single string that will be automatically wrapped in an array
-	 * 
-	 * if no value is provided for lookup, it will default to the textResources file
 	 */
 	replacer.replace = function (str, lookup) {
-		/* if there is no lookup, use resources */
+		/* if there is no lookup, don't change the input */
 		if (helpers.isUndefined(lookup)) 
-			lookup = resources;
+			return str;
 		
 		/* wrap lookup in an array if it's a string */
 		else if (typeof lookup === "string")
