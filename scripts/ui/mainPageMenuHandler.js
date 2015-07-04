@@ -56,7 +56,7 @@ define(["textResources", "_OptionMenu", "jquery"], function (resources, _OptionM
 		if (manager.Any())
 			menuOptions = menuOptions.add(deleteAllBoards);
 
-		_OptionMenu.create(menuOptions).addClass("main-page-menu");
+		_OptionMenu.create(menuOptions).addClass("main-page-menu fixed");
 	};
 		
     return methods;

@@ -81,8 +81,9 @@ function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDa
 				/* Set up the title & other information */
 		var title = stringReplacer.replace(resources.reportBoardTitle, [ resources[type.resource], board.Name ]);
 		
-		var title = $("<div>", { "class": "report-title-container above-screen-block shadowed" })
-			.append($("<div>", { "class" : "report-title tooltip", "data-tooltip": title }).text(title));
+		var title = $("<header>", { "class": "fixed above-screen-block shadowed" })
+			.append($("<div>", { "class" : "report-title" })
+				.append($("<span>", { "class": "tooltip", "data-tooltip": title }).text(title)));
 		
 		/* set up the data */		
 		var data;
@@ -126,9 +127,11 @@ function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDa
 		var aMinusBTitle = stringReplacer.replace(resources.reportBoardDiffTitle, [ typeName, boardA.Name, boardB.Name ]);
 		var bMinusATitle = stringReplacer.replace(resources.reportBoardDiffTitle, [ typeName, boardB.Name, boardA.Name ]);
 		
-		var title = $("<div>", { "class": "report-title-container above-screen-block shadowed" })
-			.append($("<div>", { "class" : "report-title left-side tooltip", "data-tooltip": aMinusBTitle }).text(aMinusBTitle))
-			.append($("<div>", { "class" : "report-title right-side tooltip", "data-tooltip": bMinusATitle }).text(bMinusATitle));
+		var title = $("<header>", { "class": "fixed above-screen-block shadowed" })
+			.append($("<div>", { "class" : "report-title left-side" })
+				.append($("<span>", { "class" : "tooltip", "data-tooltip": aMinusBTitle }).text(aMinusBTitle)))
+			.append($("<div>", { "class" : "report-title right-side" })
+				.append($("<span>", { "class" : "tooltip", "data-tooltip": bMinusATitle }).text(bMinusATitle)));
 		
 		/* get the unique pedals of each board to show the reports for */		
 		var aMinusB = boardDiffEngine.GetUniquePedals(boardA, boardB); 
