@@ -47,6 +47,9 @@ define([ "helperMethods" ], function (helpers) {
 		
 		/* moves the pedal at @oldPedalIndex to @newPedalIndex in this boards pedal array */
 		this.Reorder = function(oldPedalIndex, newPedalIndex) {
+			/* Validate Input */
+			if (oldPedalIndex < 0 || newPedalIndex < 0)
+				throw new Error("Indexes cannot be negative! Old: " + oldPedalIndex + " New: " + newPedalIndex);
 			if (thisBoard.pedals.length <= oldPedalIndex || thisBoard.pedals.length <= newPedalIndex)
 				throw new Error("Pedal index out of bounds. There are " + thisBoard.pedals.length + " pedals on the board. " + oldPedalIndex + " and/or " + newPedalIndex + " were invalid");
 			
@@ -55,14 +58,16 @@ define([ "helperMethods" ], function (helpers) {
 			
 			if (oldPedalIndex === newPedalIndex)
 				return movePedal; /* putting it in the same place requires no change. */
-						
+			
 			var moveUp = oldPedalIndex > newPedalIndex;
 			var smallerIndex = moveUp
 				? newPedalIndex
 				: oldPedalIndex;
 				
+			/* No need to loop through the first part since we'll just copy it straight */
 			var orderedPedals = thisBoard.pedals.slice(0, smallerIndex)			
 			
+			/* loop through the rest to find the pedal that we need to move and move it */
 			for (var i = smallerIndex; i < thisBoard.pedals.length; i++) {
 				/* for move up we add this first */
 				if (moveUp && i === newPedalIndex)

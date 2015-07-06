@@ -235,7 +235,11 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 		
 		/* Moves a pedal at index of @oldPedalIndex to @newPedalIndex on board with id of @boardId */
 		manager.ReorderPedal = function (oldPedalIndex, newPedalIndex, boardId) {	
-			assertBoardIdExists(boardId);			
+			assertBoardIdExists(boardId);
+			
+			if (oldPedalIndex < 0 || newPedalIndex < 0)
+				throw new Error("Indexes cannot be negative! Old: " + oldPedalIndex + " New: " + newPedalIndex);
+			
 			var reorderedPedal = boards[boardId].data.Reorder(oldPedalIndex, newPedalIndex);
 			
 			/* log this change to the history */

@@ -1,4 +1,4 @@
-define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], function (pedalBoardManager, $, helpers, classes) {
+define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], function (pedalBoardManager, $, helpers, classes) {	"use strict";	
     describe("data/pedalBoardManager.js", function () {
 		    var manager;
 				var $fakeEl;
@@ -6,11 +6,11 @@
 				/* Copied at random from pedalsGetter.js */
 				var dummyPedal = new classes.Pedal({
 				    name: "ND-1 Nova Delay",
-						id: 2,
-        				price: 169.99,
-        				identifier: 2,
-        				type: 2,
-				});
+					id: 1,
+					price: 169.99,
+					identifier: 2,
+					type: 2,
+				});								var dummyPedal2 = new classes.Pedal({				    name: "Kindgom",					id: 2,					price: 169,					identifier: 2,					type: 6,				});
 				
 				beforeEach(function () {
 				    manager = pedalBoardManager.create();
@@ -575,7 +575,7 @@
 					});
 					
 					it("should throw a TypeError if @clientRect is not a ClientRect object", function () {
-						var board = manager.Add("Board Name", $fakeEl)
+						var board = manager.Add("Board Name", $fakeEl);
 						
 						var thrower = function () {
 							manager.Move(board.id, {});
@@ -585,7 +585,7 @@
 					});
 					
 					it("should set the clientRect property of the board", function () {
-						var board = manager.Add("Board Name", $fakeEl)
+						var board = manager.Add("Board Name", $fakeEl);
 						
 						var rect = board.el.get(0).getBoundingClientRect();
 						
@@ -601,7 +601,7 @@
 				
 				describe("Resize", function () {					
 					it("should set the clientRect property of the board", function () {
-						var board = manager.Add("Board Name", $fakeEl)
+						var board = manager.Add("Board Name", $fakeEl);
 						
 						var rect = board.el.get(0).getBoundingClientRect();
 						
@@ -614,7 +614,7 @@
 					});
 					
 					it("should throw a TypeError if @clientRect is not a ClientRect object", function () {
-						var board = manager.Add("Board Name", $fakeEl)
+						var board = manager.Add("Board Name", $fakeEl);
 						
 						var thrower = function () {
 							manager.Resize(board.id, {});
@@ -630,6 +630,6 @@
 						
 						expect(thrower).toThrow();
 					});
-				});
+				});								describe("Reorder Pedal", function () {					it("should place the pedal at the given old index to the given new index", function () {						var board = manager.Add("Board Name", $fakeEl);												manager.AddPedal(dummyPedal,  board.id);						manager.AddPedal(dummyPedal2, board.id);												var pedalsBefore = manager.GetBoard(board.id).data.pedals;												expect(pedalsBefore[0]).toEqual(dummyPedal);						expect(pedalsBefore[1]).toEqual(dummyPedal2);												manager.ReorderPedal(0, 1, board.id);												var pedalsAfter = manager.GetBoard(board.id).data.pedals;												expect(pedalsAfter[0]).toEqual(dummyPedal2);						expect(pedalsAfter[1]).toEqual(dummyPedal);					});										it("should throw a Error if @oldPedalIndex is invalid", function () {						var board = manager.Add("Board Name", $fakeEl);						manager.AddPedal(dummyPedal, board.id);						manager.AddPedal(dummyPedal2, board.id);												var thrower = function () {							manager.ReorderPedal(9, 1, board.id);						};						expect(thrower).toThrowError();					});										it("should throw a Error if @newPedalIndex is invalid", function () {						var board = manager.Add("Board Name", $fakeEl);						manager.AddPedal(dummyPedal, board.id);						manager.AddPedal(dummyPedal2, board.id);												var thrower = function () {							manager.ReorderPedal(1, 9, board.id);						};						expect(thrower).toThrowError();					});										it("should throw a Error if @oldPedalIndex and @newPedalIndex are invalid", function () {						var board = manager.Add("Board Name", $fakeEl);												var thrower = function () {							manager.ReorderPedal(0, 1, board.id);						};						expect(thrower).toThrowError();					});															it("should throw a Error if @oldPedalIndex is negative", function () {						var board = manager.Add("Board Name", $fakeEl);						manager.AddPedal(dummyPedal, board.id);						manager.AddPedal(dummyPedal2, board.id);												var thrower = function () {							manager.ReorderPedal(-1, 1, board.id);						};						expect(thrower).toThrowError();					});										it("should throw a Error if @newPedalIndex is negative", function () {						var board = manager.Add("Board Name", $fakeEl);						manager.AddPedal(dummyPedal, board.id);						manager.AddPedal(dummyPedal2, board.id);												var thrower = function () {							manager.ReorderPedal(1, -1, board.id);						};						expect(thrower).toThrowError();					});										it("should throw a Error if @oldPedalIndex and @newPedalIndex are negative", function () {						var board = manager.Add("Board Name", $fakeEl);						manager.AddPedal(dummyPedal, board.id);						manager.AddPedal(dummyPedal2, board.id);												var thrower = function () {							manager.ReorderPedal(-1, -1, board.id);						};						expect(thrower).toThrowError();					});										it("should throw an exception if an invalid board id is provided", function () {						var thrower = function () {							manager.Resize(0, 0, "not a reaL_board-iD" + new Date());						};												expect(thrower).toThrow();					});				});
 		});
 })
