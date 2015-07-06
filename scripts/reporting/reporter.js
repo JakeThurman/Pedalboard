@@ -1,4 +1,4 @@
-define([ "reportTypes", "boardDiffEngine", "colorEffects", "jquery", "Chart", "helperMethods", "pedalDataAccess", "pedalBoardClasses", "stringReplacer", "textResources", "domReady!" ], 
+define([ "reportTypes", "boardDiffEngine", "colorEffects", "jquery", "Chart", "helperMethods", "pedalDataAccess", "pedalBoardClasses", "stringReplacer", "textResources", "jquery-ui", "domReady!" ], 
 function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDataAccess, classes, stringReplacer, resources) {
 	"use strict";
 		
@@ -73,6 +73,44 @@ function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDa
 			function (color) { return color.color; }); /* getColor */
 	}
 	
+	function addLegend(chartToGet, chartContainer) { 
+		var helpers = Chart.helpers;
+	
+		var legendHolder = document.createElement('div');
+		legendHolder.className = "above-screen-block fixed report-legend";
+		
+		legendHolder.innerHTML = chartToGet.generateLegend();
+		// Include a html legend template after the module doughnut itself
+		helpers.each(legendHolder.firstChild.childNodes, function(legendNode, index){
+			helpers.addEvent(legendNode, 'mouseover', function(){
+				var activeSegment = chartToGet.segments[index];
+				activeSegment.save();
+				activeSegment.fillColor = activeSegment.highlightColor;
+				chartToGet.showTooltip([activeSegment]);
+				activeSegment.restore();
+			});
+		});
+		helpers.addEvent(legendHolder.firstChild, 'mouseout', function(){
+			chartToGet.draw();
+		});
+		
+		var $legendHolder = $(legendHolder)
+			.appendTo(document.body);
+		
+		function posLegend() {
+			$legendHolder.position({
+				my: "center center",
+				at: "right center",
+				of: chartContainer,
+			});
+		}
+		posLegend();
+		
+		$(window).resize(posLegend);
+		
+		return $legendHolder;
+	}
+	
 	/* ! Public Functions ! */
 	var methods = {};
 	
@@ -116,6 +154,8 @@ function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDa
 			});
 					
 		myChart = new Chart(canvas.getContext("2d")).Doughnut(data, type.options);
+		
+		addLegend(myChart, reportContainer);
 	}
 	
 	methods.compare = function (boardA, boardB, type) {
@@ -170,18 +210,25 @@ function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDa
 		var bMinusAChart;
 		var blocker = $("<div>", { "class": "screen-block" });
 		
+		var elsToRemoveOnClick = $([]);
+		
 		/* attach stuff to the body */
-		blocker.add(aMinusBContainer).add(bMinusAContainer).add(title)
-			.appendTo(document.body)
+		elsToRemoveOnClick = elsToRemoveOnClick.add(
+			
+			blocker.add(aMinusBContainer).add(bMinusAContainer).add(title)
+				.appendTo(document.body));
 		/* when any of them are clicked on, close it all */
-			.click(function () {
-				blocker.add(aMinusBContainer).add(bMinusAContainer).add(title).remove();
+		elsToRemoveOnClick.click(function () {
+				elsToRemoveOnClick.remove();
 				aMinusBChart.destroy();
 				bMinusAChart.destroy();
 			});
 	
 		aMinusBChart = new Chart(aMinusBCanvas.getContext("2d")).Doughnut(aMinusBData, type.options);
 		bMinusAChart = new Chart(bMinusACanvas.getContext("2d")).Doughnut(bMinusAData, type.options);
+		
+		elsToRemoveOnClick = elsToRemoveOnClick.add(addLegend(aMinusBChart, aMinusBContainer));
+		elsToRemoveOnClick = elsToRemoveOnClick.add(addLegend(bMinusAChart, bMinusAContainer));
 	};
 	
 	/* return internal functions in a "private" object of the class for the sake of unit testing */

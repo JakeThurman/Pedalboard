@@ -89,15 +89,6 @@
 	border-bottom-right-radius: 5px;
 }
 
-.output-box > .header > .add,
-.output-box .add-pedal {
-	font-size: 2em;
-	cursor: pointer;
-	color: #999;
-	float: right;
-	padding-left: 10px;
-}
-
 .output-box > .header > h2 {
 	display: inline;
     margin-right: 15px;
@@ -145,6 +136,10 @@ header.fixed {
 	
 	.options-menu.main-page-menu {
 		top: 40px;
+	}
+	
+	.report-legend > ul {
+		
 	}
 }
 
@@ -203,22 +198,17 @@ header.fixed {
 		top: 31px;
 	}
 	
-	.tooltip::before,
-	.tooltip::after {
-		position:absolute;
-		z-index: 999;
-		opacity: 0;
-		transition:opacity 0.2s ease-out; 
-	}
-
-	.tooltip:hover::before,
-	.tooltip:hover::after {
+	.tooltip:hover::before{
 		opacity: 0.9;
 	}
 
 	.tooltip::before {
+		position:absolute;
+		z-index: 999;
+		opacity: 0;
+		transition:opacity 0.2s ease-out; 
 		content: attr(data-tooltip); 
-		font-size: 10px;
+		font-size: 1.1em;
 		border-radius: 5px;
 		line-height: 24px;
 		height: 24px;
@@ -277,9 +267,8 @@ header > #add-new-board-box:hover > #page-main-menu {
 
 header > #site-title:hover,
 header #add-new-board-box:hover {
-	background-color: #63825A;
+	background-color: #729469;
 }
-
 
 button {
 	display: inline-block;
@@ -407,14 +396,6 @@ body {
 
 .ui-draggable-handle {
 	cursor: pointer;
-}
-
-.flipped {
-	transform: rotate(180deg);
-}
-
-svg, img {
-	transition: transform .3s ease;
 }
 
 .options-menu {
@@ -647,3 +628,42 @@ a, a:visited {
 	width: 50%;
 	float: right;
 }
+
+/* report-legend */
+.report-legend > ul {
+	background-color: #e9e9e9;
+	padding: 9px;
+    margin: 0;
+	border-radius: 5px;
+	list-style: none;
+}
+
+.report-legend  li {
+	display: block;
+	padding-left: 30px;
+	position: relative;
+	margin-bottom: 4px;
+	border-radius: 5px;
+	padding: 2px 8px 2px 28px;
+	font-size: 14px;
+	cursor: default;
+	-webkit-transition: background-color 200ms ease-in-out;
+	-moz-transition: background-color 200ms ease-in-out;
+	-o-transition: background-color 200ms ease-in-out;
+	transition: background-color 200ms ease-in-out;
+}
+
+.report-legend li:hover {
+	background-color: #fafafa;
+}
+
+.report-legend li span {
+	border: 1px solid #aaa;
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 20px;
+	height: 100%;
+	border-radius: 5px;
+}
