@@ -28,6 +28,10 @@ define({
 	change_ClearedBoard: "Cleared all pedals from pedalboard \"{0}\"",
 	change_ResizeBoard: "Resized pedalbard \"{0}\"",
 	change_MoveBoard: "Moved pedalbard \"{0}\"",
+	change_MovePedalUp: "Moved {0} up on pedalboard \"{1}\"",
+	change_MovePedalDown: "Moved {0} down on pedalboard \"{1}\"",
+	change_MovePedalToTop: "Moved {0} to the top of pedalboard \"{1}\"",
+	change_MovePedalToBottom: "Moved {0} to the bottom of pedalboard \"{1}\"",
 	restoreBatchName: "Restored from save",
 	
 	/*reporting*/

@@ -227,6 +227,7 @@ header.fixed {
 
 .options-menu.main-page-menu {
 	right: 2px;
+	position: fixed;
 	transition: top .2s ease;
 }
 
@@ -510,7 +511,7 @@ a, a:visited {
 
 .history-popup {
     max-height: 250px;
-    width: 450px;
+    width: 550px;
     overflow-x: hidden;
 	overflow-y: auto;
 }

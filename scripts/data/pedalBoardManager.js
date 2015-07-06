@@ -232,6 +232,26 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			/* call all of the change callbacks for this board id */
 			callChangeCallbacks(boardId);
 		};
+		
+		/* Moves a pedal at index of @oldPedalIndex to @newPedalIndex on board with id of @boardId */
+		manager.ReorderPedal = function (oldPedalIndex, newPedalIndex, boardId) {	
+			assertBoardIdExists(boardId);			
+			var reorderedPedal = boards[boardId].data.Reorder(oldPedalIndex, newPedalIndex);
+			
+			/* log this change to the history */
+			var reorderLogResource = newPedalIndex === 0 
+				? resources.change_MovePedalToTop /* Move To Top */
+				: oldPedalIndex > newPedalIndex
+					? resources.change_MovePedalUp /* Move Up */
+					: newPedalIndex === (boards[boardId].data.pedals.length - 1)
+						? resources.change_MovePedalToBottom /* Move To Bottom */
+						: resources.change_MovePedalDown; /* Move Down */
+			
+			log(reorderLogResource, [ reorderedPedal.fullName, boards[boardId].data.Name ]);
+			
+			/* call all of the change callbacks for this board id */
+			callChangeCallbacks(boardId);
+		};
 			
 		/* Clear the board with id of @boardId of all pedals*/
 		manager.Clear = function (boardId) {

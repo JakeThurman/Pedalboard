@@ -44,7 +44,43 @@ define([ "helperMethods" ], function (helpers) {
         this.Clear = function () {
             thisBoard.pedals = [];
         };
+		
+		/* moves the pedal at @oldPedalIndex to @newPedalIndex in this boards pedal array */
+		this.Reorder = function(oldPedalIndex, newPedalIndex) {
+			if (thisBoard.pedals.length <= oldPedalIndex || thisBoard.pedals.length <= newPedalIndex)
+				throw new Error("Pedal index out of bounds. There are " + thisBoard.pedals.length + " pedals on the board. " + oldPedalIndex + " and/or " + newPedalIndex + " were invalid");
+			
+			/* the pedal to move */
+			var movePedal = thisBoard.pedals[oldPedalIndex];
+			
+			if (oldPedalIndex === newPedalIndex)
+				return movePedal; /* putting it in the same place requires no change. */
+						
+			var moveUp = oldPedalIndex > newPedalIndex;
+			var smallerIndex = moveUp
+				? newPedalIndex
+				: oldPedalIndex;
+				
+			var orderedPedals = thisBoard.pedals.slice(0, smallerIndex)			
+			
+			for (var i = smallerIndex; i < thisBoard.pedals.length; i++) {
+				/* for move up we add this first */
+				if (moveUp && i === newPedalIndex)
+					orderedPedals.push(movePedal);
+				
+				if (i !== oldPedalIndex)
+					orderedPedals.push(thisBoard.pedals[i]);
+				
+				/* for move down we add this after */
+				if (!moveUp && i === newPedalIndex)
+					orderedPedals.push(movePedal);
+			}
+			thisBoard.pedals = orderedPedals;
+			
+			return movePedal;
+		};
     
+		/* This is dead code, but I'm going to start using it in reports in there center. I'll also then move this out of here! */
         /* Returns the total cost of all of the pedals on this pedalboard */
         this.TotalCost = function() {
             var total = 0;

@@ -51,21 +51,31 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 		};
 
 		var trashCan = $("<i>", { "class": "fa fa-trash" });
-
+		
+		/* Used to make the  */
+		var originalIndex;
 		/* Make the pedals sortable */
 		content.sortable({
 			containment: popup.el,
 			items: ".single-pedal-data:not(.non-sortable)",
 			axis: "y",
 			start: function (e, ui) {
+				/* add the delete pedal zone */
 				trashCan.appendTo(content)
 					.droppable({
 						hoverClass: "trash-hover",
 						drop: deleteAction
 					});
+					
+				/* the index before start is equal to the number of pedals previous to this */
+				originalIndex = ui.item.prevAll().length;
 			},
 			stop: function (e, ui) {
+				/* remove the delete pedal zone */
 				trashCan.remove();
+				
+				/* the new index is equal to the number of pedals previous to this */
+				manager.ReorderPedal(originalIndex, ui.item.prevAll().length, popup.id);
 			},
 			placeholder: "pedal-placeholder single-pedal-data",
 		});
