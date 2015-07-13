@@ -34,6 +34,8 @@ requirejs.config({
 			"pedalDataAccess":               "data/pedalDataAccess",
 			"pedalsGetter":                  "data/pedalsGetter",
 			"changeLogger":                  "data/changeLogger",
+			"changeTypes":                   "data/changeInfo",
+			"objectTypes":                   "data/changeInfo",
 			
 			/*reporting*/
 			"reportTypes":                   "reporting/reportTypes",

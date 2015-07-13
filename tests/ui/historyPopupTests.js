@@ -6,26 +6,30 @@ define([ "historyPopup", "changeLogger", "jquery" ], function ( historyPopup, ch
 			
 		beforeEach(function () {
 			var logger = changeLogger.create();
-			logger.log("1");
-			logger.log("2");
-			logger.log("3");
+			var log = function (desc) {
+				logger.log(desc, -1, -1, -1);
+			};
+			
+			log("1");
+			log("2");
+			log("3");
 			
 			logger.batch("batch 1", function () {
-				logger.log("sub 1");
-				logger.log("sub 2");
-				logger.log("sub 3");
+				log("sub 1");
+				log("sub 2");
+				log("sub 3");
 				
 				logger.batch("sub batch 1", function () {
-					logger.log("double sub 1");
-					logger.log("double sub 2");
-					logger.log("double sub 3");
+					log("double sub 1");
+					log("double sub 2");
+					log("double sub 3");
 				});
 			});
 			
 			logger.batch("batch 2", function () {
-				logger.log("sub 1");
-				logger.log("sub 2");
-				logger.log("sub 3");
+				log("sub 1");
+				log("sub 2");
+				log("sub 3");
 			});
 			
 			changes = logger.changes;
@@ -86,13 +90,13 @@ define([ "historyPopup", "changeLogger", "jquery" ], function ( historyPopup, ch
 		
 		describe("performance", function () {
 			/* helper to create big change logs very easily */
-			function getChanges(batches, changePerBatch, stateObject) {
+			function getChanges(batches, changePerBatch) {
 				var logger = changeLogger.create();
 							
 				for (var b = 0; b < batches; b++) {
 					logger.batch("batch number " + b, function () {
 						for(var c = 0; c < changePerBatch; c++) {
-							logger.log("change number " +  c, stateObject);
+							logger.log("change number " +  c, -1, -1, -1);
 						}
 					});
 				}
@@ -101,18 +105,11 @@ define([ "historyPopup", "changeLogger", "jquery" ], function ( historyPopup, ch
 			}
 			
 			it("should be under 300ms to render 200 batches with 200 changes each, (40,000 changes)", function () {
-				/* dummy state object to simulate having some bulk in the changes */
-				var stateObject = {
-					testValue: "some string" + new Date(),
-					time: new Date(),
-					someArray: [1, 2, 3, 4, 5],
-					subObjct: { prop: {}}
-				};
-				var changes = getChanges(200, 200, stateObject);
+				var changes = getChanges(200, 200);
 				
 				var start = new Date().getTime();
 
-				historyPopup.create(changes);
+				var nothing = historyPopup.create(changes);
 
 				var end = new Date().getTime();
 				

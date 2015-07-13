@@ -1,4 +1,4 @@
-define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger", "stringReplacer", "textResources", "helperMethods"], function (classes, pedalBoardPopup, pedalRenderer, changeLogger, replacer, resources, helpers) {
+define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger", "stringReplacer", "textResources", "helperMethods", "changeTypes", "objectTypes"], function (classes, pedalBoardPopup, pedalRenderer, changeLogger, replacer, resources, helpers, changeTypes, objectTypes) {
 	var actions = {};
 		
 	actions.create = function () {
@@ -99,8 +99,8 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 	
 		/* ! Board Methods ! */
 		/* logging helper to reduce duplicate code */
-		function log(resource, params) {
-			manager.logger.log(replacer.replace(resource, params), manager.GetBoards());
+		function log(resource, params, changeType, boardId, objectType) {
+			manager.logger.log(replacer.replace(resource, params), changeType, boardId, objectType);
 		}
 		
 		/* Add a board! */
@@ -114,7 +114,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 				__pedalEls: [], /* we use this for caching the rendered pedals so that we can easily access them for removing/clearing */
 			};
 						
-			log(resources.change_AddBoard, name);
+			log(resources.change_AddBoard, name, changeTypes.addBoard, domboard.id, objectTypes.pedalboard);
 			callChangeCallbacks();
 			
 			return domboard;
@@ -129,9 +129,9 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 						
 			/* update the saved data object */
 			boards[boardId].data.Name = name;
-			
+
 			/* log this change to the history */
-			log(resources.change_RenamedBoard, [ oldName, name ]);
+			log(resources.change_RenamedBoard, [ oldName, name ], changeTypes.renamedBoard, boardId, objectTypes.pedalboard);
 			
 			/* call all of the change callbacks for this board id */
 			callChangeCallbacks(boardId);
@@ -148,18 +148,16 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			delete boards[boardId];
 			delete changeCallbacks[boardId];
 							
-			log(resources.change_DeleteBoard, name);
+			log(resources.change_DeleteBoard, name, changeTypes.deleteBoard, boardId, objectTypes.pedalboard);
 			callChangeCallbacks();
 		};
 		
 		/* Delete all of the boards */
 		manager.DeleteAll = function () {
-			manager.logger.dontLog(function () { /* don't log the individual changes here */
+			manager.logger.batch(resources.change_DeleteAllBoards, function () { /* log deleting each board as a batch */
 				for(var key in boards)
 					manager.Delete(key);
 			});
-			
-			log(resources.change_DeleteAllBoards);
 			
 			callChangeCallbacks();
 		};
@@ -177,7 +175,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			assertClientRectIsValid(clientRect);
 			
 			boards[boardId].clientRect = getClientRect(clientRect);
-			log(resources.change_MoveBoard, boards[boardId].data.Name);
+			log(resources.change_MoveBoard, boards[boardId].data.Name, changeTypes.moveBoard, boardId, objectTypes.pedalboard);
 			callChangeCallbacks(boardId);
 		}
 		
@@ -187,7 +185,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			assertClientRectIsValid(clientRect);
 			
 			boards[boardId].clientRect = getClientRect(clientRect);
-			log(resources.change_ResizeBoard, boards[boardId].data.Name);
+			log(resources.change_ResizeBoard, boards[boardId].data.Name, changeTypes.resizeBoard, boardId, objectTypes.pedalboard);
 			callChangeCallbacks(boardId);
 		}
 		
@@ -207,7 +205,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			boards[boardId].data.Add(pedal);
 			
 			/* log this change to the history */
-			log(resources.change_AddPedal, [ pedal.fullName, boards[boardId].data.Name ]);
+			log(resources.change_AddPedal, [ pedal.fullName, boards[boardId].data.Name ], changeTypes.addPedal, boardId, objectTypes.pedal);
 				
 			/* call all of the change callbacks for this board id */
 			callChangeCallbacks(boardId);
@@ -227,7 +225,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			var removedPedal = boards[boardId].data.Remove(pedalId);
 			
 			/* log this change to the history */
-			log(resources.change_RemovedPedal, [ removedPedal.fullName, boards[boardId].data.Name ]);
+			log(resources.change_RemovedPedal, [ removedPedal.fullName, boards[boardId].data.Name ], changeTypes.removedPedal, boardId, objectTypes.pedal);
 			
 			/* call all of the change callbacks for this board id */
 			callChangeCallbacks(boardId);
@@ -243,15 +241,27 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			var reorderedPedal = boards[boardId].data.Reorder(oldPedalIndex, newPedalIndex);
 			
 			/* log this change to the history */
-			var reorderLogResource = newPedalIndex === 0 
-				? resources.change_MovePedalToTop /* Move To Top */
-				: oldPedalIndex > newPedalIndex
-					? resources.change_MovePedalUp /* Move Up */
-					: newPedalIndex === (boards[boardId].data.pedals.length - 1)
-						? resources.change_MovePedalToBottom /* Move To Bottom */
-						: resources.change_MovePedalDown; /* Move Down */
+			var reorderLogResource;
+			var changeType;
 			
-			log(reorderLogResource, [ reorderedPedal.fullName, boards[boardId].data.Name ]);
+			if (newPedalIndex === 0 ) { /* To Top */
+				reorderLogResource = resources.change_MovePedalToTop;
+				changeType = changeTypes.movePedalToTop;
+			}
+			else if (oldPedalIndex > newPedalIndex) { /* Up */
+				reorderLogResource = resources.change_MovePedalUp;
+				changeType = changeTypes.movePedalUp;
+			}
+			else if (newPedalIndex === (boards[boardId].data.pedals.length - 1)) { /* To Bottom */
+				reorderLogResource = resources.change_MovePedalToBottom;
+				changeType = changeTypes.movePedalToBottom;
+			}
+			else { /* Down */
+				reorderLogResource = resources.change_MovePedalDown;
+				changeType = changeTypes.movePedalDown;
+			}
+			
+			log(reorderLogResource, [ reorderedPedal.fullName, boards[boardId].data.Name ], changeType, boardId, objectTypes.pedal);
 			
 			/* call all of the change callbacks for this board id */
 			callChangeCallbacks(boardId);
@@ -272,7 +282,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			boards[boardId].data.Clear();
 			
 			/* log this change to the history */
-			log(resources.change_ClearedBoard, boards[boardId].data.Name);
+			log(resources.change_ClearedBoard, boards[boardId].data.Name, changeTypes.clearedBoard, boardId, objectTypes.pedalboard);
 			
 			/* call all of the change callbacks for this board id */
 			callChangeCallbacks(boardId);

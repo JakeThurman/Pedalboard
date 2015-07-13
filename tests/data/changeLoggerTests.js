@@ -1,50 +1,20 @@
-define([ "changeLogger" ], function ( changeLogger ) {	
+define([ "changeLogger", "changeTypes", "objectTypes" ], function ( changeLogger, changeTypes, objectTypes ) {	
 	describe("data/changeLogger.js", function () {
 		var logger;
+		var log;
 		
 		beforeEach(function () {
 			logger = changeLogger.create();
+			
+			log = function (desc) {
+				logger.log(desc, -1, -1, -1);
+			};
 		});
 		
 	    describe("log", function () {
 		    it("should log changes", function () {
-				logger.log("a change was made");
+				logger.log("a change was made", changeTypes.addPedal, -1, objectTypes.pedalboard);
 				expect(logger.changes.length).toEqual(1);
-			});
-			
-			it("should be able to record objects in a second 'state' param", function () {
-				var state = { the: "current state" };
-				logger.log("a change was made with state", state);
-				expect(logger.changes.length).toEqual(1);
-				expect(logger.changes[0].state).toBe(state);
-			});
-			
-			it("should be able to record strings in a second 'state' param", function () {
-				var state = "the state";
-				logger.log("a change was made with state", state);
-				expect(logger.changes.length).toEqual(1);
-				expect(logger.changes[0].state).toBe(state);
-			});
-			
-			it("should be able to record arrays in a second 'state' param", function () {
-				var state = [1, 2, 3];
-				logger.log("a change was made with state", state);
-				expect(logger.changes.length).toEqual(1);
-				expect(logger.changes[0].state).toBe(state);
-			});
-			
-			it("should be able to record a function in a second 'state' param", function () {
-				var state = function () {};
-				logger.log("a change was made with state", state);
-				expect(logger.changes.length).toEqual(1);
-				expect(logger.changes[0].state).toBe(state);
-			});
-			
-			it("should allow state to be undefined", function () {
-				var state = function () {};
-				logger.log("a change was made without state");
-				expect(logger.changes.length).toEqual(1);
-				expect(logger.changes[0].state).toBeUndefined();
 			});
 			
 			it("should throw an exception if no description is provided", function () {
@@ -53,13 +23,48 @@ define([ "changeLogger" ], function ( changeLogger ) {
 				};
 				expect(thrower).toThrow();
 			});
+			
+			it("should throw an exception if @objType is not valid", function () {
+				var thrower = function () {
+					logger.log("test", -1, -1, "test");
+				};
+				expect(thrower).toThrow();
+			});
+			
+			it("should throw an exception if @changeType is not valid", function () {
+				var thrower = function () {
+					logger.log("test", "test", -1, -1);
+				};
+				expect(thrower).toThrow();
+			});
+			
+			it("should throw an exception if object Type is not undefined", function () {
+				var thrower = function () {
+					logger.log("test", 0, -1, void(0));
+				};
+				expect(thrower).toThrow();
+			});
+			
+			it("should throw an exception if @changeType is not undefined", function () {
+				var thrower = function () {
+					logger.log("test", void(0), -1, -1);
+				};
+				expect(thrower).toThrow();
+			});
+			
+			it("should throw an exception if @changeType and beyond are mission", function () {
+				var thrower = function () {
+					logger.log("test");
+				};
+				expect(thrower).toThrow();
+			});
 		});
 		
 		describe("batch", function () {
 			it("should log changes all into one batch", function () {
 				logger.batch("a test change", function () {
-					logger.log("a change was made");
-					logger.log("another change was made");					
+					log("a change was made");
+					log("another change was made");					
 				});
 				expect(logger.changes.length).toEqual(1);
 				expect(logger.changes[0].changes.length).toEqual(2);
@@ -67,10 +72,10 @@ define([ "changeLogger" ], function ( changeLogger ) {
 			
 			it("should be able to handle batches and changes at the same level", function () {
 				logger.batch("a test change", function () {
-					logger.log("a change was made");
-					logger.log("another change was made");					
+					log("a change was made");
+					log("another change was made");					
 				});
-				logger.log("top level change");
+				log("top level change");
 				
 				expect(logger.changes.length).toEqual(2);
 				expect(logger.changes[0].changes.length).toEqual(2);
@@ -79,10 +84,10 @@ define([ "changeLogger" ], function ( changeLogger ) {
 			it("should log changes into sub batches", function () {
 				logger.batch("top batch", function () {
 					logger.batch("a test change", function () {
-						logger.log("a change was made");
-						logger.log("another change was made");					
+						log("a change was made");
+						log("another change was made");					
 					});
-					logger.log("logged changes in a batch");
+					log("logged changes in a batch");
 				});
 				
 				expect(logger.changes.length).toEqual(1);
@@ -94,7 +99,7 @@ define([ "changeLogger" ], function ( changeLogger ) {
 				var hit = false;
 				var notThrower = function () {
 					logger.batch(function () {
-						logger.log("something");
+						log("something");
 						hit = true;
 					});
 				};
@@ -111,11 +116,11 @@ define([ "changeLogger" ], function ( changeLogger ) {
 		    it("should ignore all changes logged inside of a dontLog function", function () {
 				logger.dontLog(function () {
 					logger.batch("a test change", function () {
-						logger.log("a change was made");
-						logger.log("another change was made");					
+						log("a change was made");
+						log("another change was made");					
 					});
 					
-					logger.log("an outside the batch change was made");
+					log("an outside the batch change was made");
 				});
 				expect(logger.changes.length).toEqual(0);
 			});
@@ -136,9 +141,9 @@ define([ "changeLogger" ], function ( changeLogger ) {
 			
 			it("should allow for sub-functions to call dontLog as well without causing the enabled flag to get reset early", function () {
 				logger.dontLog(function () {
-					logger.log("top");
+					log("top");
 					logger.dontLog(function () {
-						logger.log("inner");
+						log("inner");
 					});
 				})
 				

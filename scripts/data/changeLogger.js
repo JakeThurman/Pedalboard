@@ -11,19 +11,25 @@ define([ "helperMethods" ], function ( helpers ) {
 		changeLogger.changes = initalChanges || [];
 		
 		/* classes */
-		var topChangeId = 0;
-		function Change(description, state) {
+		var topChangeId = changeLogger.changes.length;
+		function Change(description, changeType, objId, objType) {
+			/* Info */
 			this.description = description;
-			this.state = state;
+			this.changeType = changeType;
+			this.objId = objId;
+			this.objType = objType;
+			/* Data */
 			this.id = "change-" + topChangeId++;
 			this.isBatch = false;
 			this.timeStamp = new Date();
 		}
 		
-		var topBatchId = 0;
+		var topBatchId = changeLogger.changes.length;
 		function Batch(description, changes) {
+			/* Info */
 			this.description = description;
 			this.changes = changes || [];
+			/* Data */
 			this.id = "batch-" + topBatchId++;
 			this.isBatch = true;
 		}
@@ -39,13 +45,6 @@ define([ "helperMethods" ], function ( helpers ) {
 		   return batchIsRunning() 
 			   ? batchStack[batchStack.length - 1]
 			   : void(0); /* undefined */
-		}	
-		
-		/* help method */
-		function assertDesc(desc) {
-			/* Assert that the client gave us a description */
-			if (typeof desc !== "string") 
-				throw new Error("No description was provided to Log!");
 		}
 		
 		var enabled = true; /* Used by dontLog to temporarily disable logging */
@@ -61,7 +60,7 @@ define([ "helperMethods" ], function ( helpers ) {
 			/* Do nothing if there is nothing to do */
 			if (!enabled || helpers.isUndefined(batchChanges)) return;
 			
-		
+			
 			/* create a new batch */		
 			batchStack.push(new Batch(desc));
 
@@ -77,13 +76,22 @@ define([ "helperMethods" ], function ( helpers ) {
 				changeLogger.changes.push(batch);;
 		};
 		
-		changeLogger.log = function (desc, state) {
+		changeLogger.log = function (desc, changeType, objId, objType) {
 			/* If we are inside of a DontLog function, don't save any changes */
 			if (!enabled) return;
 			
-			assertDesc(desc);
+			/* Assert that the client gave us a description */
+			if (typeof desc !== "string") 
+				throw new Error("No description was provided to Log!");		
+			/* Make sure the changeType is a number */
+			if (changeType === "" || isNaN(new Number(changeType)))
+				throw new TypeError("@changeType should be a number from the changeInfo.js changeTypes \"enum\". Was: " + changeType);
+			/* Make sure the changeType is a number */
+			if (objType === "" || isNaN(new Number(objType)))
+				throw new TypeError("@objType should be a number from the changeInfo.js objectTypes \"enum\". Was: " + objType);
 			
-			var change = new Change(desc, state);
+			
+			var change = new Change(desc, changeType, objId, objType);
 		
 			if (batchIsRunning()) /* push change to the top batch */
 				getCurrentBatch().changes.push(change);
