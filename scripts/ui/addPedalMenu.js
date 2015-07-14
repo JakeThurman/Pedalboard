@@ -58,11 +58,11 @@ define([ "pedalDataAccess", "textResources", "helperMethods", "jquery", "jquery-
 					var results = $.ui.autocomplete.filter(allPedalNames, request.term);
 					response(results.slice(0, 10));
 				},
-				select: function (e, ui) {
+				/*select: function (e, ui) {
 					searchBox.val(ui.item.value);
 					save();
 					return false;
-				}
+				},*/
 			});
 		
 		var addIcon = $("<i>", { "class": "fa fa-plus float-right" })
