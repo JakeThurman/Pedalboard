@@ -17,6 +17,7 @@ define([ "pedalDataAccess", "textResources", "helperMethods", "jquery", "jquery-
 		
 		function save(isBlurAndSearchBox) {
 			var name = searchBox.val().trim().toLowerCase();
+			errorDisplay.remove();			
 			
 			if (name === "") {
 				if (isBlurAndSearchBox)
@@ -39,9 +40,9 @@ define([ "pedalDataAccess", "textResources", "helperMethods", "jquery", "jquery-
 			
 			if (helpers.isUndefined(newPedal)) /* The pedal name wasn't valid */
 				return;
-				
+			
+			searchBox.val("");
 			addPedalCallback(newPedal);
-			thisMenu.remove()
 		}
 		
 		var allPedalNames = helpers.select(Pedals.allPedals, function (pedal) {
@@ -56,6 +57,11 @@ define([ "pedalDataAccess", "textResources", "helperMethods", "jquery", "jquery-
 				source: function(request, response) {
 					var results = $.ui.autocomplete.filter(allPedalNames, request.term);
 					response(results.slice(0, 10));
+				},
+				select: function (e, ui) {
+					searchBox.val(ui.item.value);
+					save();
+					return false;
 				}
 			});
 		
