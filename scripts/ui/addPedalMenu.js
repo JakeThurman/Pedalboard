@@ -1,4 +1,6 @@
 define([ "pedalDataAccess", "textResources", "helperMethods", "jquery", "jquery-ui" ], function ( Pedals, resources, helpers, $ ) {
+	"use strict";
+	
 	var methods = {};
 	
 	methods.create = function (link, addPedalCallback) {

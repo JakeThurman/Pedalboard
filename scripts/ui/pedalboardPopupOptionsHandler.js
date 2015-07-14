@@ -1,5 +1,7 @@
 define(["_OptionMenu", "jquery", "addPedalMenu", "textResources", "reportTypeMenu", "compareToMenu"], function (_OptionMenu, $, addPedalMenu, resources, reportTypeMenu, compareToMenu) {
-    var methods = {};
+   "use strict";
+
+	var methods = {};
 
 	/*
 	 *  @id:                the id of the board,

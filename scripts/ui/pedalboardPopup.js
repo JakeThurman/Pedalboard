@@ -1,4 +1,6 @@
 define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOptionsHandler", "reporter", "jquery-ui"], function (_Popup, $, resources, pedalRenderer, pedalboardPopupOptionsHandler, reporter) {
+	"use strict";
+	
 	var methods = {};
 	
 	/*Make sure the window nextNewPedalBoardIdoardId value is setup*/
