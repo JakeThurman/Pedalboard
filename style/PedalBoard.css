@@ -75,6 +75,14 @@
 	background-color: rgb(249, 249, 249);
 }
 
+.single-pedal-data:nth-child(odd):hover {
+	background-color: rgb(233, 233, 233);
+}
+
+.single-pedal-data:nth-child(even):hover {
+	background-color: rgb(244, 244, 244);
+}
+
 .single-pedal-data:not(:first-child) {
 	border-top: 1px solid rgb(221, 221, 221);
 }
