@@ -60,8 +60,10 @@ define(["_OptionMenu", "jquery", "addPedalMenu", "textResources", "reportTypeMen
 			useReportSection = true;
 		}
 		/* if there are multiple boards with any pedals, add the compare button */
-		if (manager.Multiple(function (pedalboard) { return manager.AnyPedals(pedalboard.id) }))
+		if (manager.Multiple(function (pedalboard) { return manager.AnyPedals(pedalboard.id) })) {
 			compareButton.appendTo(reportSection);
+			useReportSection = true;
+		}
 		
 		/* delete section */
 		var deleteSection = $("<div>", { "class": "section" });
