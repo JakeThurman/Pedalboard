@@ -142,20 +142,21 @@ function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDa
 			.append(canvas);
 		
 		var myChart;
+		var myLegend;
 		var blocker = $("<div>", { "class": "screen-block" });
 		
 		/* append everything to the body */
 		blocker.add(reportContainer).add(title)
 			.appendTo(document.body)
 		/* when one of them gets clicked close it all */
-			.click(function () {
-				blocker.add(reportContainer).add(title).remove();
+			.add(myLegend).click(function () {
+				blocker.add(reportContainer).add(title).add(myLegend).remove();
 				myChart.destroy();
 			});
 					
 		myChart = new Chart(canvas.getContext("2d")).Doughnut(data, type.options);
 		
-		addLegend(myChart, reportContainer);
+		myLegend = addLegend(myChart, reportContainer);
 	}
 	
 	methods.compare = function (boardA, boardB, type) {

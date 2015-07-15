@@ -34,7 +34,6 @@ define(["_OptionMenu", "jquery", "addPedalMenu", "textResources", "reportTypeMen
 					manager.Clear(id);
 			});
 		
-		/* These buttons ARE dead code, but are still here to be placeholders for the coming report feature  */
 		var reportButton = $("<div>", { "class": "section-top" })
 			.text(resources.boardReportButton)
 			.click(function () {
