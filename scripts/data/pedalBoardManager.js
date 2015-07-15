@@ -164,9 +164,9 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 		
 		/* Board-UI logging methods */
 		/*  clientRect = (vanilla js element).getBoundingClientRect(); */
-		function assertClientRectIsValid(clientRect) {
-			if (!(clientRect instanceof ClientRect))
-				throw new TypeError("clientRect is not a ClientRect. Try using (vanilla js element).getBoundingClientRect()") 
+		function assertClientRectIsValid(clientRect) {		
+			if (!(window.ClientRect && clientRect instanceof window.ClientRect) && !(window.DOMRect && clientRect instanceof window.DOMRect))
+				throw new TypeError("@clientRect is not a valid. Try using (vanilla js element).getBoundingClientRect()");
 		}
 		
 		/* log a moved board */

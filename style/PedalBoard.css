@@ -12,6 +12,7 @@
     z-index: 91;
 	margin: 1px;
 	min-width: 290px;
+	height: auto !important; /* firefox bug-fix */
 }
 
 .output-box > .header > .fa-bars {
