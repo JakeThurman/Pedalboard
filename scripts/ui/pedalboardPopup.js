@@ -58,11 +58,13 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 					manager.Resize(popup.id, popup.el.get(0).getBoundingClientRect());
 				}
 			});
+		var justDeleted = false;
 		
 		var deleteAction  = function( event, ui ) {
 			var pedalId = pedalRenderer.getId(ui.draggable);
 			ui.draggable.remove();
 			manager.RemovePedal(pedalId, popup.id);
+			justDeleted = true;
 		};
 
 		var trashCan = $("<i>", { "class": "fa fa-trash" });
@@ -89,6 +91,11 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 				/* remove the delete pedal zone */
 				trashCan.remove();
 				
+				/* If the pedal was just deleted, don't try to reorder - IT'S GONE! */
+				if (justDeleted) {
+					justDeleted = false;
+					return;
+				}
 				/* the new index is equal to the number of pedals previous to this */
 				manager.ReorderPedal(originalIndex, ui.item.prevAll().length, popup.id);
 			},
