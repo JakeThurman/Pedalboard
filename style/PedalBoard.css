@@ -333,7 +333,7 @@ button:hover {
 	border-color: #ccc;
 }
 
-*:focus {
+input:focus {
 	text-decoration: none;
 	border-color: #51a7e8;
 	outline: none;
