@@ -94,21 +94,7 @@ function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDa
 			chartToGet.draw();
 		});
 		
-		var $legendHolder = $(legendHolder)
-			.appendTo(document.body);
-		
-		function posLegend() {
-			$legendHolder.position({
-				my: "center center",
-				at: "right center",
-				of: chartContainer,
-			});
-		}
-		posLegend();
-		
-		$(window).resize(posLegend);
-		
-		return $legendHolder;
+		return $(legendHolder).appendTo(chartContainer);
 	}
 	
 	/* ! Public Functions ! */
