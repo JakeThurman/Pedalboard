@@ -1,4 +1,4 @@
-define(["_OptionMenu", "jquery", "addPedalMenu", "textResources", "reportTypeMenu", "compareToMenu"], function (_OptionMenu, $, addPedalMenu, resources, reportTypeMenu, compareToMenu) {
+define(["_OptionMenu", "jquery", "textResources", "reportTypeMenu", "compareToMenu"], function (_OptionMenu, $, resources, reportTypeMenu, compareToMenu) {
    "use strict";
 
 	var methods = {};
@@ -6,12 +6,12 @@ define(["_OptionMenu", "jquery", "addPedalMenu", "textResources", "reportTypeMen
 	/*
 	 *  @id:                the id of the board,
 	 *  @menubutton:        $object of the menu button,
-	 *  @pedalContainer:    the container to append new pedals,
 	 *  @manager:           the pedalBoardManager.js instance to add the pedal to.
+	 *  @addPedals:         calling this function should open an addPedalsMenu modal
 	 *  @startReport:       calling this function should start a report on it with the given type paramCompare
 	 *  @startCompare:      calling this function should start a comparative report of the given type against board with the given boardId
 	 */
-	methods.handle = function (id, menuButton, pedalContainer, manager, startReport, startCompare) {	
+	methods.handle = function (id, menuButton, manager, addPedals, startReport, startCompare) {	
 		var deleteLink = $("<div>")
 			.text(resources.deletePedalBoard)
 			.click(function () {
@@ -21,11 +21,7 @@ define(["_OptionMenu", "jquery", "addPedalMenu", "textResources", "reportTypeMen
 		
 		var addPedal = $("<div>")
 			.text(resources.addPedalToBoard)
-			.click(function () {
-				addPedalMenu.create(menuButton, function (pedal) {
-					manager.AddPedal(pedal, id, pedalContainer);
-				});
-			});
+			.click(addPedals);
 				
 		var clearLink = $("<div>")
 			.text(resources.clearPedalsFromBoard)

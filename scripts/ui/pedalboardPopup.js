@@ -1,4 +1,4 @@
-define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOptionsHandler", "reporter", "jquery-ui"], function (_Popup, $, resources, pedalRenderer, pedalboardPopupOptionsHandler, reporter) {
+define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOptionsHandler", "reporter", "addPedalMenu", "jquery-ui"], function (_Popup, $, resources, pedalRenderer, pedalboardPopupOptionsHandler, reporter, addPedalMenu) {
 	"use strict";
 	
 	var methods = {};
@@ -14,9 +14,22 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 	 */
 	methods.create =  function (title, appendTo, manager) {		
 		var content = $("<div>", { "class": "pedal-board display-none" });
+			
+		function startAddingPedals() {
+			return addPedalMenu.create(menuButton, function (pedal) {
+				manager.AddPedal(pedal, popup.id, content);
+			});
+		}
 		
 		var helpText = $("<div>", { "class": "help-text display-none" })
 			.text(resources.pedalBoardDragHelpText);
+			
+		var addPedalsQuickIcon = $("<i>", { "class": "fa fa-plus float-left" })
+			.prependTo(helpText)
+			.click(function () {
+				startAddingPedals()
+					.addClass("quick-add-pedals-menu");
+			});
 		
 		var menuButton = $("<i>", { "class": "fa fa-bars" });
 					 
@@ -83,10 +96,11 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 		});
 		
 		menuButton.click(function () {			 
-			pedalboardPopupOptionsHandler.handle(popup.id, menuButton, content, manager, 
-				function (reportType) { /* startReport */
+			pedalboardPopupOptionsHandler.handle(popup.id, menuButton, manager, 
+				startAddingPedals, /* @addPedals */
+				function (reportType) { /* @startReport */
 					reporter.report(manager.GetBoard(popup.id).data, reportType);
-				}, function (compareBoardId, compareType) { /* startCompare */
+				}, function (compareBoardId, compareType) { /* @startCompare */
 					reporter.compare(manager.GetBoard(popup.id).data, manager.GetBoard(compareBoardId).data, compareType);
 				});
 		});
@@ -100,9 +114,7 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 		var addFirstPedalHelp = $("<div>", { "class": "no-pedals-help-text non-sortable" })
 			.text(resources.pedalboardNoPedalsHelpText)
 			.insertBefore(content)
-			.click(function () {
-				menuButton.click();
-			});
+			.click(startAddingPedals);
 		
 		$("<i>", { "class": "fa fa-level-up float-right" })
 			.appendTo(addFirstPedalHelp);
@@ -120,9 +132,7 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 					.addClass("display-none");
 				
 				addFirstPedalHelp.insertBefore(content)
-					.click(function () {
-						menuButton.click();
-					});
+					.click(startAddingPedals);
 			}
 		});
 		

@@ -4,15 +4,15 @@ define([ "pedalDataAccess", "textResources", "helperMethods", "jquery", "jquery-
 	var methods = {};
 	
 	methods.create = function (link, addPedalCallback) {
-		var errorDisplay = $("<div>", { "class": "error-display" })
-			.click(function () {
-				searchBox.focus();
-			});
+		var errorDisplay = $("<div>", { "class": "error-display" });
 			
 		function error (msg) {
 			errorDisplay
 				.prependTo(thisMenu)
-				.text(msg);		
+				.text(msg)
+				.click(function () {
+					searchBox.focus();
+				});		
 		}
 		
 		function save(isBlurAndSearchBox) {

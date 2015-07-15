@@ -483,17 +483,40 @@ a, a:visited {
 	font-size: 1.5em;
 }
 
-.fa-plus::before {
+.quick-add-pedals-menu.options-menu{
+	bottom: -7px;
+	left: -8px;
+	top: auto !important;
+	right: auto !important;
+}
+
+.quick-add-pedals-menu.options-menu::before {
+	display: none;
+}
+
+.header .fa-plus::before {
 	vertical-align: middle;
 	font-size: 1.5em;
 	line-height: 36px;
 }
 
-.fa-plus {
+.header .fa-plus {
 	width: 36px;
+}
+
+.help-text > .fa-plus {
+	width: 16px;
+}
+
+.help-text > .fa-plus::before {
+	font-size: 1.3em;
+}
+
+.fa-plus {
     text-align: center;
     color: #bbb;
     transition: color .2s ease;
+	cursor: pointer;
 }
 
 .fa-plus:hover {
