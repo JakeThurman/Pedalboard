@@ -452,6 +452,12 @@ a, a:visited {
 	cursor: pointer;
 }
 
+.options-menu > .error-display {
+	font-size: 1.1em !important;
+	margin-top: 4px;
+	text-align: right;
+}
+
 .options-menu > *:not(.no-hover):not(.section):hover, 
 .options-menu > .section > *:not(.no-hover):hover {
     background-color: #4183c4;

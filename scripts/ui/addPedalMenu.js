@@ -6,9 +6,9 @@ define([ "pedalDataAccess", "textResources", "helperMethods", "jquery", "jquery-
 	methods.create = function (link, addPedalCallback) {
 		var errorDisplay = $("<div>", { "class": "error-display" });
 			
-		function error (msg) {
+		function error(msg) {
 			errorDisplay
-				.prependTo(thisMenu)
+				.appendTo(thisMenu)
 				.text(msg)
 				.click(function () {
 					searchBox.focus();
