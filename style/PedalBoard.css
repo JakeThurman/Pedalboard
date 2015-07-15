@@ -119,7 +119,10 @@ header.fixed {
 	left: 0;
 	width: 100%;
 	background-color: #5D804D;
-	transition: height .2s ease
+	transition: height .2s ease;
+	-webkit-transition: height .2s ease;
+	-moz-transition: height .2s ease;
+	-o-transition: height .2s ease;
 }
 
 @media (min-width: 700px) {
@@ -214,7 +217,10 @@ header.fixed {
 		position:absolute;
 		z-index: 999;
 		opacity: 0;
-		transition:opacity 0.2s ease-out; 
+		transition: opacity 0.2s ease-out; 
+		-webkit-transition: opacity .2s ease;
+		-moz-transition: opacity .2s ease;
+		-o-transition: opacity .2s ease;
 		content: attr(data-tooltip); 
 		font-size: 1.1em;
 		border-radius: 5px;
@@ -237,15 +243,24 @@ header.fixed {
 	right: 2px;
 	position: fixed;
 	transition: top .2s ease;
+	-webkit-transition: top .2s ease;
+	-moz-transition: top .2s ease;
+	-o-transition: top .2s ease;
 }
 
 .options-menu.main-page-menu::before {
 	transition: right .2s ease;
+	-webkit-transition: right .2s ease;
+	-moz-transition: right .2s ease;
+	-o-transition: right .2s ease;
 }
 
 header > #site-title ,
 .menu-icon#page-main-menu {
 	transition: font-size .2s ease, line-height .2s ease;
+	-webkit-transition: font-size .2s ease, line-height .2s ease;
+	-moz-transition: font-size .2s ease, line-height .2s ease;
+	-o-transition: font-size .2s ease, line-height .2s ease;
 }
 
 .menu-icon#page-main-menu {
@@ -522,6 +537,9 @@ a, a:visited {
     text-align: center;
     color: #bbb;
     transition: color .2s ease;
+	-webkit-transition: color .2s ease;
+	-moz-transition: color .2s ease;
+	-o-transition: color .2s ease;
 	cursor: pointer;
 }
 
@@ -652,6 +670,9 @@ a, a:visited {
 	text-align: center;
     color: #fff;
 	transition: font-size .2s ease; 
+	-webkit-transition: font-size .2s ease;
+	-moz-transition: font-size .2s ease;
+	-o-transition: font-size .2s ease;
     overflow-x: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -669,7 +690,7 @@ a, a:visited {
 
 /* report-legend */
 .report-legend > ul {
-	background-color: #e9e9e9;
+	background-color: #F7F7F7;
 	padding: 9px;
     margin: 0;
 	border-radius: 5px;
@@ -685,14 +706,10 @@ a, a:visited {
 	padding: 2px 8px 2px 28px;
 	font-size: 14px;
 	cursor: default;
-	-webkit-transition: background-color 200ms ease-in-out;
-	-moz-transition: background-color 200ms ease-in-out;
-	-o-transition: background-color 200ms ease-in-out;
-	transition: background-color 200ms ease-in-out;
 }
 
 .report-legend li:hover {
-	background-color: #fafafa;
+	background-color: #FFFFFF;
 }
 
 .report-legend li span {
