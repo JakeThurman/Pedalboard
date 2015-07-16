@@ -19,7 +19,7 @@ define({
 	pedalboardNoPedalsHelpText: "Add The First Pedal To This Board!",
 	
 	/* change log resources */
-	change_AddBoard: "Added pedalboard \"{0}\"",
+	change_AddBoard: "Created pedalboard \"{0}\"",
 	change_RenamedBoard: "Renamed pedalboard \"{0}\" to \"{1}\"",
 	change_DeleteBoard: "Deleted pedalboard \"{0}\"",
 	change_DeleteAllBoards: "Deleted all pedalboards",
