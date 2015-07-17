@@ -11,17 +11,17 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 		/* Where all of the managed boards are stored */
 		var boards = {};
 		
-		/* separate from boards so that we can keep it more light weight for configuration logs */
+		/* Separate from boards so that we can keep it more light weight for configuration logs */
 		var changeCallbacks = {};
 		var allBoardChangeCallbacks = [];
 		
-		/* validation helper */
+		/* Validation helper for board ids */
 		function assertBoardIdExists(id) {
 			if (!boards[id]) 
 				throw new Error("A board with id of: \"" + id + "\" does not exist");
 		}
 		
-		/* partial copy helper */
+		/* Partial copy helper for client rects (we don't want all of the properties) */
 		function getClientRect(fullRect) {
 			return {
 				left: fullRect.left,
@@ -31,7 +31,16 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 		}
 			
 		/* !Data Methods! */
-		/*Get the board with id of @boardId */
+		/*
+		 * Get the board with id of @boardId
+		 *
+		 * @boardId: The id of the pedalboard to check
+		 * @returns: [Object]: {
+		 *                        data: [PedalboardClasses.PedalBoard],
+		 *                        clientRect: [Object] : {  left: "10px", top: "10px", width: "300px" },
+		 *                        id: @boardId,
+		 *                     }
+		 */
 		manager.GetBoard = function (boardId) {
 			var board = boards[boardId];
 			
@@ -54,15 +63,14 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 			return thisBoard;
 		};
 		
-		/* Get an array of all of the board data */
 		/*
-		 * Are there any boards [where func]?
+		 * Get an array of all of the board data
 		 *
-		 * @returns: [Object] : {
-		 *                        data: [PedalboardClasses.PedalBoard],
-		 *                        clientRect: [Object] : {  left: "10px", top: "10px", width: "300px",  },
-		 *                        id: board.id,
-		 *                      }
+		 * @returns: [Array<Object>] : [{
+		 *                                data: [PedalboardClasses.PedalBoard],
+		 *                                clientRect: [Object] : {  left: "10px", top: "10px", width: "300px" },
+		 *                                id: (boardId value),
+		 *                             }]
 		 */
 		manager.GetBoards = function () {
 			var out = [];
