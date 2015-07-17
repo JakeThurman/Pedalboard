@@ -1,11 +1,12 @@
-define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger", "stringReplacer", "textResources", "helperMethods", "changeTypes", "objectTypes"], function (classes, pedalBoardPopup, pedalRenderer, changeLogger, replacer, resources, helpers, changeTypes, objectTypes) {
+define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer", "textResources", "helperMethods", "changeTypes", "objectTypes"], function (classes, pedalBoardPopup, pedalRenderer, replacer, resources, helpers, changeTypes, objectTypes) {
 	var actions = {};
 		
-	actions.create = function () {
+	actions.create = function (logger) {
 		var manager = {};
-			
-		/* create a logger instance */
-		manager.logger = changeLogger.create();
+		
+		/* Assert that the logger is valid */
+		if (!logger.changes || !logger.log || !logger.batch)
+			throw new TypeError("Logger should be a changeLogger object");
 		
 		/* Where all of the managed boards are stored */
 		var boards = {};
@@ -129,7 +130,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 		/* ! Board Methods ! */
 		/* Logging helper to reduce duplicate code */
 		function log(resource, params, changeType, boardId, objectType) {
-			manager.logger.log(replacer.replace(resource, params), changeType, boardId, objectType);
+			logger.log(replacer.replace(resource, params), changeType, boardId, objectType);
 		}
 		
 		/*
@@ -197,7 +198,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 		
 		/* Delete all fo the boards on the page. */
 		manager.DeleteAll = function () {
-			manager.logger.batch(resources.change_DeleteAllBoards, function () { /* log deleting each board as a batch */
+			logger.batch(resources.change_DeleteAllBoards, function () { /* log deleting each board as a batch */
 				for(var key in boards)
 					manager.Delete(key);
 			});
@@ -366,7 +367,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 		 * @boardId: [OPTIONAL] The id of the pedalboard to call changes for -> If not provided, only call globally scoped changes
 		 */
 		function callChangeCallbacks(boardId) {	
-			var change = manager.logger.changes[manager.logger.changes.length - 1];
+			var change = logger.changes[logger.changes.length - 1];
 			
 			if (!helpers.isUndefined(boardId)) {
 				helpers.forEach(changeCallbacks[boardId], function (callback) {
@@ -399,6 +400,37 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			
 			changeCallbacks[boardId] = changeCallbacks[boardId] || [];
 			changeCallbacks[boardId].push(func);
+		};
+		
+		/*
+		 * Import function used for restore 
+		 * 
+		 * @boards:           The manager.GetBoards() obejct to be imported.
+		 * @contentContainer: JQuery $object of the container for the imported pedal boards.
+		 */
+		manager.Import = function (boards, contentContainer) {
+			if (!helpers.isArray(boards))
+				throw new TypeError("Boards is not valid");
+				
+			/* Create a new board for each, and add all of its pedals */
+			helpers.forEach(boards, function(board) {
+				if (!board || !board.data || !board.clientRect || !board.data.pedals || !board.data.Name)
+					throw new TypeError("The board is not valid, it should be an object from manager.GetBoard([id])");
+				
+				/* Add the board */
+				var domBoard = manager.Add(board.data.Name, contentContainer);
+				
+				/* TODO: don't hard code this lookup for the content region */
+				var pedalContainer = domBoard.el.find(".pedal-board");
+				
+				/* Place and size the popup as it priviously was */
+				domBoard.el.css(board.clientRect);
+				
+				/* Add each of the pedals to the board */
+				helpers.forEach(board.data.pedals, function (pedal) {
+					manager.AddPedal(pedal, domBoard.id, pedalContainer);
+				});
+			})
 		};
         
         return manager;
