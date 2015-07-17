@@ -6,8 +6,8 @@ define([ "historyPopup", "changeLogger", "jquery" ], function ( historyPopup, ch
 			
 		beforeEach(function () {
 			var logger = changeLogger.create();
-			var log = function (desc) {
-				logger.log(desc, -1, -1, -1);
+			var log = function () {
+				logger.log(-1, -1, -1);
 			};
 			
 			log("1");
@@ -96,7 +96,7 @@ define([ "historyPopup", "changeLogger", "jquery" ], function ( historyPopup, ch
 				for (var b = 0; b < batches; b++) {
 					logger.batch("batch number " + b, function () {
 						for(var c = 0; c < changePerBatch; c++) {
-							logger.log("change number " +  c, -1, -1, -1);
+							logger.log(-1, -1, -1);
 						}
 					});
 				}
@@ -130,7 +130,8 @@ define([ "historyPopup", "changeLogger", "jquery" ], function ( historyPopup, ch
 				expect(contains(desc)).toBe(false);
 				
 				/* add it */
-				hPopup.addChange({ 
+				hPopup.addChange({
+					isBatch: true, /* only batches have a non generated description */
 					description: desc,
 					timeStamp: new Date(),
 				});

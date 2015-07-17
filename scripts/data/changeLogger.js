@@ -12,12 +12,14 @@ define([ "helperMethods" ], function ( helpers ) {
 		
 		/* classes */
 		var topChangeId = changeLogger.changes.length;
-		function Change(description, changeType, objId, objType) {
+		function Change(changeType, objType, objId, objName, otherName) {
 			/* Info */
-			this.description = description;
 			this.changeType = changeType;
 			this.objId = objId;
 			this.objType = objType;
+			/* Resource information helper */
+			this.objName = objName;
+			this.otherName = otherName;
 			/* Data */
 			this.id = "change-" + topChangeId++;
 			this.isBatch = false;
@@ -44,7 +46,7 @@ define([ "helperMethods" ], function ( helpers ) {
 		function getCurrentBatch() {
 		   return batchIsRunning() 
 			   ? batchStack[batchStack.length - 1]
-			   : void(0); /* undefined */
+			   : changeLogger;
 		}
 		
 		var enabled = true; /* Used by dontLog to temporarily disable logging */
@@ -60,29 +62,23 @@ define([ "helperMethods" ], function ( helpers ) {
 			/* Do nothing if there is nothing to do */
 			if (!enabled || helpers.isUndefined(batchChanges)) return;
 			
-			
-			/* create a new batch */		
+			/* Create a new batch */		
 			batchStack.push(new Batch(desc));
 
-			/* run the code that will put changes inside this batch */
+			/* Run the code that will put changes inside this batch */
 			batchChanges();
 					
-			/* remove the top batch since it's now done */
+			/* Remove the top batch since it's now done */
 			var batch = batchStack.pop();
 			
-			if (batchIsRunning()) /* push this batch as a change in the now top batch */
-				getCurrentBatch().changes.push(batch);
-			else /* Otherwise, push this batch as a complete change */
-				changeLogger.changes.push(batch);;
+			/* Push this batch as a change in the top batch/top level. */
+			getCurrentBatch().changes.push(batch);
 		};
 		
-		changeLogger.log = function (desc, changeType, objId, objType) {
+		changeLogger.log = function (changeType, objType, objId, objName, otherName) {
 			/* If we are inside of a DontLog function, don't save any changes */
 			if (!enabled) return;
 			
-			/* Assert that the client gave us a description */
-			if (typeof desc !== "string") 
-				throw new Error("No description was provided to Log!");		
 			/* Make sure the changeType is a number */
 			if (changeType === "" || isNaN(new Number(changeType)))
 				throw new TypeError("@changeType should be a number from the changeInfo.js changeTypes \"enum\". Was: " + changeType);
@@ -90,13 +86,11 @@ define([ "helperMethods" ], function ( helpers ) {
 			if (objType === "" || isNaN(new Number(objType)))
 				throw new TypeError("@objType should be a number from the changeInfo.js objectTypes \"enum\". Was: " + objType);
 			
-			
-			var change = new Change(desc, changeType, objId, objType);
+			/* Create a change object */
+			var change = new Change(changeType, objType, objId, objName, otherName);
 		
-			if (batchIsRunning()) /* push change to the top batch */
-				getCurrentBatch().changes.push(change);
-			else /* Otherwise, push this a individual change */
-				changeLogger.changes.push(change);
+			/* Push this change as a change in the top batch/top level. */
+			getCurrentBatch().changes.push(change);
 		};
 		
 		changeLogger.dontLog = function (func) {

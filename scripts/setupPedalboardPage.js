@@ -13,7 +13,7 @@ require(["pedalBoardManager", "jquery", "mainPageMenuHandler", "pedalBoardStorag
 	logger.batch(resources.restoreBatchName, function () {
 		manager.Import(pedalBoardStorage.Load(), mainContentContainer);
 	});
-	
+		
 	/* Setup the main page menu click handler */
    	pageMenuButton.click(function () {			
    	    mainPageMenuHandler.handle(pageMenuButton, mainContentContainer, manager, 

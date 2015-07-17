@@ -29,7 +29,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 				width: fullRect.width,
 			};
 		}
-			
+		
 		/* !Data Methods! */
 		/*
 		 * Get the board with id of @boardId
@@ -135,17 +135,14 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 			return board ? board.data.pedals.length > 1 : false; /* If there is no board with this id return false */
 		};
 	
-		/* ! Board Methods ! */
-		/* Logging helper to reduce duplicate code */
-		function log(resource, params, changeType, boardId, objectType) {
-			logger.log(replacer.replace(resource, params), changeType, boardId, objectType);
-		}
-		
+		/* ! Board Methods ! */		
 		/*
 		 * Add a pedalboard
 		 *
 		 * @name:             The name for the pedalboard
 		 * @contentConatiner: The jquery element to make the parent of the pedalboard dom object
+		 *
+		 * @returns:          JQuery $object for the rendered (new) pedalboard
 		 */
 		manager.Add = function (name, contentConatiner) {	
 			var domboard = pedalBoardPopup.create(name, contentConatiner, manager);
@@ -157,7 +154,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 				__pedalEls: [], /* we use this for caching the rendered pedals so that we can easily access them for removing/clearing */
 			};
 						
-			log(resources.change_AddBoard, name, changeTypes.addBoard, domboard.id, objectTypes.pedalboard);
+			logger.log(changeTypes.addBoard, objectTypes.pedalboard, domboard.id, name);
 			callChangeCallbacks();
 			
 			return domboard;
@@ -179,7 +176,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 			boards[boardId].data.Name = name;
 
 			/* log this change to the history */
-			log(resources.change_RenamedBoard, [ oldName, name ], changeTypes.renamedBoard, boardId, objectTypes.pedalboard);
+			logger.log(changeTypes.renamedBoard, objectTypes.pedalboard, boardId, name, oldName);
 			
 			/* call all of the change callbacks for this board id */
 			callChangeCallbacks(boardId);
@@ -200,7 +197,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 			delete boards[boardId];
 			delete changeCallbacks[boardId];
 							
-			log(resources.change_DeleteBoard, name, changeTypes.deleteBoard, boardId, objectTypes.pedalboard);
+			logger.log(changeTypes.deleteBoard, objectTypes.pedalboard, boardId, name);
 			callChangeCallbacks();
 		};
 		
@@ -230,9 +227,9 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 			assertClientRectIsValid(clientRect);
 			
 			boards[boardId].clientRect = getClientRect(clientRect);
-			log(resources.change_MoveBoard, boards[boardId].data.Name, changeTypes.moveBoard, boardId, objectTypes.pedalboard);
+			logger.log(changeTypes.moveBoard, objectTypes.pedalboard, boardId, boards[boardId].data.Name);
 			callChangeCallbacks(boardId);
-		}
+		};
 		
 		/*
 		 * Log a board as resized
@@ -245,9 +242,34 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 			assertClientRectIsValid(clientRect);
 			
 			boards[boardId].clientRect = getClientRect(clientRect);
-			log(resources.change_ResizeBoard, boards[boardId].data.Name, changeTypes.resizeBoard, boardId, objectTypes.pedalboard);
+			logger.log(changeTypes.resizeBoard, objectTypes.pedalboard, boardId, boards[boardId].data.Name);
 			callChangeCallbacks(boardId);
-		}
+		};
+		
+		/*
+		 * Clear the board with id of @boardId of all pedals
+		 *
+		 * @boardId: The id of the pedalboard to clear all pedals from
+		 */
+		manager.Clear = function (boardId) {
+			assertBoardIdExists(boardId);			
+			
+			/*remove the pedals from the dom */
+			helpers.forEach(boards[boardId].__pedalEls, function (pedalEl) { 
+			    pedalEl.remove();
+			});	
+			/* reset the dom container */
+			boards[boardId].__pedalEls = []; 
+			
+			/* clear the data pedals from the data board */
+			boards[boardId].data.Clear();
+			
+			/* log this change to the history */
+			logger.log(changeTypes.clearedBoard, objectTypes.pedalboard, boardId, boards[boardId].data.Name);
+			
+			/* call all of the change callbacks for this board id */
+			callChangeCallbacks(boardId);
+		};
 		
 		/* ! Pedal Methods ! */		 
 		/*
@@ -257,6 +279,8 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 		 * @pedal:                     The pedal object to add to the board
 		 * @boardId:                   The id of the pedalboard to add the pedal to
 		 * @pedalContainer: [OPTIONAL] If provided, The jquery object to append the rendered pedal to
+		 *
+		 * @returns:                   JQuery $object of the rendered pedal.
 		 */
 		manager.AddPedal = function (pedal, boardId, pedalContainer) {
 			assertBoardIdExists(boardId);
@@ -269,7 +293,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 			boards[boardId].data.Add(pedal);
 			
 			/* log this change to the history */
-			log(resources.change_AddPedal, [ pedal.fullName, boards[boardId].data.Name ], changeTypes.addPedal, boardId, objectTypes.pedal);
+			logger.log(changeTypes.addPedal, objectTypes.pedal, boardId, pedal.fullName, boards[boardId].data.Name);
 				
 			/* call all of the change callbacks for this board id */
 			callChangeCallbacks(boardId);
@@ -295,7 +319,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 			var removedPedal = boards[boardId].data.Remove(pedalId);
 			
 			/* log this change to the history */
-			log(resources.change_RemovedPedal, [ removedPedal.fullName, boards[boardId].data.Name ], changeTypes.removedPedal, boardId, objectTypes.pedal);
+			logger.log(changeTypes.removedPedal, objectTypes.pedal, boardId, removedPedal.fullName, boards[boardId].data.Name);
 			
 			/* call all of the change callbacks for this board id */
 			callChangeCallbacks(boardId);
@@ -317,52 +341,15 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 			var reorderedPedal = boards[boardId].data.Reorder(oldPedalIndex, newPedalIndex);
 			
 			/* log this change to the history */
-			var reorderLogResource;
-			var changeType;
+			var changeType = newPedalIndex === 0
+				? changeTypes.movePedalToTop /* To Top */
+				: oldPedalIndex > newPedalIndex
+					? changeTypes.movePedalUp /* Up */
+					: newPedalIndex === (boards[boardId].data.pedals.length - 1)
+						? changeTypes.movePedalToBottom /* To Bottom */
+						: changeTypes.movePedalDown /* Down */
 			
-			if (newPedalIndex === 0 ) { /* To Top */
-				reorderLogResource = resources.change_MovePedalToTop;
-				changeType = changeTypes.movePedalToTop;
-			}
-			else if (oldPedalIndex > newPedalIndex) { /* Up */
-				reorderLogResource = resources.change_MovePedalUp;
-				changeType = changeTypes.movePedalUp;
-			}
-			else if (newPedalIndex === (boards[boardId].data.pedals.length - 1)) { /* To Bottom */
-				reorderLogResource = resources.change_MovePedalToBottom;
-				changeType = changeTypes.movePedalToBottom;
-			}
-			else { /* Down */
-				reorderLogResource = resources.change_MovePedalDown;
-				changeType = changeTypes.movePedalDown;
-			}
-			
-			log(reorderLogResource, [ reorderedPedal.fullName, boards[boardId].data.Name ], changeType, boardId, objectTypes.pedal);
-			
-			/* call all of the change callbacks for this board id */
-			callChangeCallbacks(boardId);
-		};
-		
-		/*
-		 * Clear the board with id of @boardId of all pedals
-		 *
-		 * @boardId: The id of the pedalboard to clear all pedals from
-		 */
-		manager.Clear = function (boardId) {
-			assertBoardIdExists(boardId);			
-			
-			/*remove the pedals from the dom */
-			helpers.forEach(boards[boardId].__pedalEls, function (pedalEl) { 
-			    pedalEl.remove();
-			});	
-			/* reset the dom container */
-			boards[boardId].__pedalEls = []; 
-			
-			/* clear the data pedals from the data board */
-			boards[boardId].data.Clear();
-			
-			/* log this change to the history */
-			log(resources.change_ClearedBoard, boards[boardId].data.Name, changeTypes.clearedBoard, boardId, objectTypes.pedalboard);
+			logger.log(changeType, objectTypes.pedal, boardId, reorderedPedal.fullName, boards[boardId].data.Name);
 			
 			/* call all of the change callbacks for this board id */
 			callChangeCallbacks(boardId);

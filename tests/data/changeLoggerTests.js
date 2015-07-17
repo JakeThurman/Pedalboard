@@ -7,13 +7,13 @@ define([ "changeLogger", "changeTypes", "objectTypes" ], function ( changeLogger
 			logger = changeLogger.create();
 			
 			log = function (desc) {
-				logger.log(desc, -1, -1, -1);
+				logger.log(-1, -1, -1);
 			};
 		});
 		
 	    describe("log", function () {
 		    it("should log changes", function () {
-				logger.log("a change was made", changeTypes.addPedal, -1, objectTypes.pedalboard);
+				logger.log(changeTypes.addPedal, -1, objectTypes.pedalboard);
 				expect(logger.changes.length).toEqual(1);
 			});
 			
@@ -40,21 +40,21 @@ define([ "changeLogger", "changeTypes", "objectTypes" ], function ( changeLogger
 			
 			it("should throw an exception if object Type is not undefined", function () {
 				var thrower = function () {
-					logger.log("test", 0, -1, void(0));
+					logger.log(0, void(0), -1);
 				};
 				expect(thrower).toThrow();
 			});
 			
 			it("should throw an exception if @changeType is not undefined", function () {
 				var thrower = function () {
-					logger.log("test", void(0), -1, -1);
+					logger.log(void(0), -1, -1);
 				};
 				expect(thrower).toThrow();
 			});
 			
-			it("should throw an exception if @changeType and beyond are mission", function () {
+			it("should throw an exception if @changeType and beyond are missing", function () {
 				var thrower = function () {
-					logger.log("test");
+					logger.log();
 				};
 				expect(thrower).toThrow();
 			});

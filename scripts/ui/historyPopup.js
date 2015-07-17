@@ -1,9 +1,49 @@
-define([ "_Popup", "textResources", "jquery", "helperMethods", "moment" ], function ( _Popup, resources, $, helpers, moment ) {
+define([ "_Popup", "textResources", "jquery", "helperMethods", "moment", "changeTypes", "objectTypes", "stringReplacer" ], function ( _Popup, resources, $, helpers, moment, changeTypes, objectTypes, replacer ) {
 	"use strict";
-
+	
 	var methods = {};
 
 	methods.create = function(changeLog) {
+		function genChangeText(changeType, objName, otherName) {
+			switch (changeType) {
+				case changeTypes.addBoard: 
+					return replacer.replace(resources.change_AddBoard, objName);
+					
+				case changeTypes.renamedBoard:
+					return replacer.replace(resources.change_RenamedBoard, [ otherName, objName ]);
+					
+				case changeTypes.deleteBoard:
+					return replacer.replace(resources.change_DeleteBoard, objName);
+					
+				case changeTypes.moveBoard:
+					return replacer.replace(resources.change_MoveBoard, objName);
+					
+				case changeTypes.resizeBoard:
+					return replacer.replace(resources.change_ResizeBoard, objName);
+					
+				case changeTypes.addPedal:
+					return replacer.replace(resources.change_AddPedal, [ otherName, objName ]);
+					
+				case changeTypes.removedPedal:
+					return replacer.replace(resources.change_RemovedPedal, [ otherName, objName ]);
+					
+				case changeTypes.movePedalToTop:
+					return replacer.replace(resources.movePedalToTop, [ otherName, objName ]);
+					
+				case changeTypes.change_MovePedalUp:
+					return replacer.replace(resources.change_MovePedalUp, [ otherName, objName ]);
+					
+				case changeTypes.change_MovePedalToBottom:
+					return replacer.replace(resources.change_MovePedalToBottom, [ otherName, objName ]);
+					
+				case changeTypes.change_MovePedalDown:
+					return replacer.replace(resources.change_MovePedalDown, [ otherName, objName ]);
+					
+				case changeTypes.clearedBoard:
+					return replacer.replace(resources.change_ClearedBoard, objName);
+			}
+		}
+	
 		/* set up the user language for the moment library */
 		moment.locale(window.navigator.userLanguage || window.navigator.language)
 	
@@ -16,11 +56,13 @@ define([ "_Popup", "textResources", "jquery", "helperMethods", "moment" ], funct
 			var changeDiv = $("<div>");
 			
 			var description = $("<div>", { "class": "description" })
-					.text(change.description)
 					.appendTo(changeDiv);
 						
 			if (change.isBatch) {
-				/* so we can lazily render batch changes we need, but not multiple times */
+				/* The text is the provided description */
+				description.text(change.description)
+				
+				/* So we can lazily render batch changes we need, but not multiple times */
 				var renderedSubChanges = false;
 				
 				var expander = $("<i>", { "class": "float-left fa fa-plus-square" });
@@ -31,7 +73,7 @@ define([ "_Popup", "textResources", "jquery", "helperMethods", "moment" ], funct
 						expander.toggleClass("fa-plus-square")
 							.toggleClass("fa-minus-square");
 							
-						/* lazily render sub changes */
+						/* Lazily render sub changes */
 						if (!renderedSubChanges) {
 							helpers.forEach(change.changes, function (subChange) {
 								changeDiv.append(renderChange(subChange));
@@ -44,9 +86,12 @@ define([ "_Popup", "textResources", "jquery", "helperMethods", "moment" ], funct
 				changeDiv.prepend(expander)
 					.addClass("batch");
 			}
-			else {				
+			else {
+				/* Generate the resource for this change based */
+				description.text(genChangeText(change.changeType, change.objName, change.otherName));
+			
 				changeDiv.addClass("change");
-					
+				
 				var timeStamp = $("<div>", { "class": "time-stamp" })
 					.text(new moment(change.timeStamp).fromNow())
 					.appendTo(changeDiv);
