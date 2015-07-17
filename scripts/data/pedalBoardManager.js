@@ -54,6 +54,15 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 		};
 		
 		/* Get an array of all of the board data */
+		/*
+		 * Are there any boards [where func]?
+		 *
+		 * @returns: [Object] : {
+		 *                        data: [PedalboardClasses.PedalBoard],
+		 *                        clientRect: [Object] : {  left: "10px", top: "10px", width: "300px",  },
+		 *                        id: board.id,
+		 *                      }
+		 */
 		manager.GetBoards = function () {
 			var out = [];
 			for(var key in boards) {
@@ -62,7 +71,12 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			return out;
 		};
 		
-		/* Are there any boards [where func]? */
+		/*
+		 * Are there any boards [where func]?
+		 *
+		 * @where:   [OPTIONAL] A function returning a boolean to select only some of the boards -> If not provided will check all boards
+		 * @returns:            [boolean]
+		 */
 		manager.Any = function (where) {
 			for(var key in boards) {
 				if (!where || where(manager.GetBoard(key))) /* if there is no where statement, or this one counts */
@@ -71,7 +85,12 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			return false;
 		};
 		
-		/* Are there multiple boards [where func]? */
+		/*
+		 * Are there multiple boards [where func]?
+		 *
+		 * @where:   [OPTIONAL] A function returning a boolean to select only some of the boards -> If not provided will check all boards
+		 * @returns:            [boolean]
+		 */
 		manager.Multiple = function (where) {
 			var any = false;
 			for (var key in boards) {
@@ -85,25 +104,40 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			return false;
 		};
 		
-		/* Are there any pedals on the board with id of @boardId? */
+		/*
+		 * Are there any pedals on the pedalboard with id of @boardId?
+		 *
+		 * @boardId: The id of the pedalboard to check
+		 * @returns: [boolean]
+		 */
 		manager.AnyPedals = function (boardId) {
 			var board = boards[boardId];
 			return board ? board.data.pedals.length > 0 : false; /* If there is no board with this id return false */
 		};
 		
-		/* Are there multiple pedals on board with id of @boardId? */
+		/*
+		 * Are there multiple pedals on the pedalboard with id of @boardId?
+		 *
+		 * @boardId: The id of the pedalboard to check
+		 * @returns: [boolean]
+		 */
 		manager.MultiplePedals = function (boardId) {
 			var board = boards[boardId];
 			return board ? board.data.pedals.length > 1 : false; /* If there is no board with this id return false */
 		};
 	
 		/* ! Board Methods ! */
-		/* logging helper to reduce duplicate code */
+		/* Logging helper to reduce duplicate code */
 		function log(resource, params, changeType, boardId, objectType) {
 			manager.logger.log(replacer.replace(resource, params), changeType, boardId, objectType);
 		}
 		
-		/* Add a board! */
+		/*
+		 * Add a pedalboard
+		 *
+		 * @name:             The name for the pedalboard
+		 * @contentConatiner: The jquery element to make the parent of the pedalboard dom object
+		 */
 		manager.Add = function (name, contentConatiner) {	
 			var domboard = pedalBoardPopup.create(name, contentConatiner, manager);
 		
@@ -120,7 +154,12 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			return domboard;
 		};
 		
-		/* Rename a board */
+		/*
+		 * Rename a board
+		 *
+		 * @name:    The new name for the pedalboard
+		 * @boardId: The id of the pedalboard to update the name of 
+		 */
 		manager.Rename = function (name, boardId) {
 			assertBoardIdExists(boardId);
 			
@@ -137,7 +176,11 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			callChangeCallbacks(boardId);
 		};
 		
-		/* Delete a board */
+		/*
+		 * Delete board from the page
+		 *
+		 * @boardId: The id of the pedalboard to delete
+		 */
 		manager.Delete = function (boardId) {			
 			assertBoardIdExists(boardId);
 			
@@ -152,24 +195,27 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			callChangeCallbacks();
 		};
 		
-		/* Delete all of the boards */
+		/* Delete all fo the boards on the page. */
 		manager.DeleteAll = function () {
 			manager.logger.batch(resources.change_DeleteAllBoards, function () { /* log deleting each board as a batch */
 				for(var key in boards)
 					manager.Delete(key);
 			});
-			
-			callChangeCallbacks();
 		};
 		
-		/* Board-UI logging methods */
-		/*  clientRect = (vanilla js element).getBoundingClientRect(); */
+		/* ! Board-UI Logging Methods ! */
+		/* Quick helper to check (for chrome and firefox) if the client rect object is valid */
 		function assertClientRectIsValid(clientRect) {		
 			if (!(window.ClientRect && clientRect instanceof window.ClientRect) && !(window.DOMRect && clientRect instanceof window.DOMRect))
 				throw new TypeError("@clientRect is not a valid. Try using (vanilla js element).getBoundingClientRect()");
 		}
 		
-		/* log a moved board */
+		/*
+		 * Log a board as moved
+		 *
+		 * @boardId:    The id of the pedalboard to record as moved
+		 * @clientRect: The javascript client rect object recieved from ([VANILLA JS DOM ELEMENT].getBoundingClientRect()) where the dom element is the pedalboard
+		 */
 		manager.Move = function (boardId, clientRect) {
 			assertBoardIdExists(boardId);
 			assertClientRectIsValid(clientRect);
@@ -179,7 +225,12 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			callChangeCallbacks(boardId);
 		}
 		
-		/* log a resized board */
+		/*
+		 * Log a board as resized
+		 *
+		 * @boardId:    The id of the pedalboard to record as resized
+		 * @clientRect: The javascript client rect object recieved from ([VANILLA JS DOM ELEMENT].getBoundingClientRect()) where the dom element is the pedalboard
+		 */
 		manager.Resize = function (boardId, clientRect) {
 			assertBoardIdExists(boardId);
 			assertClientRectIsValid(clientRect);
@@ -189,10 +240,14 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			callChangeCallbacks(boardId);
 		}
 		
-		/* ! Pedal Methods ! */
-		/* 
+		/* ! Pedal Methods ! */		 
+		/*
 		 * Add the passed in pedal object to the board with id of @boardId. 
 		 * Optionally then appends the created dom element to @pedalContainer 
+		 *
+		 * @pedal:                     The pedal object to add to the board
+		 * @boardId:                   The id of the pedalboard to add the pedal to
+		 * @pedalContainer: [OPTIONAL] If provided, The jquery object to append the rendered pedal to
 		 */
 		manager.AddPedal = function (pedal, boardId, pedalContainer) {
 			assertBoardIdExists(boardId);
@@ -216,10 +271,16 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			return rendered;
 		};
 		
-		/* Remove a pedal with id of @pedal id from the board with id of @boardId. */
-		/* NOTE: this function breaks convention and DOES NOT handle the dom. This
-		   is becuase choosing which instance of a pedal that is on the same board
-		   is not yet implimented. */
+		/*
+		 * Remove a pedal with id of @pedal id from the board with id of @boardId.
+		 *
+		 *   NOTE: this function breaks convention and DOES NOT handle the dom. This
+		 *         is becuase choosing which instance of a pedal that is on the same board
+		 *         is not yet implimented.
+		 *
+		 * @pedalId: The id of the pedal to remove from the board
+		 * @boardId: The id of the pedalboard to remove the pedal from
+		 */
 		manager.RemovePedal = function (pedalId, boardId) {	
 			assertBoardIdExists(boardId);			
 			var removedPedal = boards[boardId].data.Remove(pedalId);
@@ -231,7 +292,13 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			callChangeCallbacks(boardId);
 		};
 		
-		/* Moves a pedal at index of @oldPedalIndex to @newPedalIndex on board with id of @boardId */
+		/*
+		 * Moves a pedal at index of @oldPedalIndex to @newPedalIndex on board with id of @boardId
+		 *
+		 * @oldPedalIndex: The original index of the pedal (BEFORE move), which is the same as the number of pedals above it on the board.
+		 * @newPedalIndex: The nex index of the pedal (AFTER move), which is the same as the number of pedals above it on the board.
+		 * @boardId:       The id of the pedalboard the reordered pedal is a member of
+		 */
 		manager.ReorderPedal = function (oldPedalIndex, newPedalIndex, boardId) {	
 			assertBoardIdExists(boardId);
 			
@@ -266,8 +333,12 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			/* call all of the change callbacks for this board id */
 			callChangeCallbacks(boardId);
 		};
-			
-		/* Clear the board with id of @boardId of all pedals*/
+		
+		/*
+		 * Clear the board with id of @boardId of all pedals
+		 *
+		 * @boardId: The id of the pedalboard to clear all pedals from
+		 */
 		manager.Clear = function (boardId) {
 			assertBoardIdExists(boardId);			
 			
@@ -288,9 +359,12 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			callChangeCallbacks(boardId);
 		};
 		
-		
 		/* ! Change Callbacks ! */
-		/* calls all of the change callback functions for the given board id, and all global callbacks */
+		/*
+		 * [PRIVATE] Calls all of the change callback functions for the given board id, and all global callbacks
+		 *
+		 * @boardId: [OPTIONAL] The id of the pedalboard to call changes for -> If not provided, only call globally scoped changes
+		 */
 		function callChangeCallbacks(boardId) {	
 			var change = manager.logger.changes[manager.logger.changes.length - 1];
 			
@@ -304,11 +378,18 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			});
 		}
 		
-		/* Add a change callback to a board */
+		/*
+		 * Add a change callback to a board 
+		 *
+		 * @boardId: [OPTIONAL] The id of the pedalboard to call changes for -> If not provided, only call globally scoped changes
+		 * @func:               The action to be executed on every change.
+		 *                               params: @change: The change object just created by the logger.
+		 */
 		manager.AddChangeCallback = function (boardId, func) {
 			if (typeof func !== "function") {
-				if (typeof boardId === "function" && helpers.isUndefined(func)) {
-					func = boardId; /* this is a global/all board callback*/
+				if (typeof boardId === "function" && helpers.isUndefined(func)) { 
+					/* This is a global/all board callback*/
+					func = boardId; /* No board id was provided, it is the function */
 					allBoardChangeCallbacks.push(func);
 					return;
 				}
@@ -318,7 +399,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "changeLogger",
 			
 			changeCallbacks[boardId] = changeCallbacks[boardId] || [];
 			changeCallbacks[boardId].push(func);
-		}
+		};
         
         return manager;
 	};
