@@ -98,10 +98,10 @@ define([ "_Popup", "textResources", "jquery", "helperMethods", "moment", "change
 				var timeStamp = $("<div>", { "class": "time-stamp" })
 					.text(new moment(change.timeStamp).fromNow())
 					.appendTo(changeDiv);
-					
-				setInterval(function () { /* every minute, refresh the "from now" */
+				
+				momentUpdateIntervals.push(setInterval(function () { /* every minute, refresh the "from now" */
 					timeStamp.text(new moment(change.timeStamp).fromNow());
-				}, 60000) /*60,000ms = 1min*/
+				}, 60000)); /*60,000ms = 1min*/
 			}
 			
 			return changeDiv;
