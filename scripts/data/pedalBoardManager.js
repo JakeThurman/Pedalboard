@@ -201,7 +201,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 			callChangeCallbacks();
 		};
 		
-		/* Delete all fo the boards on the page. */
+		/* Delete all of the boards on the page. */
 		manager.DeleteAll = function () {
 			logger.batch(resources.change_DeleteAllBoards, function () { /* log deleting each board as a batch */
 				for(var key in boards)
@@ -220,7 +220,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 		 * Log a board as moved
 		 *
 		 * @boardId:    The id of the pedalboard to record as moved
-		 * @clientRect: The javascript client rect object recieved from ([VANILLA JS DOM ELEMENT].getBoundingClientRect()) where the dom element is the pedalboard
+		 * @clientRect: The javascript client rect object received from ([VANILLA JS DOM ELEMENT].getBoundingClientRect()) where the dom element is the pedalboard
 		 */
 		manager.Move = function (boardId, clientRect) {
 			assertBoardIdExists(boardId);
@@ -293,7 +293,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 			boards[boardId].data.Add(pedal);
 			
 			/* log this change to the history */
-			logger.log(changeTypes.addPedal, objectTypes.pedal, boardId, pedal.fullName, boards[boardId].data.Name);
+			logger.log(changeTypes.addPedal, objectTypes.pedal, boardId, boards[boardId].data.Name, pedal.fullName);
 				
 			/* call all of the change callbacks for this board id */
 			callChangeCallbacks(boardId);
@@ -308,8 +308,8 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 		 * Remove a pedal with id of @pedal id from the board with id of @boardId.
 		 *
 		 *   NOTE: this function breaks convention and DOES NOT handle the dom. This
-		 *         is becuase choosing which instance of a pedal that is on the same board
-		 *         is not yet implimented.
+		 *         is because choosing which instance of a pedal that is on the same board
+		 *         is not yet implemented.
 		 *
 		 * @pedalId: The id of the pedal to remove from the board
 		 * @boardId: The id of the pedalboard to remove the pedal from
@@ -319,7 +319,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 			var removedPedal = boards[boardId].data.Remove(pedalId);
 			
 			/* log this change to the history */
-			logger.log(changeTypes.removedPedal, objectTypes.pedal, boardId, removedPedal.fullName, boards[boardId].data.Name);
+			logger.log(changeTypes.removedPedal, objectTypes.pedal, boardId, boards[boardId].data.Name, removedPedal.fullName);
 			
 			/* call all of the change callbacks for this board id */
 			callChangeCallbacks(boardId);
@@ -329,7 +329,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 		 * Moves a pedal at index of @oldPedalIndex to @newPedalIndex on board with id of @boardId
 		 *
 		 * @oldPedalIndex: The original index of the pedal (BEFORE move), which is the same as the number of pedals above it on the board.
-		 * @newPedalIndex: The nex index of the pedal (AFTER move), which is the same as the number of pedals above it on the board.
+		 * @newPedalIndex: The new index of the pedal (AFTER move), which is the same as the number of pedals above it on the board.
 		 * @boardId:       The id of the pedalboard the reordered pedal is a member of
 		 */
 		manager.ReorderPedal = function (oldPedalIndex, newPedalIndex, boardId) {	
@@ -418,7 +418,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 				/* TODO: don't hard code this lookup for the content region */
 				var pedalContainer = domBoard.el.find(".pedal-board");
 				
-				/* Place and size the popup as it priviously was */
+				/* Place and size the popup as it previously was */
 				domBoard.el.css(board.clientRect);
 				
 				/* Add each of the pedals to the board */
