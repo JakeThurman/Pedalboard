@@ -568,6 +568,11 @@ a, a:visited {
 	overflow-y: auto;
 }
 
+.history-popup .description {
+	margin-bottom: 2px;
+	margin-top: 1px;
+}
+
 .history-popup .batch:not(.expanded) > .change {
 	display: none;
 }
@@ -580,13 +585,17 @@ a, a:visited {
 	margin-bottom: 5px;
 }
 
-.history-popup .fa-plus-square, .fa-minus-square {
+.history-popup .fa-plus-square, 
+.history-popup .fa-minus-square {
 	cursor: pointer;
 	margin-right: 5px;
+    font-size: 1.1em;
 }
 
 .history-popup .batch > .description {
 	cursor: pointer;
+	font-weight: bold;
+	font-size: 1.1em;
 }
 
 .history-popup .batch > .description:hover {
