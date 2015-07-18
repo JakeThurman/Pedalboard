@@ -28,19 +28,22 @@ define([ "_Popup", "textResources", "jquery", "helperMethods", "moment", "change
 					return replacer.replace(resources.change_RemovedPedal, [ otherName, objName ]);
 					
 				case changeTypes.movePedalToTop:
-					return replacer.replace(resources.movePedalToTop, [ otherName, objName ]);
+					return replacer.replace(resources.change_MovePedalToTop, [ otherName, objName ]);
 					
-				case changeTypes.change_MovePedalUp:
+				case changeTypes.movePedalUp:
 					return replacer.replace(resources.change_MovePedalUp, [ otherName, objName ]);
 					
-				case changeTypes.change_MovePedalToBottom:
+				case changeTypes.movePedalToBottom:
 					return replacer.replace(resources.change_MovePedalToBottom, [ otherName, objName ]);
 					
-				case changeTypes.change_MovePedalDown:
+				case changeTypes.movePedalDown:
 					return replacer.replace(resources.change_MovePedalDown, [ otherName, objName ]);
 					
 				case changeTypes.clearedBoard:
 					return replacer.replace(resources.change_ClearedBoard, objName);
+					
+				default:
+					throw new TypeError("@changeType is invalid, was: " + changeType);
 			}
 		}
 	

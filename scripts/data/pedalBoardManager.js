@@ -349,7 +349,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 						? changeTypes.movePedalToBottom /* To Bottom */
 						: changeTypes.movePedalDown /* Down */
 			
-			logger.log(changeType, objectTypes.pedal, boardId, reorderedPedal.fullName, boards[boardId].data.Name);
+			logger.log(changeType, objectTypes.pedal, boardId, boards[boardId].data.Name, reorderedPedal.fullName);
 			
 			/* call all of the change callbacks for this board id */
 			callChangeCallbacks(boardId);
