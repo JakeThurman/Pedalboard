@@ -14,10 +14,9 @@ require(["pedalBoardManager", "jquery", "mainPageMenuHandler", "pedalBoardStorag
 		manager.Import(pedalBoardStorage.Load(), mainContentContainer);
 	}
 	
-	/* We don't need to log that the page was reloaded! First load should be in a batch though */
-	if (pedalBoardStorage.HasSavedData())
+	if (pedalBoardStorage.HasSavedData()) /* We don't need to log that the page was reloaded! */
 		logger.dontLog(doImport);
-	else
+	else /* First load should be in a batch though */
 		logger.batch(resources.firstStartupBatchName, doImport);
 		
 	/* Setup the main page menu click handler */

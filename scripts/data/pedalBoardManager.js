@@ -338,6 +338,9 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 			if (oldPedalIndex < 0 || newPedalIndex < 0)
 				throw new Error("Indexes cannot be negative! Old: " + oldPedalIndex + " New: " + newPedalIndex);
 			
+			/* Only save a change if one was made */
+			if (oldPedalIndex === newPedalIndex) return; 
+			
 			var reorderedPedal = boards[boardId].data.Reorder(oldPedalIndex, newPedalIndex);
 			
 			/* log this change to the history */
