@@ -32,7 +32,7 @@ define({
 	change_MovePedalDown: "Moved {0} down on pedalboard \"{1}\"",
 	change_MovePedalToTop: "Moved {0} to the top of pedalboard \"{1}\"",
 	change_MovePedalToBottom: "Moved {0} to the bottom of pedalboard \"{1}\"",
-	restoreBatchName: "Restored from save",
+	firstStartupBatchName: "Let the games begin!",
 	
 	/*reporting*/
 	boardReportButton: "Report",
