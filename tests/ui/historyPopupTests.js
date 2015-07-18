@@ -7,7 +7,7 @@ define([ "historyPopup", "changeLogger", "jquery" ], function ( historyPopup, ch
 		beforeEach(function () {
 			var logger = changeLogger.create();
 			var log = function () {
-				logger.log(-1, -1, -1);
+				logger.log(4, -1, -1);
 			};
 			
 			log("1");

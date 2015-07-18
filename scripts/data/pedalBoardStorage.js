@@ -5,7 +5,7 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 	
 	var pedalboardStorageName = "pedalboardData";
 	var historyStorageName = "pedalboardChangeHistory";
-		
+	
 	function supports_html5_storage() {
         try { 
 			return 'localStorage' in window && window['localStorage'] !== null; 
