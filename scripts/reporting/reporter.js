@@ -113,6 +113,8 @@ function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDa
 				.append($("<span>", { "class": "tooltip", "data-tooltip": titleItem.text }).text(titleItem.text))
 				.appendTo(titleBar);
 		});
+		
+		return titleBar;
 	}
 	
 	function makeDisplay(cssClass, type, pedals) {
@@ -164,7 +166,7 @@ function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDa
 	function handleDisplay(objs, titleBar, parent) {
 		var blocker = $("<div>", { "class": "screen-block" });
 		
-		var closeAllOnClick = $(blocker, titleBar)
+		var closeAllOnClick = $(blocker).add(titleBar)
 			.appendTo(parent);
 		
 		var charts = [];
