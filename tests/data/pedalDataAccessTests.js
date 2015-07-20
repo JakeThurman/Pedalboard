@@ -59,6 +59,13 @@ define([ "helperMethods", "pedalDataAccess" ], function (helpers, pedalDataAcces
 					expect(validity).toBe(true);
 				});
 			});
+			
+			it("should have not floating point prices (in cents!) to avoid floating point errors", function () {
+				helpers.forEach(pedalDataAccess.allPedals, function (pedal) {
+					console.log(pedal.price + pedal.name);
+					expect(pedal.price % 1).toBe(0);
+				});
+			});
 		});
 		
 		describe("boards", function () {

@@ -26,6 +26,7 @@ requirejs.config({
 			"historyPopup":                  "ui/historyPopup",
 			"reportTypeMenu":                "ui/reportTypeMenu",
 			"compareToMenu":                 "ui/compareToMenu", 
+			"priceRenderer":                 "ui/priceRenderer",
 			
 			/* Data */
 			"pedalBoardClasses":             "data/pedalBoardClasses",

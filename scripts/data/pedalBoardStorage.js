@@ -27,7 +27,7 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 	 *
 	 * @boards:  [Array<Manager.GetBoard()>] All of the boards added to the current pedalboard manager.
 	 * @history: [Array<Changes/Batches>]    All of the changes ever made
-	 */
+	 */	 
 	methods.Save = function(boards, history) {
 	    if (!supports_html5_storage())
 			return;

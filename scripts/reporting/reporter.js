@@ -1,5 +1,5 @@
-define([ "reportTypes", "boardDiffEngine", "colorEffects", "jquery", "Chart", "helperMethods", "pedalDataAccess", "pedalBoardClasses", "stringReplacer", "textResources", "jquery-ui", "domReady!" ], 
-function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDataAccess, classes, stringReplacer, resources) {
+define([ "reportTypes", "boardDiffEngine", "colorEffects", "jquery", "Chart", "helperMethods", "pedalDataAccess", "pedalBoardClasses", "stringReplacer", "textResources", "priceRenderer", "jquery-ui", "domReady!" ], 
+function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDataAccess, classes, stringReplacer, resources, priceRenderer) {
 	"use strict";
 		
 	Chart.defaults.global.responsive = true;
@@ -129,6 +129,7 @@ function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDa
 			helpers.forEach(data, function (item) {
 				total += item.value;
 			});
+			total = priceRenderer.render(total);
 		} else if (type.id == reportTypes.pedalType.id) {
 			data = getTypeData(pedals);
 			total = data.length;
