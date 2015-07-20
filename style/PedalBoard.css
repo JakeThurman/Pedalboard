@@ -754,6 +754,24 @@ a, a:visited {
 	background-color: #222;
 	border-radius: 10px;
 	padding: 10px 30px;
+	z-index: -1;
+	transition: font-size .4s ease; 
+	-webkit-transition: font-size .4s ease;
+	-moz-transition: font-size .4s ease;
+	-o-transition: font-size .4s ease;
+}
+
+@media (max-width: 900px) and (min-width: 475px) {
+	.report-total {
+		font-size: 0.7em;
+	}
+}
+
+
+@media (max-width: 474px) {
+	.report-total {
+		font-size: 0.5em;
+	}
 }
 
 .report-container {
