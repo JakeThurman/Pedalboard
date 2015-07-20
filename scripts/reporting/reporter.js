@@ -11,17 +11,15 @@ function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDa
 	}
 	
 	function getData(items, getName, getValue, getColor) {
-		var output = [];
-		helpers.forEach(items, function (item) {
+		return helpers.select(items, function (item) {
 			var color = getColor(item);
-			output.push({
+			return {
 				value: getValue(item),
 				label: getName(item),
 				color: color,
 				highlight: colorEffects.highlight(color, 0.1), /*10% lighter*/
-			});
+			};
 		});
-		return output;
 	}
 	
 	function getPriceData(pedals) {
@@ -73,7 +71,7 @@ function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDa
 			function (color) { return color.color; }); /* getColor */
 	}
 	
-	function addLegend(chartToGet, chartContainer) { 
+	function makeLegend(chartToGet) { 
 		var helpers = Chart.helpers;
 	
 		var legendHolder = document.createElement('div');
@@ -94,128 +92,130 @@ function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDa
 			chartToGet.draw();
 		});
 		
-		return $(legendHolder).appendTo(chartContainer);
+		return legendHolder;
 	}
 	
-	/* ! Public Functions ! */
-	var methods = {};
+	function makeTitle(titleItems) {
+		var titleBar = $("<header>", { "class": "fixed above-screen-block shadowed" });
+		
+		helpers.forEach(titleItems, function (titleItem) {
+			$("<div>", { "class" : "report-title" })
+				.addClass(titleItem.cssClass)
+				.append($("<span>", { "class": "tooltip", "data-tooltip": titleItem.text }).text(titleItem.text))
+				.appendTo(titleBar);
+		});
+	}
 	
-	methods.report = function (board, type) {
-		assertIsPedalBoard(board);
-				/* Set up the title & other information */
-		var title = stringReplacer.replace(resources.reportBoardTitle, [ resources[type.resource], board.Name ]);
-		
-		var title = $("<header>", { "class": "fixed above-screen-block shadowed" })
-			.append($("<div>", { "class" : "report-title" })
-				.append($("<span>", { "class": "tooltip", "data-tooltip": title }).text(title)));
-		
+	function makeDisplay(cssClass, type, pedals) {
 		/* set up the data */		
 		var data;
 		
 		if (type.id === reportTypes.price.id)
-			data = getPriceData(board.pedals);
+			data = getPriceData(pedals);
 		else if (type.id == reportTypes.pedalType.id)
-			data = getTypeData(board.pedals);
+			data = getTypeData(pedals);
 		else if (type.id == reportTypes.color.id)
-			data = getColorData(board.pedals);
+			data = getColorData(pedals);
 		else
 			throw new Error("Type param is not valid or not implemented!")
 		
 		/* set up the display */
 		var canvas = document.createElement("canvas");
 		
-		var reportContainer = $("<div>", { "class": "above-screen-block report-container full-size" })
+		var reportContainer = $("<div>", { "class": "above-screen-block report-container" })
+			.addClass(cssClass)
 			.append(canvas);
 		
-		var myChart;
-		var myLegend;
+		var chart;
+		
+		/* Return all of the values so that they can be added as needed */
+		return {
+			container: reportContainer,
+			getChart: function () { /* "lazy" chart return */
+				chart = chart || (new Chart(canvas.getContext("2d")).Doughnut(data, type.options));
+				return chart;
+			},
+		};
+	}
+	
+	function handleDisplay(objs, titleBar, parent) {
 		var blocker = $("<div>", { "class": "screen-block" });
 		
-		/* append everything to the body */
-		blocker.add(reportContainer).add(title)
-			.appendTo(document.body)
-		/* when one of them gets clicked close it all */
-			.add(myLegend).click(function () {
-				blocker.add(reportContainer).add(title).add(myLegend).remove();
-				myChart.destroy();
-			});
-					
-		myChart = new Chart(canvas.getContext("2d")).Doughnut(data, type.options);
+		var closeAllOnClick = $(blocker, titleBar)
+			.appendTo(parent);
 		
-		myLegend = addLegend(myChart, reportContainer);
+		var charts = [];
+		
+		helpers.forEach(objs, function (obj) {			
+			/* Add the dom container to be closed when any of them are clicked */
+			closeAllOnClick = closeAllOnClick.add(
+				obj.container.appendTo(parent) /* Append the container to the dom */
+			);
+			
+			var chart = obj.getChart();
+			
+			/* Add the legend */
+			$(makeLegend(chart)).appendTo(obj.container);
+			
+			/* Add the chart object to be destoryed when we close it */
+			charts.push(chart);
+		});
+		
+		closeAllOnClick.click(function () {
+			/* Remove all report from the dom! */
+			closeAllOnClick.remove();
+			
+			/* Kill all the charts! */
+			helpers.forEach(charts, function (chart) {
+				chart.destroy();
+			});
+		});
+	}
+	
+	
+	/* ! Public Functions ! */
+	var methods = {};
+	
+	methods.report = function (board, type) {
+		assertIsPedalBoard(board);
+		
+		/* Create the chart Display */
+		var display = makeDisplay("full-size", type, board.pedals);
+				/* Set up the title */		
+		var title = makeTitle({ 
+			text: stringReplacer.replace(resources.reportBoardTitle, [ resources[type.resource], board.Name ])
+		});
+		
+		/* Add it all */
+		handleDisplay(display, title, document.body);
 	}
 	
 	methods.compare = function (boardA, boardB, type) {
 		assertIsPedalBoard(boardA);
 		assertIsPedalBoard(boardB);
 		
-		/* Set up the title & other information */
-		var typeName = resources[type.resource];
-		var aMinusBTitle = stringReplacer.replace(resources.reportBoardDiffTitle, [ typeName, boardA.Name, boardB.Name ]);
-		var bMinusATitle = stringReplacer.replace(resources.reportBoardDiffTitle, [ typeName, boardB.Name, boardA.Name ]);
-		
-		var title = $("<header>", { "class": "fixed above-screen-block shadowed" })
-			.append($("<div>", { "class" : "report-title left-side" })
-				.append($("<span>", { "class" : "tooltip", "data-tooltip": aMinusBTitle }).text(aMinusBTitle)))
-			.append($("<div>", { "class" : "report-title right-side" })
-				.append($("<span>", { "class" : "tooltip", "data-tooltip": bMinusATitle }).text(bMinusATitle)));
-		
-		/* get the unique pedals of each board to show the reports for */		
+		/* Get the unique pedals of each board to show the reports for */		
 		var aMinusB = boardDiffEngine.GetUniquePedals(boardA, boardB); 
 		var bMinusA = boardDiffEngine.GetUniquePedals(boardB, boardA);
 		
-		/* set up the data */		
-		var aMinusBData;
-		var bMinusAData;
+		/* Create the displays for each of the boards */
+		var aMinusBDisplay = makeDisplay("left-side", type, aMinusB);
+		var bMinusADisplay = makeDisplay("right-side", type, bMinusA);
 		
-		if (type.id === reportTypes.price.id) {
-			aMinusBData = getPriceData(aMinusB);
-			bMinusAData = getPriceData(bMinusA);
-		}
-		else if (type.id == reportTypes.pedalType.id) {
-			aMinusBData = getTypeData(aMinusB);
-			bMinusAData = getTypeData(bMinusA);
-		}
-		else if (type.id == reportTypes.color.id) {
-			aMinusBData = getColorData(aMinusB);
-			bMinusAData = getColorData(bMinusA);
-		}
-		else
-			throw new Error("compareType param is not valid or not implemented!")
+		/* Set up the title */
+		var typeName = resources[type.resource];
 		
-		/* set up the display */
-		var aMinusBCanvas = document.createElement("canvas");
-		var bMinusACanvas = document.createElement("canvas");
+		var title = makeTitle([{
+				text: stringReplacer.replace(resources.reportBoardDiffTitle, [ typeName, boardA.Name, boardB.Name ]),
+				cssClass: "left-side",
+			},
+			{
+				text: stringReplacer.replace(resources.reportBoardDiffTitle, [ typeName, boardB.Name, boardA.Name ]),
+				cssClass: "right-side",
+			}]);
 		
-		var aMinusBContainer = $("<div>", { "class": "above-screen-block report-container left-side" })
-			.append(aMinusBCanvas);
-		
-		var bMinusAContainer = $("<div>", { "class": "above-screen-block report-container right-side" })
-			.append(bMinusACanvas);
-		
-		var aMinusBChart;
-		var bMinusAChart;
-		var blocker = $("<div>", { "class": "screen-block" });
-		
-		var elsToRemoveOnClick = $([]);
-		
-		/* attach stuff to the body */
-		elsToRemoveOnClick = elsToRemoveOnClick.add(
-			
-			blocker.add(aMinusBContainer).add(bMinusAContainer).add(title)
-				.appendTo(document.body));
-		/* when any of them are clicked on, close it all */
-		elsToRemoveOnClick.click(function () {
-				elsToRemoveOnClick.remove();
-				aMinusBChart.destroy();
-				bMinusAChart.destroy();
-			});
-	
-		aMinusBChart = new Chart(aMinusBCanvas.getContext("2d")).Doughnut(aMinusBData, type.options);
-		bMinusAChart = new Chart(bMinusACanvas.getContext("2d")).Doughnut(bMinusAData, type.options);
-		
-		elsToRemoveOnClick = elsToRemoveOnClick.add(addLegend(aMinusBChart, aMinusBContainer));
-		elsToRemoveOnClick = elsToRemoveOnClick.add(addLegend(bMinusAChart, bMinusAContainer));
+		/* Add it all! */
+		handleDisplay([aMinusBDisplay, bMinusADisplay], title, document.body);
 	};
 	
 	/* return internal functions in a "private" object of the class for the sake of unit testing */
