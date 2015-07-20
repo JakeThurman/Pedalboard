@@ -41,6 +41,7 @@ define({
 	reportInWhatWayHelpText: "On what?",
 	reportBoardDiffTitle: "{0} of pedals on \"{1}\" but not on \"{2}\"",
 	reportBoardTitle: "{0} of pedals on \"{1}\"",
+	reportTotalPedlas: "{0} pedals",
 	reportType_Price: "Price",
 	reportType_Diff: "Difference",
 	reportType_PedalType: "Pedal Type",

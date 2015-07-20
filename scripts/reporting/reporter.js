@@ -94,6 +94,15 @@ function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDa
 		
 		return legendHolder;
 	}
+		
+	function makeTotal(total, count, template) {
+		var mainText = stringReplacer.replace(template, [ total ]);
+		var countText = stringReplacer.replace(resources.reportTotalPedlas, [ count ]);
+		
+		return $("<div>", { "class": "report-total" })
+			.append($("<div>", { "class": "report-total-main" }).text(mainText))
+			.append($("<div>", { "class": "report-total-count" }).text(countText));
+	}
 	
 	function makeTitle(titleItems) {
 		var titleBar = $("<header>", { "class": "fixed above-screen-block shadowed" });
@@ -109,15 +118,24 @@ function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDa
 	function makeDisplay(cssClass, type, pedals) {
 		/* set up the data */		
 		var data;
+		var total;
+		var count = pedals.length;
 		
-		if (type.id === reportTypes.price.id)
+		if (type.id === reportTypes.price.id) {
 			data = getPriceData(pedals);
-		else if (type.id == reportTypes.pedalType.id)
+			total = 0;
+			helpers.forEach(data, function (item) {
+				total += item.value;
+			});
+		} else if (type.id == reportTypes.pedalType.id) {
 			data = getTypeData(pedals);
-		else if (type.id == reportTypes.color.id)
+			total = data.length;
+		} else if (type.id == reportTypes.color.id) {
 			data = getColorData(pedals);
-		else
+			total = data.length;
+		} else {
 			throw new Error("Type param is not valid or not implemented!")
+		}
 		
 		/* set up the display */
 		var canvas = document.createElement("canvas");
@@ -126,11 +144,16 @@ function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDa
 			.addClass(cssClass)
 			.append(canvas);
 		
+		/* Add the total */
+		var total = makeTotal(total, count, type.totalTemplate)
+			.appendTo(reportContainer);
+		
 		var chart;
 		
 		/* Return all of the values so that they can be added as needed */
 		return {
 			container: reportContainer,
+			total: total,
 			getChart: function () { /* "lazy" chart return */
 				chart = chart || (new Chart(canvas.getContext("2d")).Doughnut(data, type.options));
 				return chart;
@@ -156,6 +179,18 @@ function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDa
 			
 			/* Add the legend */
 			$(makeLegend(chart)).appendTo(obj.container);
+			
+			/* Setup positioning the total */
+			function posTotal() {
+				obj.total.position({
+					my: "center",
+					at: "center",
+					of: obj.container,
+				});
+			}
+			
+			$(window).resize(posTotal);
+			posTotal();
 			
 			/* Add the chart object to be destoryed when we close it */
 			charts.push(chart);
