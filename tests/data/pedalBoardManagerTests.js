@@ -160,9 +160,8 @@ define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], 
 		/*(name, contentConatiner) */
 		describe("Add", function () {
 			it("should create a dom element for the board and append it to the passed in param", function () {
-				var temp = $("<div>");
-				var board = manager.Add("Test 1", temp);
-				expect(board.el.get(0).parentNode).toBe(temp.get(0));
+				var board = manager.Add("Test 1");
+				expect(board.el.get(0).parentNode).toBe($fakeEl.get(0));
 			});
 			
 			it("should add the board to the board stack to be retrived with .GetBoard()", function () {
