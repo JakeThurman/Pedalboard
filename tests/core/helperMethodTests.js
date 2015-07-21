@@ -463,5 +463,78 @@ define([ "helperMethods" ], function ( helpers, undef ) {
 				expect(thrower).toThrowError(TypeError);
 			});
 		});
+		
+		describe("callUntil", function () {
+			it("should call the given function until @until returns true", function () {
+				var callCount = 0;
+				var maxCalls = 12;
+				
+				function call() {
+					callCount++;
+				}
+				
+				function until() {
+					return callCount === maxCalls;
+				}
+				
+				helpers.callUntil(call, until);
+				
+				expect(callCount).toEqual(maxCalls);
+			});
+			
+			it("should returns the values returned from @call", function () {
+				var callCount = 0;
+				var maxCalls = 12;
+				
+				function call() {
+					return callCount++;
+				}
+				
+				function until() {
+					return callCount === maxCalls;
+				}
+				
+				var result = helpers.callUntil(call, until);
+				expect(result).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+			});
+			
+			it("should call the given function until @call returns false if no @until value is given", function () {
+				var callCount = 0;
+				var maxCalls = 12;
+				
+				function call() {
+					return ++callCount !== maxCalls;
+				}
+				
+				helpers.callUntil(call);
+				expect(callCount).toEqual(maxCalls);
+			});
+			
+			it("should return an empty array for a given empty array", function () {
+				var result = helpers.distinct([]);
+				expect(result).toEqual([]);
+			});
+			
+			it("should throw a type error if call is not provided", function () {
+				var thrower = function () {
+					helpers.callUntil();
+				};
+				expect(thrower).toThrowError(TypeError);
+			});
+			
+			it("should throw a type error if call is not a function", function () {
+				var thrower = function () {
+					helpers.callUntil("doStuff");
+				};
+				expect(thrower).toThrowError(TypeError);
+			});
+			
+			it("should throw a type error if until is given, but not a function", function () {
+				var thrower = function () {
+					helpers.distinct(function () {}, "checkStuff");
+				};
+				expect(thrower).toThrowError(TypeError);
+			});
+		});
 	});
 });

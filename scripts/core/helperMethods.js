@@ -158,5 +158,27 @@ define(function () {
 		return distinctItems;
 	};
 	
+	/*
+	 * Calls @call until @until retuns a true OR if no @until function is given, until @call returns false.
+	 *
+	 * @call:               A function to call until @until returns true, or if no @until function is given, until this returns false.
+	 * @until:   [OPTIONAL] A function that should return @stopLooping. When true @call won't be called anymore.
+	 *                          PARAMS: @value: The value just returned by @call.
+	 *
+	 * @returns:            An array of all of the values returned from @call. 
+	 */
+	helpers.callUntil = function(call, until) {
+		if (!(typeof call === "function"))
+			throw new TypeError("@call is not a function! helpers.callUntil requires a function");
+		if (!((typeof until === "function") || helpers.isUndefined(until)))
+			throw new TypeError("Optional param @until was provided but was not a function. Please see the use comment in helperMethods.js");
+		
+		var result = [call()];
+		while (until ? !until(result[result.length - 1]) : result[result.length - 1]) {
+			result.push(call());
+		}
+		return result;
+	};
+	
 	return helpers;
 });
