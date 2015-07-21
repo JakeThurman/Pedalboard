@@ -180,5 +180,22 @@ define(function () {
 		return result;
 	};
 	
+	/*
+	 * Reverses an array
+	 *
+	 * @collection: The array to reverse
+	 * @returns:    A reversed version of @collection.
+	 */
+	helpers.reverse = function (collection) {
+		if (!helpers.isArray(collection))
+			throw new TypeError("Collection param must be an array for helpers.reverse");
+		
+		var result = [];
+		for (var i = collection.length - 1; i >= 0; i--) {
+			result.push(collection[i]);
+		}
+		return result;
+	};
+	
 	return helpers;
 });

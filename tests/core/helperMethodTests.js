@@ -510,11 +510,6 @@ define([ "helperMethods" ], function ( helpers, undef ) {
 				expect(callCount).toEqual(maxCalls);
 			});
 			
-			it("should return an empty array for a given empty array", function () {
-				var result = helpers.distinct([]);
-				expect(result).toEqual([]);
-			});
-			
 			it("should throw a type error if call is not provided", function () {
 				var thrower = function () {
 					helpers.callUntil();
@@ -531,10 +526,56 @@ define([ "helperMethods" ], function ( helpers, undef ) {
 			
 			it("should throw a type error if until is given, but not a function", function () {
 				var thrower = function () {
-					helpers.distinct(function () {}, "checkStuff");
+					helpers.callUntil(function () {}, "checkStuff");
+				};
+				expect(thrower).toThrowError(TypeError);
+			});
+		});
+		
+		describe("reverse", function () {
+			it("should reverse a given array", function () {
+				var input = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+				var expected = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+								
+				var result = helpers.reverse(input);
+				expect(result).toEqual(expected);
+			});
+			
+			it("should reverse a given array of any type", function () {
+				var temp = function() {};
+				var input = ["test", 10, temp, [], "something"];
+				var expected = ["something", [], temp, 10, "test"];
+								
+				var result = helpers.reverse(input);
+				expect(result).toEqual(expected);
+			});
+			
+			it("should not reverse sub arrays", function () {
+				var input = [[2, "test"], ["test", 2]];
+				var expected = [["test", 2], [2, "test"]];
+								
+				var result = helpers.reverse(input);
+				expect(result).toEqual(expected);
+			});
+			
+			it("should return an empty array for a given empty array", function () {								
+				var result = helpers.reverse([]);
+				expect(result).toEqual([]);
+			});
+			
+			it("should throw a type error if @collection is provided", function () {
+				var thrower = function () {
+					helpers.reverse();
+				};
+				expect(thrower).toThrowError(TypeError);
+			});
+			
+			it("should throw a type error if @collection is not an array", function () {
+				var thrower = function () {
+					helpers.reverse("doStuff");
 				};
 				expect(thrower).toThrowError(TypeError);
 			});
 		});
 	});
-});
+})
