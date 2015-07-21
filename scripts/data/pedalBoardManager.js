@@ -416,9 +416,6 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 		 * @contentContainer: JQuery $object of the container for the imported pedal boards.
 		 */
 		manager.Import = function (boards, contentContainer) {
-			if (!helpers.isArray(boards))
-				throw new TypeError("Boards is not valid");
-				
 			/* Create a new board for each, and add all of its pedals */
 			helpers.forEach(boards, function(board) {
 				if (!board || !board.data || !board.clientRect || !board.data.pedals || !board.data.Name)
