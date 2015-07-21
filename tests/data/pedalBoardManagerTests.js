@@ -234,9 +234,8 @@ define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], 
 			it("should delete all boards", function () {
 				manager.Add("board", $fakeEl);
 				manager.Add("another", $fakeEl);
-				console.log(manager.GetBoards());				console.log(manager);				
-				manager.DeleteAll();								console.log(manager.GetBoards());				console.log(manager);
 				
+				manager.DeleteAll();				
 				expect(manager.GetBoards()).toEqual([]);
 			});
 		});
