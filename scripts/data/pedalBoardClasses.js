@@ -84,16 +84,6 @@ define([ "helperMethods" ], function (helpers) {
 			
 			return movePedal;
 		};
-    
-		/* This is dead code, but I'm going to start using it in reports in there center. I'll also then move this out of here! */
-        /* Returns the total cost of all of the pedals on this pedalboard */
-        this.TotalCost = function() {
-            var total = 0;
-            helpers.forEach(thisBoard.pedals, function(pedal) {
-               total += pedal.price;
-            });
-            return total;
-        };
 	};
 		
 	function getPedals(pedalContainerData){
