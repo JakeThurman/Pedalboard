@@ -2,8 +2,8 @@ define([ "_Popup", "textResources", "jquery", "helperMethods", "moment", "change
 	"use strict";
 	
 	var methods = {};
-
-	methods.create = function(changeLog) {
+	
+	methods.create = function(changeLog, revertTo) {
 		function genChangeText(changeType, objName, otherName) {
 			switch (changeType) {
 				case changeTypes.addBoard: 
@@ -55,11 +55,19 @@ define([ "_Popup", "textResources", "jquery", "helperMethods", "moment", "change
 		/* store all of the moment update intervals here so that we can kill them on close */
 		var momentUpdateIntervals = [];
 		
-		function renderChange(change) {
+		function renderChange(change, isTopLevel) {
 			var changeDiv = $("<div>");
 			
 			var description = $("<div>", { "class": "description" })
-					.appendTo(changeDiv);
+				.appendTo(changeDiv);
+				
+			if (isTopLevel) {
+				description
+					.addClass("top-level")
+					.click(function () {
+						revertTo(change.id);
+					});
+			}
 						
 			if (change.isBatch) {
 				/* The text is the provided description */
@@ -108,7 +116,7 @@ define([ "_Popup", "textResources", "jquery", "helperMethods", "moment", "change
 		}
 		
 		function appendChange(change) {
-			content.append(renderChange(change));
+			content.append(renderChange(change, true));
 		}
 		
 		helpers.forEach(changeLog, appendChange);

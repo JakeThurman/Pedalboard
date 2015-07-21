@@ -1,7 +1,15 @@
 define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer", "textResources", "helperMethods", "changeTypes", "objectTypes"], function (classes, pedalBoardPopup, pedalRenderer, replacer, resources, helpers, changeTypes, objectTypes) {
 	var actions = {};
 		
-	actions.create = function (logger) {
+	/*
+	 * Creates an instance of pedalboardManager to handle all your pedal needs!
+	 *
+	 * @logger:            Change Logger instance to log changes to
+	 * @contentContainer:  The container for added pedalboards in the dom
+	 *
+	 * @returns:           The manager instance
+	 */
+	actions.create = function (logger, contentContainer) {
 		var manager = {};
 		
 		/* Assert that the logger is valid */
@@ -140,12 +148,10 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 		 * Add a pedalboard
 		 *
 		 * @name:             The name for the pedalboard
-		 * @contentConatiner: The jquery element to make the parent of the pedalboard dom object
-		 *
 		 * @returns:          JQuery $object for the rendered (new) pedalboard
 		 */
-		manager.Add = function (name, contentConatiner) {	
-			var domboard = pedalBoardPopup.create(name, contentConatiner, manager);
+		manager.Add = function (name) {	
+			var domboard = pedalBoardPopup.create(name, contentContainer, manager);
 		
 			boards[domboard.id] = { 
 				dom: domboard,
@@ -413,16 +419,15 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 		 * Import function used for restore 
 		 * 
 		 * @boards:           The manager.GetBoards() obejct to be imported.
-		 * @contentContainer: JQuery $object of the container for the imported pedal boards.
 		 */
-		manager.Import = function (boards, contentContainer) {
+		manager.Import = function (boards) {
 			/* Create a new board for each, and add all of its pedals */
 			helpers.forEach(boards, function(board) {
 				if (!board || !board.data || !board.clientRect || !board.data.pedals || !board.data.Name)
 					throw new TypeError("The board is not valid, it should be an object from manager.GetBoard([id])");
 				
 				/* Add the board */
-				var domBoard = manager.Add(board.data.Name, contentContainer);
+				var domBoard = manager.Add(board.data.Name);
 				
 				/* TODO: don't hard code this lookup for the content region */
 				var pedalContainer = domBoard.el.find(".pedal-board");

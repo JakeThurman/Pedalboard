@@ -37,6 +37,7 @@ requirejs.config({
 			"changeLogger":                  "data/changeLogger",
 			"changeTypes":                   "data/changeInfo",
 			"objectTypes":                   "data/changeInfo",
+			"stateReverter":                 "data/stateReverter",
 			
 			/*reporting*/
 			"reportTypes":                   "reporting/reportTypes",
