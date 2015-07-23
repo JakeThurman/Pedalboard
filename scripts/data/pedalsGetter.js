@@ -114,7 +114,7 @@ define(function () {
 				pedals: [{
 					name: "CH1 Chorus", 
 					color: "#88B7DB",
-					price: 99,
+					price: 9900,
 					identifier: 2,
 					type: 3,
 					id: 4,
