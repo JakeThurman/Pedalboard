@@ -37,8 +37,7 @@ define([ "helperMethods" ], function ( helpers ) {
 			this.objName = objName;
 			this.otherName = otherName;
 			/* Data */
-			this.id = "change-" + topChangeId++;
-			this.isBatch = false;
+			this.id = "c-" + topChangeId++;
 			this.timeStamp = new Date();
 			this.oldValue = oldValue;
 			this.newValue = newValue;
@@ -52,7 +51,7 @@ define([ "helperMethods" ], function ( helpers ) {
 			/* Resource information helper */
 			this.objName = objName;
 			/* Data */
-			this.id = "batch-" + topBatchId++;
+			this.id = "b-" + topBatchId++;
 			this.isBatch = true;
 		}
 		

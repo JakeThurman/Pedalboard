@@ -83,7 +83,7 @@ define(function () {
 					id : 2,
 					pedals: [{
 						name: "(Mini)",
-						color: "#B32F26",
+						color: "B32F26",
 						id: 1,
 						identifier: 2,
 						price: 9999,
@@ -92,7 +92,7 @@ define(function () {
 				},
 				{
 					name: "ND-1 Nova Delay",
-					color: "#3A3536",
+					color: "3A3536",
 					id: 2,
 					price: 16999,
 					identifier: 2,
@@ -100,7 +100,7 @@ define(function () {
 				},
 				{
 					name: "Ditto Looper",
-					color: "#45403D",
+					color: "45403D",
 					identifier: 2,
 					price: 9999,
 					type: 9,
@@ -113,7 +113,7 @@ define(function () {
 				id: 3,
 				pedals: [{
 					name: "CH1 Chorus", 
-					color: "#88B7DB",
+					color: "88B7DB",
 					price: 9900,
 					identifier: 2,
 					type: 3,
@@ -126,7 +126,7 @@ define(function () {
 				id: 4,
 				pedals: [{
 					name: "SN10 Pedal Tuner",
-					color: "#E4E4E3",
+					color: "E4E4E3",
 					price: 3269,
 					type: 7,
 					identifier: 2,
@@ -139,7 +139,7 @@ define(function () {
 				id: 5,
 				pedals: [{
 					name: "Crybaby Wah",
-					color: "#282826",
+					color: "282826",
 					price: 7999,
 					type: 8,
 					identifier: 2,
@@ -152,7 +152,7 @@ define(function () {
 				id: 6,
 				pedals: [{
 					name: "Volume Pedal JR",
-					color: "#C6CCCC",
+					color: "C6CCCC",
 					price: 6765,
 					type: 8,
 					identifier: 2,
@@ -165,7 +165,7 @@ define(function () {
 				id: 7,
 				pedals: [{
 					name: "Blue Sky",
-					color: "#4DA5BD",
+					color: "4DA5BD",
 					price: 29900,
 					type: 1,
 					identifier: 2,
@@ -173,7 +173,7 @@ define(function () {
 				},
 				{
 					name: "Möbius",
-					color: "#286FC1",
+					color: "286FC1",
 					price: 44900,
 					type: 3,
 					identifier: 2,
@@ -181,7 +181,7 @@ define(function () {
 				},
 				{
 					name: "Deco",
-					color: "#D7CABA",
+					color: "D7CABA",
 					price: 29900,
 					type: 6,
 					identifier: 2,
@@ -189,7 +189,7 @@ define(function () {
 				},
 				{
 					name: "Big Sky",
-					color: "#04ACD1",
+					color: "04ACD1",
 					price: 47900,
 					type: 1,
 					identifier: 2,
@@ -197,7 +197,7 @@ define(function () {
 				},
 				{
 					name: "Brigadier",
-					color: "#63843D",
+					color: "63843D",
 					price: 29900,
 					type: 2,
 					identifier: 2,
@@ -205,7 +205,7 @@ define(function () {
 				},
 				{
 					name: "Lex Rotary",
-					color: "#8E5B48",
+					color: "8E5B48",
 					price: 29900,
 					type: 3,
 					identifier: 2,
@@ -213,7 +213,7 @@ define(function () {
 				},
 				{
 					name: "OB.1",
-					color: "#DD9737",
+					color: "DD9737",
 					price: 19900,
 					type: 4,
 					identifier: 2,
@@ -221,7 +221,7 @@ define(function () {
 				},
 				{
 					name: "Flint",
-					color: "#191411",
+					color: "191411",
 					price: 29900,
 					type: 1,
 					identifier: 2,
@@ -229,7 +229,7 @@ define(function () {
 				},
 				{
 					name: "Timeline",
-					color: "#84797D",
+					color: "84797D",
 					price: 44900,
 					type: 2,
 					identifier: 2,
@@ -237,7 +237,7 @@ define(function () {
 				},
 				{
 					name: "DIG",
-					color: "#F796A9",
+					color: "F796A9",
 					price: 29900,
 					type: 2,
 					identifier: 2,
@@ -245,7 +245,7 @@ define(function () {
 				},
 				{
 					name: "Orbit dBucket Flanger",
-					color: "#911784",
+					color: "911784",
 					price: 29900,
 					type: 3,
 					identifier: 2,
@@ -253,7 +253,7 @@ define(function () {
 				},
 				{
 					name: "El Capistan dTape Echo",
-					color: "#B4B0AD",
+					color: "B4B0AD",
 					price: 29900,
 					type: 2,
 					identifier: 2,
@@ -261,7 +261,7 @@ define(function () {
 				},
 				{
 					name: "Ola dBucket Chorus & Vibrato",
-					color: "#137497",
+					color: "137497",
 					price: 29900,
 					type: 3,
 					identifier: 2,
@@ -274,7 +274,7 @@ define(function () {
 				id: 8,
 				pedals: [{
 					name: "Kingdom",
-					color: "#EBEDE9",
+					color: "EBEDE9",
 					price: 15900,
 					type: 6,
 					identifier: 2,
@@ -282,7 +282,7 @@ define(function () {
 				},
 				{
 					name: "Refinery",
-					color: "#DC2D34",
+					color: "DC2D34",
 					price: 16900,
 					type: 4,
 					identifier: 2,
@@ -290,7 +290,7 @@ define(function () {
 				},
 				{
 					name: "The City",
-					color: "#7AB598",
+					color: "7AB598",
 					price: 19900,
 					type: 6,
 					identifier: 2,
@@ -298,7 +298,7 @@ define(function () {
 				},
 				{
 					name: "Slow Hound",
-					color: "#161B20",
+					color: "161B20",
 					price: 17900,
 					type: 6,
 					identifier: 2,
@@ -306,7 +306,7 @@ define(function () {
 				},
 				{
 					name: "Foxtail",
-					color: "#B86D35",
+					color: "B86D35",
 					price: 17900,
 					type: 6,
 					identifier: 2,
@@ -314,7 +314,7 @@ define(function () {
 				},
 				{
 					name: "Wrath",
-					color: "#18171C",
+					color: "18171C",
 					price: 12900,
 					type: 6,
 					identifier: 2,
@@ -322,7 +322,7 @@ define(function () {
 				},
 				{
 					name: "Magnifica",
-					color: "#7AAFBB",
+					color: "7AAFBB",
 					price: 12900,
 					type: 1,
 					identifier: 2,
@@ -330,7 +330,7 @@ define(function () {
 				},
 				{
 					name: "Ebenezer",
-					color: "#836373",
+					color: "836373",
 					price: 9500,
 					type: 12,
 					identifier: 2,
@@ -338,7 +338,7 @@ define(function () {
 				},
 				{
 					name: "K-Buffer",
-					color: "#4893B7",
+					color: "4893B7",
 					price: 6000,
 					type: 11,
 					identifier: 2,
@@ -346,7 +346,7 @@ define(function () {
 				},
 				{
 					name: "Wave",
-					color: "#BEBFBA",
+					color: "BEBFBA",
 					price: 32500,
 					type: 2,
 					identifier: 2,
@@ -359,7 +359,7 @@ define(function () {
 				id: 9,
 				pedals: [{
 					name: "Deep Six",
-					color: "#A6D5D2",
+					color: "A6D5D2",
 					type: 4,
 					price: 19900,
 					identifier: 2,
@@ -367,7 +367,7 @@ define(function () {
 				},
 				{
 					name: "Voyager",
-					color: "#D4E5D3",
+					color: "D4E5D3",
 					type: 6,
 					price: 18900,
 					identifier: 2,
@@ -375,7 +375,7 @@ define(function () {
 				},
 				{
 					name: "Iron Horse",
-					color: "#BA9D00",
+					color: "BA9D00",
 					type: 6,
 					price: 16900,
 					identifier: 2,
@@ -383,7 +383,7 @@ define(function () {
 				},
 				{
 					name: "Jupiter",
-					color: "#9C0306",
+					color: "9C0306",
 					type: 6,
 					price: 17900,
 					identifier: 2,
@@ -391,7 +391,7 @@ define(function () {
 				},
 				{
 					name: "Mayflower",
-					color: "#172C4B",
+					color: "172C4B",
 					type: 6,
 					price: 17900,
 					identifier: 2,
@@ -399,7 +399,7 @@ define(function () {
 				},
 				{
 					name: "Plainsman",
-					color: "#5A585B",
+					color: "5A585B",
 					type: 12,
 					price: 14900,
 					identifier: 2,
@@ -407,7 +407,7 @@ define(function () {
 				},
 				{
 					name: "Harvester",
-					color: "#E9E9DD",
+					color: "E9E9DD",
 					type: 6,
 					price: 18900,
 					identifier: 2,
@@ -415,7 +415,7 @@ define(function () {
 				},
 				{
 					name: "Janus",
-					color: "#F4EEDE",
+					color: "F4EEDE",
 					type: 6,
 					price: 28900,
 					identifier: 2,
@@ -423,7 +423,7 @@ define(function () {
 				},
 				{
 					name: "Bellwether",
-					color: "#B3504F",
+					color: "B3504F",
 					type: 2,
 					price: 34900,
 					identifier: 2,
@@ -431,7 +431,7 @@ define(function () {
 				},
 				{
 					name: "Descent",
-					color: "#35363F",
+					color: "35363F",
 					type: 1,
 					price: 29900,
 					identifier: 2,
@@ -439,7 +439,7 @@ define(function () {
 				},
 				{
 					name: "Aethos",
-					color: "#7C809C",
+					color: "7C809C",
 					type: 5,
 					price: 16900,
 					identifier: 2,
@@ -447,7 +447,7 @@ define(function () {
 				},
 				{
 					name: "Phoenix",
-					color: "#7C809C",
+					color: "7C809C",
 					type: 5,
 					price: 27900,
 					identifier: 2,
@@ -455,7 +455,7 @@ define(function () {
 				},
 				{
 					name: "Transit",
-					color: "#666257",
+					color: "666257",
 					type: 13,
 					price: 9000,
 					identifier: 2,
@@ -472,7 +472,7 @@ define(function () {
 					id: 11,
 					pedals: [{
 						name: "Chameleon",
-						color: "#4FBB7F",
+						color: "4FBB7F",
 						price: 14900, 
 						type: 5,
 						identifier: 2,
@@ -480,7 +480,7 @@ define(function () {
 					},
 					{
 						name: "Jr.",
-						color: "#D2282A",
+						color: "D2282A",
 						price: 10500,
 						type: 5,
 						identifier: 2,
@@ -494,7 +494,7 @@ define(function () {
 				id: 12,
 				pedals: [{
 					name: "Soul Food Overdrive",
-					color: "#DCC591",
+					color: "DCC591",
 					price: 7820,
 					type: 6,
 					identifier: 2,
@@ -502,7 +502,7 @@ define(function () {
 				},
 				{
 					name: "Nano POG",
-					color: "#FC0000",
+					color: "FC0000",
 					id: 20,
 					price: 20290,
 					type: 10,
@@ -510,7 +510,7 @@ define(function () {
 				},
 				{
 					name: "Micro POG",
-					color: "#FC0000",
+					color: "FC0000",
 					id: 21,
 					price: 21380,
 					type: 10,
@@ -518,7 +518,7 @@ define(function () {
 				},
 				{
 					name: "POG 2",
-					color: "#FC0000",
+					color: "FC0000",
 					id: 22,
 					price: 30999,
 					type: 10,
@@ -526,7 +526,7 @@ define(function () {
 				},
 				{
 					name: "Freeze",
-					color: "#B4DDE5",
+					color: "B4DDE5",
 					id: 23,
 					price: 12310,
 					type: 3,
@@ -534,7 +534,7 @@ define(function () {
 				},
 				{
 					name: "Superego",
-					color: "#5C6650",
+					color: "5C6650",
 					id: 76,
 					price: 21400,
 					type: 3,
@@ -542,7 +542,7 @@ define(function () {
 				},
 				{
 					name: "Pitch Fork",
-					color: "#949DA0",
+					color: "949DA0",
 					id: 24,
 					price: 15820,
 					type: 10,
@@ -555,7 +555,7 @@ define(function () {
 				id: 13,
 				pedals: [{
 					name: "Tube Screamer",
-					color: "#3B9955",
+					color: "3B9955",
 					price: 9999,
 					type: 6,
 					identifier: 2,
@@ -568,7 +568,7 @@ define(function () {
 				id: 14,
 				pedals: [{
 					name: "RD1 Rock Distortion",
-					color: "#181818",
+					color: "181818",
 					price: 2499,
 					type: 6,
 					id: 17,
@@ -581,7 +581,7 @@ define(function () {
 				id: 15,
 				pedals: [{
 					name: "OCD",
-					color: "#E6E2D9",
+					color: "E6E2D9",
 					price: 12720,
 					type: 6,
 					identifier: 2,
@@ -589,7 +589,7 @@ define(function () {
 				},
 				{
 					name: "Plimsoul",
-					color: "#31365C",
+					color: "31365C",
 					price: 14400,
 					type: 6,
 					identifier: 2,
@@ -601,7 +601,7 @@ define(function () {
 					id: 17,
 					pedals: [{
 						name: "2 Mosfet",
-						color: "#2D5CAA",
+						color: "2D5CAA",
 						type: 6,
 						price: 12000,
 						identifier: 2,
@@ -609,7 +609,7 @@ define(function () {
 					},
 					{
 						name: "3",
-						color: "#383934",
+						color: "383934",
 						price: 14400,
 						type: 6,
 						identifier: 2,
@@ -618,7 +618,7 @@ define(function () {
 				},
 				{
 					name: "Supa-Trem 1",
-					color: "#0B0B09",
+					color: "0B0B09",
 					price: 16000,
 					type: 3,
 					identifier: 2,
@@ -626,7 +626,7 @@ define(function () {
 				},
 				{
 					name: "Secret Freq",
-					color: "#0B0B09",
+					color: "0B0B09",
 					price: 14400,
 					type: 6,
 					identifier: 2,
@@ -639,7 +639,7 @@ define(function () {
 				id: 16,
 				pedals: [{
 					name: "Rainbow Machine",
-					color: "#CB447F",
+					color: "CB447F",
 					price: 22500,
 					type: 10,
 					identifier: 2,
@@ -647,7 +647,7 @@ define(function () {
 				},
 				{
 					name: "Bit Commander",
-					color: "#B6B7B9",
+					color: "B6B7B9",
 					price: 17500,
 					type: 10,
 					identifier: 2,
@@ -660,7 +660,7 @@ define(function () {
 				id: 18,
 				pedals: [{
 					name: "Compressor",
-					color: "#4D7196",
+					color: "4D7196",
 					price: 24900,
 					type: 4,
 					identifier: 2,
@@ -668,7 +668,7 @@ define(function () {
 				},
 				{
 					name: "Heavy",
-					color: "#22231E",
+					color: "22231E",
 					price: 29900,
 					type: 6,
 					identifier: 2,
@@ -676,7 +676,7 @@ define(function () {
 				},
 				{
 					name: "Multidrive",
-					color: "#605957",
+					color: "605957",
 					price: 29900,
 					type: 6,
 					identifier: 2,
@@ -684,7 +684,7 @@ define(function () {
 				},
 				{
 					name: "Nebulus",
-					color: "#AE2B4A",
+					color: "AE2B4A",
 					price: 29900,
 					type: 3,
 					identifier: 2,
@@ -692,7 +692,7 @@ define(function () {
 				},
 				{
 					name: "Phaser",
-					color: "#039443",
+					color: "039443",
 					price: 34900,
 					type: 3,
 					identifier: 2,
@@ -700,7 +700,7 @@ define(function () {
 				},
 				{
 					name: "Tape Delay",
-					color: "#0E0D13",
+					color: "0E0D13",
 					price: 24900,
 					type: 2,
 					identifier: 2,
@@ -708,7 +708,7 @@ define(function () {
 				},
 				{
 					name: "Buffer",
-					color: "#1B1B1B",
+					color: "1B1B1B",
 					price: 9900,
 					type: 11,
 					identifier: 2,
@@ -716,7 +716,7 @@ define(function () {
 				},
 				{
 					name: "Buffer+",
-					color: "#1B1B1B",
+					color: "1B1B1B",
 					price: 14900,
 					type: 11,
 					identifier: 2,
@@ -724,7 +724,7 @@ define(function () {
 				},
 				{
 					name: "ParaEq",
-					color: "#0065B9",
+					color: "0065B9",
 					price: 24900,
 					type: 14,
 					identifier: 2,
@@ -732,7 +732,7 @@ define(function () {
 				},
 				{
 					name: "Distortion",
-					color: "#99162B",
+					color: "99162B",
 					price: 14900,
 					type: 6,
 					identifier: 2,
@@ -740,7 +740,7 @@ define(function () {
 				},
 				{
 					name: "Fuzz",
-					color: "#D69800",
+					color: "D69800",
 					price: 14900,
 					type: 6,
 					identifier: 2,
@@ -748,7 +748,7 @@ define(function () {
 				},
 				{
 					name: "Germ Drive",
-					color: "#B9B2A1",
+					color: "B9B2A1",
 					price: 14900,
 					type: 6,
 					identifier: 2,
@@ -756,7 +756,7 @@ define(function () {
 				},
 				{
 					name: "Superdelay",
-					color: "#EBEBEB",
+					color: "EBEBEB",
 					price: 44900,
 					type: 2,
 					identifier: 2,
@@ -764,7 +764,7 @@ define(function () {
 				},
 				{
 					name: "Tremolo 2",
-					color: "#FC4604",
+					color: "FC4604",
 					price: 24900,
 					type: 3,
 					identifier: 2,

@@ -12,12 +12,12 @@ function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDa
 	
 	function getData(items, getName, getValue, getColor) {
 		return helpers.select(items, function (item) {
-			var color = getColor(item);
+			var color = "#" + getColor(item);
 			return {
 				value: getValue(item),
 				label: getName(item),
 				color: color,
-				highlight: colorEffects.highlight(color, 0.1), /*10% lighter*/
+				highlight: colorEffects.highlight(color, 0.2), /*10% lighter*/
 			};
 		});
 	}
