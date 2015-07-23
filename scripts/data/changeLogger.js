@@ -44,10 +44,13 @@ define([ "helperMethods" ], function ( helpers ) {
 			this.newValue = newValue;
 		}
 		
-		function Batch(description, changes) {
+		function Batch(batchType, objId, objName) {
 			/* Info */
-			this.description = description;
-			this.changes = changes || [];
+			this.batchType = batchType;
+			this.objId = objId;
+			this.changes = [];
+			/* Resource information helper */
+			this.objName = objName;
 			/* Data */
 			this.id = "batch-" + topBatchId++;
 			this.isBatch = true;
@@ -69,18 +72,23 @@ define([ "helperMethods" ], function ( helpers ) {
 		var enabled = true; /* Used by dontLog to temporarily disable logging */
 		
 		/* ! Public Methods ! */	
-		changeLogger.batch = function (desc, batchChanges) {
-			/* check and correct params if there is no description */
-			if (typeof desc === "function") {
-				batchChanges = desc;
-				desc = void(0); /* undefined */
+		changeLogger.batch = function (batchType, objId, objName, batchChanges) {
+			/* If the optional param pair @objId & @objName were not given, fix the variables */
+			if (typeof objId === "function" && helpers.isUndefined(batchChanges) && helpers.isUndefined(objName)) {
+				batchChanges = objId;
+				objId = void(0);
 			}
+		
+			/* Make sure the changeType is a number */
+			if (batchType === "" || isNaN(new Number(batchType)))
+				throw new TypeError("@batchType should be a number from the changeInfo.js batchType \"enum\". Was: " + batchType);
+			/* Make sure the changeType is a number */
 			
 			/* Do nothing if there is nothing to do */
 			if (!enabled || helpers.isUndefined(batchChanges)) return;
 			
 			/* Create a new batch */		
-			batchStack.push(new Batch(desc));
+			batchStack.push(new Batch(batchType, objId, objName));
 
 			/* Run the code that will put changes inside this batch */
 			batchChanges();

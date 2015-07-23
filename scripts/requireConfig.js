@@ -36,6 +36,7 @@ requirejs.config({
 			"pedalsGetter":                  "data/pedalsGetter",
 			"changeLogger":                  "data/changeLogger",
 			"changeTypes":                   "data/changeInfo",
+			"batchTypes":                    "data/changeInfo",
 			"objectTypes":                   "data/changeInfo",
 			"stateReverter":                 "data/stateReverter",
 			

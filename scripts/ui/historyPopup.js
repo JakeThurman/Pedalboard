@@ -1,9 +1,22 @@
-define([ "_Popup", "textResources", "jquery", "helperMethods", "moment", "changeTypes", "objectTypes", "stringReplacer" ], function ( _Popup, resources, $, helpers, moment, changeTypes, objectTypes, replacer ) {
+define([ "_Popup", "textResources", "jquery", "helperMethods", "moment", "changeTypes", "batchTypes", "objectTypes", "stringReplacer" ], 
+function ( _Popup, resources, $, helpers, moment, changeTypes, batchTypes, objectTypes, replacer ) {
 	"use strict";
 	
 	var methods = {};
 	
 	methods.create = function(changeLog, revertTo) {
+		function genBatchText(batchType, objName) {
+			switch (batchType) {
+				case batchTypes.firstLoad:
+					return resources.firstStartupBatchName;
+					
+				case batchTypes.deleteAll:
+					return resources.change_DeleteAllBoards;
+					
+				case batchTypes.clearBoard:
+					return replacer.replace(resources.change_ClearedBoard, objName);
+			}
+		}
 		function genChangeText(changeType, objName, otherName) {
 			switch (changeType) {
 				case changeTypes.addBoard: 
@@ -27,6 +40,9 @@ define([ "_Popup", "textResources", "jquery", "helperMethods", "moment", "change
 				case changeTypes.removedPedal:
 					return replacer.replace(resources.change_RemovedPedal, [ otherName, objName ]);
 					
+				case changeTypes.clearedBoard:
+					return replacer.replace(resources.change_ClearedBoard, objName);
+					
 				case changeTypes.movePedalToTop:
 					return replacer.replace(resources.change_MovePedalToTop, [ otherName, objName ]);
 					
@@ -38,9 +54,6 @@ define([ "_Popup", "textResources", "jquery", "helperMethods", "moment", "change
 					
 				case changeTypes.movePedalDown:
 					return replacer.replace(resources.change_MovePedalDown, [ otherName, objName ]);
-					
-				case changeTypes.clearedBoard:
-					return replacer.replace(resources.change_ClearedBoard, objName);
 					
 				default:
 					throw new TypeError("@changeType is invalid, was: " + changeType);
@@ -55,23 +68,15 @@ define([ "_Popup", "textResources", "jquery", "helperMethods", "moment", "change
 		/* store all of the moment update intervals here so that we can kill them on close */
 		var momentUpdateIntervals = [];
 		
-		function renderChange(change, isTopLevel) {
+		function renderChange(change) {
 			var changeDiv = $("<div>");
 			
 			var description = $("<div>", { "class": "description" })
 				.appendTo(changeDiv);
-				
-			if (isTopLevel) {
-				description
-					.addClass("top-level")
-					.click(function () {
-						revertTo(change.id);
-					});
-			}
-						
+			
 			if (change.isBatch) {
 				/* The text is the provided description */
-				description.text(change.description)
+				description.text(change.description || genBatchText(change.batchType, change.objName));
 				
 				/* So we can lazily render batch changes we need, but not multiple times */
 				var renderedSubChanges = false;

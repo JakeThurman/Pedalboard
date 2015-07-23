@@ -61,9 +61,7 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 		var justDeleted = false;
 		
 		var deleteAction  = function( event, ui ) {
-			var pedalId = pedalRenderer.getId(ui.draggable);
-			ui.draggable.remove();
-			manager.RemovePedal(pedalId, popup.id);
+			manager.RemovePedal(ui.draggable.prevAll().filter(":not(.pedal-placeholder)").length, popup.id);
 			justDeleted = true;
 		};
 
@@ -85,7 +83,7 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 					});
 					
 				/* the index before start is equal to the number of pedals previous to this */
-				originalIndex = ui.item.prevAll().length;
+				originalIndex = ui.item.prevAll().filter(":not(.pedal-placeholder)").length;
 			},
 			stop: function (e, ui) {
 				/* remove the delete pedal zone */
@@ -97,7 +95,7 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 					return;
 				}
 				/* the new index is equal to the number of pedals previous to this */
-				manager.ReorderPedal(originalIndex, ui.item.prevAll().length, popup.id);
+				manager.ReorderPedal(originalIndex, ui.item.prevAll().filter(":not(.pedal-placeholder)").length, popup.id);
 			},
 			placeholder: "pedal-placeholder single-pedal-data",
 		});

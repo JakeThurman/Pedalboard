@@ -1,4 +1,7 @@
-define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer", "textResources", "helperMethods", "changeTypes", "objectTypes"], function (classes, pedalBoardPopup, pedalRenderer, replacer, resources, helpers, changeTypes, objectTypes) {
+define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "textResources", "helperMethods", "changeTypes", "batchTypes", "objectTypes"], 
+function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTypes, batchTypes, objectTypes) {
+	"use strict";
+	
 	var actions = {};
 		
 	/*
@@ -209,7 +212,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 		
 		/* Delete all of the boards on the page. */
 		manager.DeleteAll = function () {
-			logger.batch(resources.change_DeleteAllBoards, function () { /* log deleting each board as a batch */
+			logger.batch(batchTypes.deleteAll, function () { /* log deleting each board as a batch */
 				for(var key in boards)
 					manager.Delete(key);
 			});
@@ -265,24 +268,12 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 		manager.Clear = function (boardId) {
 			assertBoardIdExists(boardId);
 			
-			/* save the current pedal stack for logging in a second */
-			var oldValue = boards[boardId].data.pedals;
-			
-			/*remove the pedals from the dom */
-			helpers.forEach(boards[boardId].__pedalEls, function (pedalEl) { 
-			    pedalEl.remove();
+			logger.batch(batchTypes.clearBoard, boardId, boards[boardId].data.Name, function () {
+				var pedalsCount = boards[boardId].data.pedals.length;
+				for (var i = 0; i < pedalsCount; i++) {
+					manager.RemovePedal(0, boardId);
+				}
 			});
-			/* reset the dom container */
-			boards[boardId].__pedalEls = []; 
-			
-			/* clear the data pedals from the data board */
-			boards[boardId].data.Clear();
-			
-			/* log this change to the history */
-			logger.log(changeTypes.clearedBoard, objectTypes.pedalboard, boardId, oldValue, [], boards[boardId].data.Name);
-			
-			/* call all of the change callbacks for this board id */
-			callChangeCallbacks(boardId);
 		};
 		
 		/* ! Pedal Methods ! */		 
@@ -325,12 +316,19 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 		 *         is because choosing which instance of a pedal that is on the same board
 		 *         is not yet implemented.
 		 *
-		 * @pedalId: The id of the pedal to remove from the board
+		 * @index:   The index of the pedal to remove from the board
 		 * @boardId: The id of the pedalboard to remove the pedal from
 		 */
-		manager.RemovePedal = function (pedalId, boardId) {	
+		manager.RemovePedal = function (index, boardId) {	
 			assertBoardIdExists(boardId);
-			var removedPedal = boards[boardId].data.Remove(pedalId);
+			var removedPedal = boards[boardId].data.Remove(index);
+			
+			/* Kill the dom element */
+			boards[boardId].__pedalEls[index].remove();
+			var i = 0;
+			boards[boardId].__pedalEls = helpers.where(boards[boardId].__pedalEls, function () {
+				return i++ !== index;
+			});
 			
 			/* log this change to the history */
 			logger.log(changeTypes.removedPedal, objectTypes.pedal, boardId, removedPedal, void(0), boards[boardId].data.Name, removedPedal.fullName);
@@ -356,6 +354,35 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 			if (oldPedalIndex === newPedalIndex) return; 
 			
 			var reorderedPedal = boards[boardId].data.Reorder(oldPedalIndex, newPedalIndex);
+			
+			/* Reorder the __pedalEls cache */
+			{
+				/* The pedal to move */
+				var movePedal = boards[boardId].__pedalEls[oldPedalIndex];
+				
+				var moveUp = oldPedalIndex > newPedalIndex;
+				var smallerIndex = moveUp
+					? newPedalIndex
+					: oldPedalIndex;
+					
+				/* No need to loop through the first part since we'll just copy it straight */
+				var orderedPedals = boards[boardId].__pedalEls.slice(0, smallerIndex)			
+				
+				/* loop through the rest to find the pedal that we need to move and move it */
+				for (var i = smallerIndex; i < boards[boardId].__pedalEls.length; i++) {
+					/* for move up we add this first */
+					if (moveUp && i === newPedalIndex)
+						orderedPedals.push(movePedal);
+					
+					if (i !== oldPedalIndex)
+						orderedPedals.push(boards[boardId].__pedalEls[i]);
+					
+					/* for move down we add this after */
+					if (!moveUp && i === newPedalIndex)
+						orderedPedals.push(movePedal);
+				}
+				boards[boardId].__pedalEls = orderedPedals;
+			}
 			
 			/* log this change to the history */
 			var changeType = newPedalIndex === 0

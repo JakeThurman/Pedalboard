@@ -17,11 +17,16 @@ define([ "helperMethods", "changeTypes" ], function (helpers, changeTypes) {
 	 * @returns the stack of changes sorted from newest to oldest.
 	 */
 	methods.takeUntilId = function(changeId, getNextChange, putChangeBack) {
-		var result = helpers.callUntil(getNextChange, function (change) {
+		var results = helpers.callUntil(getNextChange, function (change) {
 			return change.id === changeId;
 		});
-		putChangeBack(result.pop());
-		return result;
+		
+		/* Put the last change back, and don't revert it */
+		putChangeBack(results.pop());
+		/* Put the rest of the changes back, but keep them so we will revert them */
+		helpers.forEach(results, putChangeBack);
+		
+		return results;
 	};
 	
 	/*
@@ -33,7 +38,7 @@ define([ "helperMethods", "changeTypes" ], function (helpers, changeTypes) {
 	methods.revert = function (changeStack, manager) {
 		helpers.forEach(changeStack, function (change) {
 			if (change.isBatch) {
-				methods.revert(helpers.reverse(change.changes));
+				methods.revert(helpers.reverse(change.changes), manager);
 				return; /* That's all we want to do with a batch */
 			}
 			

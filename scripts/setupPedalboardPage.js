@@ -1,5 +1,5 @@
-require(["pedalBoardManager", "jquery", "mainPageMenuHandler", "pedalBoardStorage", "stateReverter", "historyPopup", "changeLogger", "textResources", "domReady!"], 
-function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateReverter, historyPopup, changeLogger, resources) {
+require(["pedalBoardManager", "jquery", "mainPageMenuHandler", "pedalBoardStorage", "stateReverter", "historyPopup", "changeLogger", "batchTypes", "domReady!"], 
+function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateReverter, historyPopup, changeLogger, batchTypes) {
     "use strict";
 	
 	/* DOM variables */
@@ -18,7 +18,7 @@ function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateRev
 	if (pedalBoardStorage.HasSavedData()) /* We don't need to log that the page was reloaded! */
 		logger.dontLog(doImport);
 	else /* First load should be in a batch though */
-		logger.batch(resources.firstStartupBatchName, doImport);
+		logger.batch(batchTypes.firstLoad, doImport);
 	
 	function revertTo(changeId) { /* Revert action */
 		var changes = stateReverter.takeUntilId(changeId, 

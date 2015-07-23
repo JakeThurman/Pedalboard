@@ -12,38 +12,20 @@ define([ "helperMethods" ], function (helpers) {
 			thisBoard.pedals.push(pedal);
 		};
 				
-		this.Remove = function(pedalId){
-			var pedalsWithThisId = helpers.where(thisBoard.pedals, function (boardPedal) {
-				return boardPedal.id === pedalId;
-			});
-				
-			var pedalToRemove = helpers.single(pedalsWithThisId,
-				function() {/* more than one result */
-					/* Figure out which one to remove */
-					console.log("TODO: handle choosing which to delete.");
-					return pedalsWithThisId[0];
-				},
-				function() {/* zero results */
-					throw "There were no pedals with id of: " + pedalId;
-				}
-			);
-				
-			var deletedOne = false;
+		this.Remove = function(index){
+			if (index < 0 || (index + 1) > thisBoard.pedals.length)
+				throw new Error("Index is outside of the bounds of the pedals array: " + index);
 			
+			var pedalToRemove = thisBoard.pedals[index];
+			
+			var i = 0;
 			/* We can't use the delete keyword because it leaves a messy undefined in the array. */			
-			thisBoard.pedals = helpers.where(thisBoard.pedals, function (pedal) {
-				/* Use the already deleted bool to make sure we only delete one instance of this pedal */
-				if (deletedOne) return true;
-				deletedOne = (pedal.id === pedalToRemove.id);
-				return pedal.id !== pedalToRemove.id;
+			thisBoard.pedals = helpers.where(thisBoard.pedals, function () {
+				return i++ !== index;
 			});
 			
 			return pedalToRemove;
 		};
-				
-        this.Clear = function () {
-            thisBoard.pedals = [];
-        };
 		
 		/* moves the pedal at @oldPedalIndex to @newPedalIndex in this boards pedal array */
 		this.Reorder = function(oldPedalIndex, newPedalIndex) {
