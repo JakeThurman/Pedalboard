@@ -163,7 +163,7 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 				__pedalEls: [], /* we use this for caching the rendered pedals so that we can easily access them for removing/clearing */
 			};
 			
-			logger.log(changeTypes.addBoard, objectTypes.pedalboard, domboard.id, void(0), boards[domboard.id], name);
+			logger.log(changeTypes.addBoard, objectTypes.pedalboard, domboard.id, void(0), manager.GetBoard(domboard.id), name);
 			callChangeCallbacks();
 			
 			return domboard;
@@ -322,6 +322,7 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 		manager.RemovePedal = function (index, boardId) {	
 			assertBoardIdExists(boardId);
 			var removedPedal = boards[boardId].data.Remove(index);
+			removedPedal.index = index;
 			
 			/* Kill the dom element */
 			boards[boardId].__pedalEls[index].remove();
@@ -384,16 +385,7 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 				boards[boardId].__pedalEls = orderedPedals;
 			}
 			
-			/* log this change to the history */
-			var changeType = newPedalIndex === 0
-				? changeTypes.movePedalToTop /* To Top */
-				: oldPedalIndex > newPedalIndex
-					? changeTypes.movePedalUp /* Up */
-					: newPedalIndex === (boards[boardId].data.pedals.length - 1)
-						? changeTypes.movePedalToBottom /* To Bottom */
-						: changeTypes.movePedalDown /* Down */
-			
-			logger.log(changeType, objectTypes.pedal, boardId, oldPedalIndex, newPedalIndex, boards[boardId].data.Name, reorderedPedal.fullName);
+			logger.log(changeTypes.movePedal, objectTypes.pedal, boardId, oldPedalIndex, newPedalIndex, boards[boardId].data.Name, reorderedPedal.fullName);
 			
 			/* call all of the change callbacks for this board id */
 			callChangeCallbacks(boardId);

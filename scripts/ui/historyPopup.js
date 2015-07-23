@@ -4,24 +4,24 @@ function ( _Popup, resources, $, helpers, moment, changeTypes, batchTypes, objec
 	
 	var methods = {};
 	
-	methods.create = function(changeLog, revertTo) {
+	methods.create = function(changeLog) {
 		function genBatchText(batchType, objName) {
 			switch (batchType) {
 				case batchTypes.firstLoad:
 					return resources.firstStartupBatchName;
-					
+				
 				case batchTypes.deleteAll:
 					return resources.change_DeleteAllBoards;
-					
+				
 				case batchTypes.clearBoard:
 					return replacer.replace(resources.change_ClearedBoard, objName);
 			}
 		}
-		function genChangeText(changeType, objName, otherName) {
+		function genChangeText(changeType, objName, otherName, newValue, oldValue) {
 			switch (changeType) {
 				case changeTypes.addBoard: 
 					return replacer.replace(resources.change_AddBoard, objName);
-					
+				
 				case changeTypes.renamedBoard:
 					return replacer.replace(resources.change_RenamedBoard, [ otherName, objName ]);
 					
@@ -39,22 +39,17 @@ function ( _Popup, resources, $, helpers, moment, changeTypes, batchTypes, objec
 					
 				case changeTypes.removedPedal:
 					return replacer.replace(resources.change_RemovedPedal, [ otherName, objName ]);
-					
-				case changeTypes.clearedBoard:
-					return replacer.replace(resources.change_ClearedBoard, objName);
-					
-				case changeTypes.movePedalToTop:
-					return replacer.replace(resources.change_MovePedalToTop, [ otherName, objName ]);
-					
-				case changeTypes.movePedalUp:
-					return replacer.replace(resources.change_MovePedalUp, [ otherName, objName ]);
-					
-				case changeTypes.movePedalToBottom:
-					return replacer.replace(resources.change_MovePedalToBottom, [ otherName, objName ]);
-					
-				case changeTypes.movePedalDown:
-					return replacer.replace(resources.change_MovePedalDown, [ otherName, objName ]);
-					
+				
+				case changeTypes.movePedal:
+					var resource = newValue
+						? resources.change_MovePedalToTop /* To Top */
+						: oldValue > newValue
+							? resources.change_MovePedalUp /* Up */
+							: newValue === (boards[boardId].data.pedals.length - 1)
+								? resources.change_MovePedalToBottom /* To Bottom */
+								: resources.change_MovePedalDown /* Down */
+					return replacer.replace(resource, [ otherName, objName ]);
+				
 				default:
 					throw new TypeError("@changeType is invalid, was: " + changeType);
 			}
@@ -104,7 +99,7 @@ function ( _Popup, resources, $, helpers, moment, changeTypes, batchTypes, objec
 			}
 			else {
 				/* Generate the resource for this change based */
-				description.text(genChangeText(change.changeType, change.objName, change.otherName));
+				description.text(genChangeText(change.changeType, change.objName, change.otherName, change.newValue, change.oldValue));
 			
 				changeDiv.addClass("change");
 				
