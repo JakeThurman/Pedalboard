@@ -10,15 +10,15 @@ function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateRev
 	var logger = changeLogger.create(pedalBoardStorage.Load());
 	var manager = pedalBoardManager.create(logger, mainContentContainer);
 	
-	/* Restore save data */
-	function doImport() {
-		stateReverter.replay(logger.changes, manager);
-	}
-	
+	/* Restore save data */	
 	if (pedalBoardStorage.HasSavedData()) /* We don't need to log that the page was reloaded! */
-		logger.dontLog(doImport);
+		logger.dontLog(function () {
+			stateReverter.replay(logger.changes, manager);
+		});
 	else /* First load should be in a batch though */
-		logger.batch(batchTypes.firstLoad, doImport);
+		logger.batch(batchTypes.firstLoad, function () {
+			manager.Import(pedalBoardStorage.GetDefaultBoard());
+		});
 	
 	/* Setup the main page menu click handler */
    	pageMenuButton.click(function () {

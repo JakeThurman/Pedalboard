@@ -1,4 +1,4 @@
-define(["helperMethods", "textResources"], function (helpers, resources) {
+define(["helperMethods", "textResources", "changeTypes"], function (helpers, resources, changeTypes) {
     "use strict";
 	
 	var methods = {};
@@ -37,12 +37,24 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 	methods.Load = function () {
 		if (supports_html5_storage() && localStorage[historyStorageName])
 			return JSON.parse(localStorage[historyStorageName]);
-		else
-			return [];
 	};
 	
 	methods.HasSavedData = function () {
 		return supports_html5_storage() && localStorage[historyStorageName];
+	};
+	
+	methods.GetDefaultBoard = function () {
+		return {
+			data: {
+				Name: resources.defaultPedalBoardName,
+				pedals: [],
+			},
+			clientRect: {
+				left: "10px",
+				top: "49px",
+				width: "509px"
+			},
+		};
 	};
 		
 	return methods;

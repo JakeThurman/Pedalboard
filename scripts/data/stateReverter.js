@@ -78,7 +78,7 @@ define([ "helperMethods", "changeTypes" ], function (helpers, changeTypes) {
 					break;
 					
 				default:
-					throw new TypeError("@changeType is invalid, was: " + changeType);
+					throw new TypeError("@changeType is invalid, was: " + change.changeType);
 			}
 		});
 	};
@@ -135,7 +135,7 @@ define([ "helperMethods", "changeTypes" ], function (helpers, changeTypes) {
 					break;
 					
 				default:
-					throw new TypeError("@changeType is invalid, was: " + changeType);
+					throw new TypeError("@changeType is invalid, was: " + change.changeType);
 			}
 		});
 	};
