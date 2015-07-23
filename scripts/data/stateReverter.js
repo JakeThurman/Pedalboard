@@ -2,32 +2,6 @@ define([ "helperMethods", "changeTypes" ], function (helpers, changeTypes) {
 	"use strict";
 	
 	var methods = {};
-
-	/*
-	 * Gets the stack of changes since and including the change with @changeId
-	 *
-	 * @changeId:       The id to call @getNextChange until the change returned's id is the same.
-	 * @getNextChange:  The function returning the next change in a stack
-	 *                      EXAMPLE:
-	 *                          function getNextChange() {
-	 *                              return logger.changes.pop();
-	 *                          }
-	 * @putChangeBack: The last change is going to need to be put back into its stack becasue we don't want to revert that change, just to it.
-	 *
-	 * @returns the stack of changes sorted from newest to oldest.
-	 */
-	methods.takeUntilId = function(changeId, getNextChange, putChangeBack) {
-		var results = helpers.callUntil(getNextChange, function (change) {
-			return change.id === changeId;
-		});
-		
-		/* Put the last change back, and don't revert it */
-		putChangeBack(results.pop());
-		/* Put the rest of the changes back, but keep them so we will revert them */
-		helpers.forEach(results, putChangeBack);
-		
-		return results;
-	};
 	
 	/*
 	 * Replays all of the given change logger changes
