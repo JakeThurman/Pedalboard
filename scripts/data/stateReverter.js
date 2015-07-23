@@ -6,19 +6,22 @@ define([ "helperMethods", "changeTypes" ], function (helpers, changeTypes) {
 	/*
 	 * Gets the stack of changes since and including the change with @changeId
 	 *
-	 * @changeId:      The id to call @getNextChange until the change returned's id is the same.
-	 * @getNextChange: The function returning the next change in a stack
-	 *                     EXAMPLE:
-	 *                         function getNextChange() {
-	 *                             return logger.changes.pop();
-	 *                         }
+	 * @changeId:       The id to call @getNextChange until the change returned's id is the same.
+	 * @getNextChange:  The function returning the next change in a stack
+	 *                      EXAMPLE:
+	 *                          function getNextChange() {
+	 *                              return logger.changes.pop();
+	 *                          }
+	 * @putChangeBack: The last change is going to need to be put back into its stack becasue we don't want to revert that change, just to it.
 	 *
 	 * @returns the stack of changes sorted from newest to oldest.
 	 */
-	methods.takeUntilId = function(changeId, getNextChange) {
-		return helpers.callUntil(getNextChange, function (change) {
+	methods.takeUntilId = function(changeId, getNextChange, putChangeBack) {
+		var result = helpers.callUntil(getNextChange, function (change) {
 			return change.id === changeId;
 		});
+		putChangeBack(result.pop());
+		return result;
 	};
 	
 	/*
@@ -42,40 +45,38 @@ define([ "helperMethods", "changeTypes" ], function (helpers, changeTypes) {
 					break;
 					
 				case changeTypes.renamedBoard: /* Board was renamed, so change it back */
-					manager.Rename(boardId, change.otherName);
+					manager.Rename(boardId, change.oldValue);
 					break;
 					
 				case changeTypes.deleteBoard: /* Board was deleted, so add it back */
-					manager.Add(change.objName);
+					manager.Import(change.oldValue);
 					break;
 					
 				case changeTypes.moveBoard: /* Board was moved so move it back */
-					manager.Move(boardId, (function () {throw "Prev move data not logged";})());
+					manager.Move(boardId, change.oldValue);
 					break;
-					
+				
 				case changeTypes.resizeBoard: /* Board was resized, so reset to it's old size */
-					manager.Resize(boardId, (function () {throw "Prev resize not logged";})());
+					manager.Resize(boardId, change.oldValue);
 					break;
 					
 				case changeTypes.addPedal: /* Pedal was added, so remove it */
-					manager.RemovePedal(boardId, (function () { throw "Pedal id not logged"; })());
+					manager.RemovePedal(change.newValue.id, boardId);
 					break;
 					
 				case changeTypes.removedPedal: /* Pedal removed so add it back */
-					manager.AddPedal(boardId, (function () { throw "Removed pedal not logged"; }))
+					manager.AddPedal(change.oldValue, boardId);
 					break;
 					
 				case changeTypes.movePedalToTop:
 				case changeTypes.movePedalUp:
 				case changeTypes.movePedalToBottom:
 				case changeTypes.movePedalDown:
-					manager.ReorderPedal((function () { throw "new index not logged" })(), (function () { throw "old index not logged"; })(), boardId);
+					manager.ReorderPedal(change.oldValue, change.newValue, boardId); /* New is passed in as old, and old as new to change them back */
 					break;
 					
 				case changeTypes.clearedBoard: /* Board cleared */
-					helpers.forEach((function () { throw "Cleared pedals not logged" })(), function (pedal) {
-						helpers.AddPedal(pedal, boardId, (function () { throw "content container not logged"; })());
-					});
+					throw "Cleared pedals is going to be changed to a batch";
 					break;
 					
 				default:

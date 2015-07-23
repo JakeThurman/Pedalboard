@@ -24,6 +24,9 @@ function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateRev
 		var changes = stateReverter.takeUntilId(changeId, 
 			function () { /* Get Next Chnage */
 				return logger.changes.pop(); /* Just pop the change because we're about to revert it anyway. */
+			},
+			function (change) { /* put change back -> once we find the change to revert to it puts that change back, becuase we don't want to revert it, only to it. */
+				return logger.changes.push(change);
 			});
 		stateReverter.revert(changes, manager);
 	}

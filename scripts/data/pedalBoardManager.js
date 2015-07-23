@@ -218,7 +218,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 		/* ! Board-UI Logging Methods ! */
 		/* Quick helper to check (for chrome and firefox) if the client rect object is valid */
 		function assertClientRectIsValid(clientRect) {		
-			if (!(window.ClientRect && clientRect instanceof window.ClientRect) && !(window.DOMRect && clientRect instanceof window.DOMRect))
+			if (!clientRect.left || !clientRect.top || !clientRect.width)
 				throw new TypeError("@clientRect is not a valid. Try using (vanilla js element).getBoundingClientRect()");
 		}
 		
@@ -229,15 +229,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 		 * @clientRect: The javascript client rect object received from ([VANILLA JS DOM ELEMENT].getBoundingClientRect()) where the dom element is the pedalboard
 		 */
 		manager.Move = function (boardId, clientRect) {
-			assertBoardIdExists(boardId);
-			assertClientRectIsValid(clientRect);
-			
-			/* Save the before value so we can log it in a second */
-			var oldValue = manager.GetBoard(boardId).clientRect;
-			
-			boards[boardId].clientRect = getClientRect(clientRect);
-			logger.log(changeTypes.moveBoard, objectTypes.pedalboard, boardId, oldValue, boards[boardId].clientRect, boards[boardId].data.Name);
-			callChangeCallbacks(boardId);
+			changeVisual(boardId, clientRect, changeTypes.moveBoard);
 		};
 		
 		/*
@@ -247,6 +239,11 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 		 * @clientRect: The javascript client rect object recieved from ([VANILLA JS DOM ELEMENT].getBoundingClientRect()) where the dom element is the pedalboard
 		 */
 		manager.Resize = function (boardId, clientRect) {
+			changeVisual(boardId, clientRect, changeTypes.resizeBoard);
+		};
+		
+		/* Helper, facoring out .Move and .Resize shared code. */
+		function changeVisual(boardId, clientRect, changeType) {
 			assertBoardIdExists(boardId);
 			assertClientRectIsValid(clientRect);
 			
@@ -254,9 +251,11 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 			var oldValue = manager.GetBoard(boardId).clientRect;
 			
 			boards[boardId].clientRect = getClientRect(clientRect);
-			logger.log(changeTypes.resizeBoard, objectTypes.pedalboard, boardId, oldValue, boards[boardId].clientRect, boards[boardId].data.Name);
+			boards[boardId].dom.el.css(boards[boardId].clientRect); /* Force make this true */
+			
+			logger.log(changeType, objectTypes.pedalboard, boardId, oldValue, boards[boardId].clientRect, boards[boardId].data.Name);
 			callChangeCallbacks(boardId);
-		};
+		}
 		
 		/*
 		 * Clear the board with id of @boardId of all pedals
