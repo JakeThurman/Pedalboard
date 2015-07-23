@@ -10,9 +10,25 @@ define([ "helperMethods" ], function ( helpers ) {
 		
 		changeLogger.changes = initalChanges || [];
 		
+		/* Loop through all of the existing changes and batches and count them so that we don't end up with duplicate ids */
+		var topChangeId = 0;
+		var topBatchId = 0;
+		helpers.forUntilBottom(changeLogger.changes, 
+			function (change) { /* @isBottomFilterAction */
+				if (change.isBatch)
+					topBatchId++;
+				
+				return !change.isBatch;
+			},
+			function (change) { /* @getChildCollectionAction */
+				return change.changes;
+			},
+			function (change) { /* @bottomAction */
+				topChangeId++;
+			});
+		
 		/* classes */
-		var topChangeId = changeLogger.changes.length;
-		function Change(changeType, objType, objId, objName, otherName) {
+		function Change(changeType, objType, objId, oldValue, newValue, objName, otherName) {
 			/* Info */
 			this.changeType = changeType;
 			this.objId = objId;
@@ -24,9 +40,10 @@ define([ "helperMethods" ], function ( helpers ) {
 			this.id = "change-" + topChangeId++;
 			this.isBatch = false;
 			this.timeStamp = new Date();
+			this.oldValue = oldValue;
+			this.newValue = newValue;
 		}
 		
-		var topBatchId = changeLogger.changes.length;
 		function Batch(description, changes) {
 			/* Info */
 			this.description = description;
@@ -75,7 +92,7 @@ define([ "helperMethods" ], function ( helpers ) {
 			getCurrentBatch().changes.push(batch);
 		};
 		
-		changeLogger.log = function (changeType, objType, objId, objName, otherName) {
+		changeLogger.log = function (changeType, objType, objId, oldValue, newValue, objName, otherName) {
 			/* If we are inside of a DontLog function, don't save any changes */
 			if (!enabled) return;
 			
@@ -87,8 +104,8 @@ define([ "helperMethods" ], function ( helpers ) {
 				throw new TypeError("@objType should be a number from the changeInfo.js objectTypes \"enum\". Was: " + objType);
 			
 			/* Create a change object */
-			var change = new Change(changeType, objType, objId, objName, otherName);
-		
+			var change = new Change(changeType, objType, objId, oldValue, newValue, objName, otherName);
+			
 			/* Push this change as a change in the top batch/top level. */
 			getCurrentBatch().changes.push(change);
 		};

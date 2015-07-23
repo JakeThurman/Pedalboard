@@ -153,8 +153,8 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 				id: domboard.id,
 				__pedalEls: [], /* we use this for caching the rendered pedals so that we can easily access them for removing/clearing */
 			};
-						
-			logger.log(changeTypes.addBoard, objectTypes.pedalboard, domboard.id, name);
+			
+			logger.log(changeTypes.addBoard, objectTypes.pedalboard, domboard.id, void(0), boards[domboard.id], name);
 			callChangeCallbacks();
 			
 			return domboard;
@@ -176,7 +176,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 			boards[boardId].data.Name = name;
 
 			/* log this change to the history */
-			logger.log(changeTypes.renamedBoard, objectTypes.pedalboard, boardId, name, oldName);
+			logger.log(changeTypes.renamedBoard, objectTypes.pedalboard, boardId, oldName, name, name, oldName);
 			
 			/* call all of the change callbacks for this board id */
 			callChangeCallbacks(boardId);
@@ -191,13 +191,13 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 			assertBoardIdExists(boardId);
 			
 			/* record so we can log the change in a second */
-			var name = boards[boardId].data.Name;
-					
+			var boardToLog = manager.GetBoard(boardId);
+			
 			boards[boardId].dom.el.remove();
 			delete boards[boardId];
 			delete changeCallbacks[boardId];
 							
-			logger.log(changeTypes.deleteBoard, objectTypes.pedalboard, boardId, name);
+			logger.log(changeTypes.deleteBoard, objectTypes.pedalboard, boardId, boardToLog, void(0), boardToLog.data.Name);
 			callChangeCallbacks();
 		};
 		
@@ -226,8 +226,11 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 			assertBoardIdExists(boardId);
 			assertClientRectIsValid(clientRect);
 			
+			/* Save the before value so we can log it in a second */
+			var oldValue = manager.GetBoard(boardId).clientRect;
+			
 			boards[boardId].clientRect = getClientRect(clientRect);
-			logger.log(changeTypes.moveBoard, objectTypes.pedalboard, boardId, boards[boardId].data.Name);
+			logger.log(changeTypes.moveBoard, objectTypes.pedalboard, boardId, oldValue, boards[boardId].clientRect, boards[boardId].data.Name);
 			callChangeCallbacks(boardId);
 		};
 		
@@ -241,8 +244,11 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 			assertBoardIdExists(boardId);
 			assertClientRectIsValid(clientRect);
 			
+			/* Save the before value so we can log it in a second */
+			var oldValue = manager.GetBoard(boardId).clientRect;
+			
 			boards[boardId].clientRect = getClientRect(clientRect);
-			logger.log(changeTypes.resizeBoard, objectTypes.pedalboard, boardId, boards[boardId].data.Name);
+			logger.log(changeTypes.resizeBoard, objectTypes.pedalboard, boardId, oldValue, boards[boardId].clientRect, boards[boardId].data.Name);
 			callChangeCallbacks(boardId);
 		};
 		
@@ -252,12 +258,15 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 		 * @boardId: The id of the pedalboard to clear all pedals from
 		 */
 		manager.Clear = function (boardId) {
-			assertBoardIdExists(boardId);			
+			assertBoardIdExists(boardId);
+			
+			/* save the current pedal stack for logging in a second */
+			var oldValue = boards[boardId].data.pedals;
 			
 			/*remove the pedals from the dom */
 			helpers.forEach(boards[boardId].__pedalEls, function (pedalEl) { 
 			    pedalEl.remove();
-			});	
+			});
 			/* reset the dom container */
 			boards[boardId].__pedalEls = []; 
 			
@@ -265,7 +274,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 			boards[boardId].data.Clear();
 			
 			/* log this change to the history */
-			logger.log(changeTypes.clearedBoard, objectTypes.pedalboard, boardId, boards[boardId].data.Name);
+			logger.log(changeTypes.clearedBoard, objectTypes.pedalboard, boardId, oldValue, [], boards[boardId].data.Name);
 			
 			/* call all of the change callbacks for this board id */
 			callChangeCallbacks(boardId);
@@ -293,7 +302,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 			boards[boardId].data.Add(pedal);
 			
 			/* log this change to the history */
-			logger.log(changeTypes.addPedal, objectTypes.pedal, boardId, boards[boardId].data.Name, pedal.fullName);
+			logger.log(changeTypes.addPedal, objectTypes.pedal, boardId, void(0), pedal, boards[boardId].data.Name, pedal.fullName);
 				
 			/* call all of the change callbacks for this board id */
 			callChangeCallbacks(boardId);
@@ -315,11 +324,11 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 		 * @boardId: The id of the pedalboard to remove the pedal from
 		 */
 		manager.RemovePedal = function (pedalId, boardId) {	
-			assertBoardIdExists(boardId);			
+			assertBoardIdExists(boardId);
 			var removedPedal = boards[boardId].data.Remove(pedalId);
 			
 			/* log this change to the history */
-			logger.log(changeTypes.removedPedal, objectTypes.pedal, boardId, boards[boardId].data.Name, removedPedal.fullName);
+			logger.log(changeTypes.removedPedal, objectTypes.pedal, boardId, removedPedal, void(0), boards[boardId].data.Name, removedPedal.fullName);
 			
 			/* call all of the change callbacks for this board id */
 			callChangeCallbacks(boardId);
@@ -352,7 +361,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 						? changeTypes.movePedalToBottom /* To Bottom */
 						: changeTypes.movePedalDown /* Down */
 			
-			logger.log(changeType, objectTypes.pedal, boardId, boards[boardId].data.Name, reorderedPedal.fullName);
+			logger.log(changeType, objectTypes.pedal, boardId, oldPedalIndex, newPedalIndex, boards[boardId].data.Name, reorderedPedal.fullName);
 			
 			/* call all of the change callbacks for this board id */
 			callChangeCallbacks(boardId);
@@ -428,7 +437,7 @@ define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "stringReplacer
 				helpers.forEach(board.data.pedals, function (pedal) {
 					manager.AddPedal(pedal, domBoard.id, pedalContainer);
 				});
-			})
+			});
 		};
         
         return manager;
