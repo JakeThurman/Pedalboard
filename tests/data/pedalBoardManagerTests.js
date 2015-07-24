@@ -1,16 +1,16 @@
-define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], function (pedalBoardManager, $, helpers, classes) {	"use strict";	
+define([ "pedalBoardManager", "jquery", "helperMethods" ], function (pedalBoardManager, $, helpers) {	"use strict";	
     describe("data/pedalBoardManager.js", function () {
 		var manager;
 		var $fakeEl;
 		
 		/* Copied at random from pedalsGetter.js */
-		var dummyPedal = new classes.Pedal({
+		var dummyPedal = {
 			name: "ND-1 Nova Delay",
 			id: 1,
-			price: 169.99,
+			price: 16999,
 			identifier: 2,
 			type: 2,
-		});				var dummyPedal2 = new classes.Pedal({			name: "Kindgom",			id: 2,			price: 169,			identifier: 2,			type: 6,		});
+		};				var dummyPedal2 = {			name: "Kindgom",			id: 2,			price: 16900,			identifier: 2,			type: 6,		};
 		
 		beforeEach(function () {			$fakeEl = $("<div>");
 			manager = pedalBoardManager.create({ 				log: function () {},				changes: [],				batch: function (first, second, thrid, func) { 					/* Just call whichever is the function */					typeof second === "function"						? second() 						: func();				},			}, $fakeEl);

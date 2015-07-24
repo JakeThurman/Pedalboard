@@ -1,0 +1,285 @@
+define([ "helperMethods", "stateReverter", "pedalBoardManager", "changeLogger", "jquery" ],
+function (helpers, reverter, pedalBoardManager, changeLogger, $) {
+	"use strict";
+	
+	describe("data/stateReverter.js", function () {		
+		/* Copied at random from pedalsGetter.js */
+		var dummyPedal = {
+			name: "ND-1 Nova Delay",
+			id: 1,
+			price: 16999,
+			identifier: 2,
+			type: 2,
+		};
+		
+		var dummyPedal2 = {
+			name: "Kindgom",
+			id: 2,
+			price: 16900,
+			identifier: 2,
+			type: 6,
+		};
+		
+		var rect1 = {
+			left: 10,
+			top: 10,
+			width: 100,
+		};
+		var rect2 = {
+			left: 100,
+			top: 100,
+			width: 500,
+		};
+		
+		var loggerFull;
+		var loggerEmpty;
+		var managerFull;
+		var managerEmpty;
+		
+		var doBasicLoad = function (a, b, c) {
+			/*Rename*/
+				managerFull.Rename(managerFull.GetBoard(a.id).data.Name + "-CHANGED", a.id);
+				managerFull.Rename(managerFull.GetBoard(a.id).data.Name + "-CHANGED", a.id);
+				managerFull.Rename(managerFull.GetBoard(a.id).data.Name + "-CHANGED", b.id);
+				managerFull.Rename(managerFull.GetBoard(a.id).data.Name + "-CHANGED", b.id);
+				managerFull.Rename(managerFull.GetBoard(a.id).data.Name + "-CHANGED", b.id);
+				managerFull.Rename(managerFull.GetBoard(a.id).data.Name + "-CHANGED", c.id);
+		
+			/* Fill Boards  */
+				/*A*/
+				managerFull.AddPedal(dummyPedal,  a.id);
+				managerFull.AddPedal(dummyPedal,  a.id);
+				managerFull.AddPedal(dummyPedal2, a.id);
+				managerFull.AddPedal(dummyPedal,  a.id);
+				managerFull.AddPedal(dummyPedal,  a.id);
+				managerFull.AddPedal(dummyPedal2, a.id);
+				managerFull.AddPedal(dummyPedal2, a.id);
+				managerFull.AddPedal(dummyPedal,  a.id);
+				
+				/*B*/
+				managerFull.AddPedal(dummyPedal,  b.id);
+				managerFull.AddPedal(dummyPedal,  b.id);
+				managerFull.AddPedal(dummyPedal2, b.id);
+				managerFull.AddPedal(dummyPedal,  b.id);
+				managerFull.AddPedal(dummyPedal,  b.id);
+				managerFull.AddPedal(dummyPedal2, b.id);
+				managerFull.AddPedal(dummyPedal2, b.id);
+				managerFull.AddPedal(dummyPedal,  b.id);
+				
+				/*C*/
+				managerFull.AddPedal(dummyPedal,  c.id);
+				managerFull.AddPedal(dummyPedal,  c.id);
+				managerFull.AddPedal(dummyPedal2, c.id);
+				managerFull.AddPedal(dummyPedal,  c.id);
+				managerFull.AddPedal(dummyPedal,  c.id);
+				managerFull.AddPedal(dummyPedal2, c.id);
+				managerFull.AddPedal(dummyPedal2, c.id);
+				managerFull.AddPedal(dummyPedal,  c.id);
+			
+			/*Remove pedals*/
+				/*B*/
+				managerFull.RemovePedal(0, b.id);
+				managerFull.RemovePedal(0, b.id);
+				managerFull.RemovePedal(4, b.id);
+				
+				/*C*/
+				managerFull.RemovePedal(4,  c.id);
+				managerFull.RemovePedal(4,  c.id);
+				managerFull.RemovePedal(2, c.id);
+				managerFull.RemovePedal(0,  c.id);
+				managerFull.RemovePedal(0,  c.id);
+				managerFull.RemovePedal(0,  c.id);
+				
+			/*Add more pedals*/
+				/*A*/
+				managerFull.AddPedal(dummyPedal,  a.id);
+				managerFull.AddPedal(dummyPedal2, a.id);
+				managerFull.AddPedal(dummyPedal,  a.id);
+				
+				/*B*/
+				managerFull.AddPedal(dummyPedal2, b.id);
+				managerFull.AddPedal(dummyPedal2, b.id);
+				managerFull.AddPedal(dummyPedal2, b.id);
+				managerFull.AddPedal(dummyPedal,  b.id);
+				
+				/*C*/
+				managerFull.AddPedal(dummyPedal2, c.id);
+				managerFull.AddPedal(dummyPedal2, c.id);
+				managerFull.AddPedal(dummyPedal2, c.id);
+				managerFull.AddPedal(dummyPedal2, c.id);
+				managerFull.AddPedal(dummyPedal2, c.id);
+				managerFull.AddPedal(dummyPedal2, c.id);
+				managerFull.AddPedal(dummyPedal2, c.id);
+				managerFull.AddPedal(dummyPedal2, c.id);
+				managerFull.AddPedal(dummyPedal2, c.id);
+				managerFull.AddPedal(dummyPedal2, c.id);
+				managerFull.AddPedal(dummyPedal2, c.id);
+				managerFull.AddPedal(dummyPedal2, c.id);
+			/*Clear C*/
+				managerFull.Clear(c.id);
+			
+			/*Rename*/
+				managerFull.Rename(managerFull.GetBoard(a.id).data.Name + " Rename", a.id);
+				managerFull.Rename(managerFull.GetBoard(a.id).data.Name + " renmae", a.id);
+				managerFull.Rename(managerFull.GetBoard(b.id).data.Name + "-renmae", b.id);
+				managerFull.Rename(managerFull.GetBoard(b.id).data.Name + "_renmae", b.id);
+				managerFull.Rename(managerFull.GetBoard(b.id).data.Name + "+renmae", b.id);
+				managerFull.Rename(managerFull.GetBoard(b.id).data.Name + "=rename", b.id);
+				managerFull.Rename(managerFull.GetBoard(c.id).data.Name + "/rename", c.id);
+				
+			/*Delete A*/
+				managerFull.Delete(a.id);
+			
+			/*Add pedals to c*/
+				managerFull.AddPedal(dummyPedal,  b.id);
+				managerFull.AddPedal(dummyPedal,  b.id);
+				managerFull.AddPedal(dummyPedal2, c.id);
+				managerFull.AddPedal(dummyPedal2, c.id);
+				managerFull.AddPedal(dummyPedal,  b.id);
+				managerFull.AddPedal(dummyPedal,  b.id);
+				managerFull.AddPedal(dummyPedal,  b.id);
+				managerFull.AddPedal(dummyPedal2, c.id);
+				managerFull.AddPedal(dummyPedal,  b.id);
+		};
+		
+		var doMoveResize = function(boards) {
+			var manager = managerFull;
+			helpers.forEach(boards, function (board) {
+				manager.Move(board.id, rect1);
+				manager.Move(board.id, rect2);
+				manager.Move(board.id, rect2);
+				manager.Move(board.id, rect2);
+				manager.Resize(board.id, rect1);
+				manager.Resize(board.id, rect1);
+				manager.Resize(board.id, rect1);
+				manager.Resize(board.id, rect2);
+				manager.Resize(board.id, rect2);
+				manager.Move(board.id, rect1);
+				manager.Move(board.id, rect1);
+				manager.Move(board.id, rect1);
+				manager.Move(board.id, rect1);
+				manager.Resize(board.id, rect1);
+				manager.Move(board.id, rect2);
+				manager.Resize(board.id, rect1);
+				manager.Move(board.id, rect2);
+				manager.Resize(board.id, rect1);
+				manager.Resize(board.id, rect1);
+				manager.Move(board.id, rect2);
+				manager.Resize(board.id, rect2);
+				manager.Resize(board.id, rect2);
+			});
+		};
+		
+		beforeEach(function () {
+			/* Create managers */
+			loggerFull = changeLogger.create();
+			var parentFull =  $("<div>");
+			managerFull = pedalBoardManager.create(loggerFull, parentFull);
+			
+			loggerEmpty = changeLogger.create();
+			var parentEmpty = $("<div>");
+			managerEmpty = pedalBoardManager.create(loggerEmpty, parentEmpty);
+			
+			/* ! Load ManagerFull ! */
+			/* Add boards */
+			var a = managerFull.Add("board a");
+			var b = managerFull.Add("board b");
+			var c = managerFull.Add("board c");
+						
+			/* Load a basic set of data */
+			doBasicLoad(a, b, c);
+			
+			/* Add move and resize events to b twice as much as c, and a none at all */
+				doMoveResize([b, c, b]);
+				
+			/*Delte all*/
+			managerFull.DeleteAll();
+			
+			/* recreate all of the boards since the old were deleted */
+			a = managerFull.Add("board a - 2");
+			b = managerFull.Add("board b - 2");
+			c = managerFull.Add("board c - 2");
+			
+			/* Load a basic set of data - again*/
+			doBasicLoad(a, b, c);
+			
+			/* Readd another "a" board since @doBasicLoad deletes it */
+			a = managerFull.Add("board a - 3");
+			
+			/* Load a basic set of data - one more time!*/
+			doBasicLoad(a, b, c);
+			
+			/* Readd another "a" board since @doBasicLoad deletes it - again */
+			a = managerFull.Add("board a - 3");
+			
+			/*Add some pedals to a*/
+				managerFull.AddPedal(dummyPedal,  a.id);
+				managerFull.AddPedal(dummyPedal2, a.id);
+				managerFull.AddPedal(dummyPedal,  a.id);
+				managerFull.AddPedal(dummyPedal,  a.id);
+				
+			/* Add move and resize events to b twice as much as c, and a none at all */
+				doMoveResize([b, b, c]);
+				
+			/*Rename a and b*/
+				managerFull.Rename(managerFull.GetBoard(a.id).data.Name + " Rename", a.id);
+				managerFull.Rename(managerFull.GetBoard(b.id).data.Name + "+rename", b.id);
+			
+			managerFull;
+		});
+		
+		describe("replay", function () {		
+			it("should replay a set of changes", function () {
+				reverter.replay(loggerFull.changes, managerEmpty);
+				
+				expect(managerEmpty.GetBoards().length).toEqual(mangerFull.GetBoards().length);
+				expect(loggerEmpty.changes).toEqual(loggerFull.changes);
+			});
+			
+			it("should not throw", function () {
+				var nonThrower = function () {
+					reverter.replay(loggerFull.changes, managerEmpty);
+				};
+				expect(nonThrower).not.toThrow();
+			});
+		});
+		
+		describe("revert", function () {
+			it("should revert a set of changes", function () {
+				var loggerLengthBefore = loggerFull.changes.length;
+				reverter.revert(helpers.reverse(loggerFull.changes), managerFull);
+				expect(mangerFull.GetBoards().length).toEqual(0);
+				expect(loggerFull.changes.length).toEqual(loggerLengthBefore * 2); /* all were reverted, so there should be a change for each plus a change for the revert change */
+			});
+			
+			it("should not throw", function () {
+				var nonThrower = function () {
+					reverter.revert(helpers.reverse(loggerFull.changes), managerFull);
+				};
+				expect(nonThrower).not.toThrow();
+			});
+		});
+		
+		describe("revert and replay", function () {
+			it("should work together without error", function () {
+				var nonThrower = function () {
+					reverter.replay(loggerFull.changes, managerEmpty);
+					reverter.revert(helpers.reverse(loggerFull.changes), managerEmpty);
+				};
+				expect(nonThrower).not.toThrow();
+			});
+			
+			it("should be able to work together even with outside changes in between each", function () {
+				var nonThrower = function () {
+					reverter.replay(loggerFull.changes, managerEmpty);
+					
+					var a = managerEmpty.Add("test");
+					managerEmpty.AddPedal(dummyPedal, a.id);
+					
+					reverter.revert(helpers.reverse(loggerFull.changes), managerEmpty);
+				};
+				expect(nonThrower).not.toThrow();
+			});
+		});
+	});
+});
