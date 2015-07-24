@@ -451,7 +451,8 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 				var pedalContainer = domBoard.el.find(".pedal-board");
 				
 				/* Place and size the popup as it previously was */
-				domBoard.el.css(board.clientRect);
+				manager.Move(domBoard.id, board.clientRect);
+				manager.Resize(domBoard.id, board.clientRect);
 				
 				/* Add each of the pedals to the board */
 				helpers.forEach(board.data.pedals, function (pedal) {
