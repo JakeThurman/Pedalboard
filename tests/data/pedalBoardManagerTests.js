@@ -13,7 +13,7 @@ define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], 
 		});				var dummyPedal2 = new classes.Pedal({			name: "Kindgom",			id: 2,			price: 169,			identifier: 2,			type: 6,		});
 		
 		beforeEach(function () {			$fakeEl = $("<div>");
-			manager = pedalBoardManager.create({ 				log: function () {},				changes: [],				batch: function (name, func) { 					/* Just call whichever is the function */					typeof name === "function" 						? name() 						: func();				},			}, $fakeEl);
+			manager = pedalBoardManager.create({ 				log: function () {},				changes: [],				batch: function (first, second, thrid, func) { 					/* Just call whichever is the function */					typeof second === "function"						? second() 						: func();				},			}, $fakeEl);
 		});
 		
 		
@@ -267,9 +267,9 @@ define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], 
 			
 			it("should append the rendered pedal to the passed in element", function () {
 				var board = manager.Add("board", $fakeEl);
-				var pedal = manager.AddPedal(dummyPedal, board.id, board.el);
-
-				expect(pedal.get(0).parentNode).toBe(board.el.get(0));
+				var pedal = manager.AddPedal(dummyPedal, board.id);
+				
+				expect(pedal.get(0).parentNode.parentNode.parentNode).toBe(board.el.get(0));
 			});
 			
 			it("should still render and return the pedal if no element is passed in to append it to", function () {
@@ -304,7 +304,7 @@ define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], 
 			it("should remove the pedal", function () {
 						var board = manager.Add("board", $fakeEl);
 						manager.AddPedal(dummyPedal, board.id, board.el);
-						manager.RemovePedal(dummyPedal.id, board.id);
+						manager.RemovePedal(0, board.id);
 						
 						expect(manager.GetBoard(board.id).data.pedals).not.toContain(dummyPedal);
 				});
@@ -398,7 +398,7 @@ define([ "pedalBoardManager", "jquery", "helperMethods", "pedalBoardClasses" ], 
 					hit = true;
 				});
 				
-				manager.RemovePedal(dummyPedal.id, board.id);
+				manager.RemovePedal(0, board.id);
 				
 				expect(hit).toBe(true);
 			});

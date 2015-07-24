@@ -39,10 +39,10 @@ define([ "colorEffects" ], function (colorEffects) {
 				expect(typeof result.name).toEqual("string");
 			});
 						
-			it("should work if there is no leading hash in the input", function () {
+			it("should work if there is no leading hash in the input, and leave it out", function () {
 				var result = colorEffects.round("fefefe");
 				
-				expect(result.color).toEqual("#ffffff");
+				expect(result.color).toEqual("ffffff");
 			});
 			
 			it("should work if there is a leading hash in the input", function () {

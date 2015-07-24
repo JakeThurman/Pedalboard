@@ -62,7 +62,7 @@ define([ "changeLogger", "changeTypes", "objectTypes" ], function ( changeLogger
 		
 		describe("batch", function () {
 			it("should log changes all into one batch", function () {
-				logger.batch("a test change", function () {
+				logger.batch(0, function () {
 					log("a change was made");
 					log("another change was made");					
 				});
@@ -71,7 +71,7 @@ define([ "changeLogger", "changeTypes", "objectTypes" ], function ( changeLogger
 			});
 			
 			it("should be able to handle batches and changes at the same level", function () {
-				logger.batch("a test change", function () {
+				logger.batch(0, function () {
 					log("a change was made");
 					log("another change was made");					
 				});
@@ -82,8 +82,8 @@ define([ "changeLogger", "changeTypes", "objectTypes" ], function ( changeLogger
 			});
 			
 			it("should log changes into sub batches", function () {
-				logger.batch("top batch", function () {
-					logger.batch("a test change", function () {
+				logger.batch(0, function () {
+					logger.batch(0, function () {
 						log("a change was made");
 						log("another change was made");					
 					});
@@ -95,10 +95,10 @@ define([ "changeLogger", "changeTypes", "objectTypes" ], function ( changeLogger
 				expect(logger.changes[0].changes[0].changes.length).toEqual(2);
 			});
 			
-			it("should not throw an exception if no batch name is provided", function () {
+			it("should not throw an exception if no object name/id are provided", function () {
 				var hit = false;
 				var notThrower = function () {
-					logger.batch(function () {
+					logger.batch(0, function () {
 						log("something");
 						hit = true;
 					});
@@ -107,15 +107,47 @@ define([ "changeLogger", "changeTypes", "objectTypes" ], function ( changeLogger
 				expect(hit).toBe(true);
 			});
 			
-			it("should do nothing if no function is provided", function () {
-				expect(logger.batch("name")).toBeUndefined();
+			it("should throw an exception if only object name is provided", function () {
+				var hit = false;
+				var thrower = function () {
+					logger.batch(0, "Test", function () {
+						log("something");
+						hit = true;
+					});
+				};
+				expect(thrower).toThrow();
+				expect(hit).toBe(false);
+			});
+			
+			it("should throw an exception if only object id is provided", function () {
+				var hit = false;
+				var thrower = function () {
+					logger.batch(0, 0, function () {
+						log("something");
+						hit = true;
+					});
+				};
+				expect(thrower).toThrow();
+				expect(hit).toBe(false);
+			});
+			
+			it("should not throw an exception if everything is provided", function () {
+				var hit = false;
+				var notThrower = function () {
+					logger.batch(0, "name", "id", function () {
+						log("something");
+						hit = true;
+					});
+				};
+				expect(notThrower).not.toThrow();
+				expect(hit).toBe(true);
 			});
 		});
 		
 		describe("dontLog", function () {
 		    it("should ignore all changes logged inside of a dontLog function", function () {
 				logger.dontLog(function () {
-					logger.batch("a test change", function () {
+					logger.batch(0, function () {
 						log("a change was made");
 						log("another change was made");					
 					});

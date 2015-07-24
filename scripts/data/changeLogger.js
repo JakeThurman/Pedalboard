@@ -76,7 +76,9 @@ define([ "helperMethods" ], function ( helpers ) {
 			if (typeof objId === "function" && helpers.isUndefined(batchChanges) && helpers.isUndefined(objName)) {
 				batchChanges = objId;
 				objId = void(0);
-			}
+			}			
+			else if (helpers.isUndefined(batchChanges) || (helpers.isUndefined(objName) !== helpers.isUndefined(objId)))
+				throw new TypeError("@batchChanges is required. Also, if @objName is given, @objId is required (and vice versa)");
 		
 			/* Make sure the changeType is a number */
 			if (batchType === "" || isNaN(new Number(batchType)))
@@ -88,10 +90,16 @@ define([ "helperMethods" ], function ( helpers ) {
 			
 			/* Create a new batch */		
 			batchStack.push(new Batch(batchType, objId, objName));
-
-			/* Run the code that will put changes inside this batch */
-			batchChanges();
-					
+			
+			try {
+				/* Run the code that will put changes inside this batch */
+				batchChanges();
+			}
+			catch (e){
+				batchStack.pop(); /* on fail, kill the batch */
+				throw e;
+			}
+			
 			/* Remove the top batch since it's now done */
 			var batch = batchStack.pop();
 			

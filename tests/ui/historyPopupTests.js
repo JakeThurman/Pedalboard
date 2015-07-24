@@ -14,19 +14,19 @@ define([ "historyPopup", "changeLogger", "jquery" ], function ( historyPopup, ch
 			log("2");
 			log("3");
 			
-			logger.batch("batch 1", function () {
+			logger.batch(0, function () {
 				log("sub 1");
 				log("sub 2");
 				log("sub 3");
 				
-				logger.batch("sub batch 1", function () {
+				logger.batch(0, function () {
 					log("double sub 1");
 					log("double sub 2");
 					log("double sub 3");
 				});
 			});
 			
-			logger.batch("batch 2", function () {
+			logger.batch(0, function () {
 				log("sub 1");
 				log("sub 2");
 				log("sub 3");
@@ -94,7 +94,7 @@ define([ "historyPopup", "changeLogger", "jquery" ], function ( historyPopup, ch
 				var logger = changeLogger.create();
 							
 				for (var b = 0; b < batches; b++) {
-					logger.batch("batch number " + b, function () {
+					logger.batch(0, function () {
 						for(var c = 0; c < changePerBatch; c++) {
 							logger.log(-1, -1, -1);
 						}

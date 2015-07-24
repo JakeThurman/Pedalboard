@@ -29,7 +29,7 @@ define([ "reporter", "reportTypes", "pedalBoardClasses", "pedalDataAccess" ], fu
 			
 			it("should loop on the given collection and call some passed in functions to get data", function () {
 				var result;
-				var color = "#abcdef";
+				var color = "abcdef";
 				var name = "name";
 				var nameConcat = "-test";
 				var expectedName = "name-test";
@@ -59,13 +59,13 @@ define([ "reporter", "reportTypes", "pedalBoardClasses", "pedalDataAccess" ], fu
 						});
 				}).not.toThrow();
 				
-				expect(result[0].color).toEqual(color);
+				expect(result[0].color).toEqual("#" + color);
 				expect(result[0].value).toEqual(value);
 				expect(result[0].label).toEqual(expectedName);
 				
 				expect(result[1].label).toEqual(expectedSecondLabel);
 				expect(result[1].value).toEqual(secondItemValue);
-				expect(result[1].color).toEqual(color);
+				expect(result[1].color).toEqual("#" + color);
 			});
 		});
 		
@@ -76,11 +76,11 @@ define([ "reporter", "reportTypes", "pedalBoardClasses", "pedalDataAccess" ], fu
 			it("should loop on the given \"pedal\" collection and get the displayName, price and color of each", function () {
 				var result;
 				
-				var color1 = "#abcdef";
+				var color1 = "abcdef";
 				var name1  = "name_1";
 				var price1 = 2.2;
 				
-				var color2 = "#a18b8c";
+				var color2 = "a18b8c";
 				var name2  = "name_2";
 				var price2 = -100.8;
 				
@@ -99,11 +99,11 @@ define([ "reporter", "reportTypes", "pedalBoardClasses", "pedalDataAccess" ], fu
 				
 				expect(result.length).toEqual(2);
 				
-				expect(result[0].color).toEqual(color1);
+				expect(result[0].color).toEqual("#" + color1);
 				expect(result[0].value).toEqual(price1);
 				expect(result[0].label).toEqual(name1 );
 				
-				expect(result[1].color).toEqual(color2);
+				expect(result[1].color).toEqual("#" + color2);
 				expect(result[1].value).toEqual(price2);
 				expect(result[1].label).toEqual(name2 );
 			});
@@ -115,11 +115,11 @@ define([ "reporter", "reportTypes", "pedalBoardClasses", "pedalDataAccess" ], fu
 			it("should return data about pedal types", function () {
 				var result;
 				
-				var color1 = "#abcdef";
+				var color1 = "abcdef";
 				var name1  = "name_1";
 				var price1 = 2.2;
 				
-				var color2 = "#a18b8c";
+				var color2 = "a18b8c";
 				var name2  = "name_2";
 				var price2 = -100.8;
 				
@@ -143,7 +143,7 @@ define([ "reporter", "reportTypes", "pedalBoardClasses", "pedalDataAccess" ], fu
 				
 				expect(result.length).toEqual(1);
 				
-				expect(result[0].color).toEqual(color1);
+				expect(result[0].color).toEqual("#" + color1);
 				expect(result[0].value).toEqual(2 /* 2 pedals of this type */);
 				expect(result[0].label).toEqual(myType.name);
 			}); 
@@ -155,16 +155,16 @@ define([ "reporter", "reportTypes", "pedalBoardClasses", "pedalDataAccess" ], fu
 			it("should give back an item for each distinct color after they are rounded", function () {
 				var result;
 				
-				var color1 = "#abcdef";
+				var color1 = "abcdef";
 				var name1  = "name_1";
 				var price1 = 2.2;
 				
 				
-				var color2 = "#a18b8e"; /*close enogh to 3 that this should round with it*/
+				var color2 = "a18b8e"; /*close enogh to 3 that this should round with it*/
 				var name2  = "name_2";
 				var price2 = -100.8;
 				
-				var color3 = "#a18b8c";
+				var color3 = "a18b8c";
 				var name3  = "name_2";
 				var price3 = -100.8;
 				

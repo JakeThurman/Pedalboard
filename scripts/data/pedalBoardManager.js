@@ -221,7 +221,7 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 		/* ! Board-UI Logging Methods ! */
 		/* Quick helper to check (for chrome and firefox) if the client rect object is valid */
 		function assertClientRectIsValid(clientRect) {		
-			if (!clientRect.left || !clientRect.top || !clientRect.width)
+			if (helpers.isUndefined(clientRect.left) || helpers.isUndefined(clientRect.top) || helpers.isUndefined(clientRect.width))
 				throw new TypeError("@clientRect is not a valid. Try using (vanilla js element).getBoundingClientRect()");
 		}
 		
