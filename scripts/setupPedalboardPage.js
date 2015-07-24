@@ -46,7 +46,7 @@ function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateRev
 			undoInProgress = true;
 			stateReverter.revert(logger.changes[logger.changes.length - (1 + lastUndoOperations)], manager);
 			undoInProgress = false;
-			/* Count two. One to say we undid this change, one to say */
+			/* Count two. One to say we undid this change, one for the change that was added by the undo opperation itself */
 			lastUndoOperations++;
 			lastUndoOperations++;
 		}
