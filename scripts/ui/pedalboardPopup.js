@@ -17,7 +17,7 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 			
 		function startAddingPedals() {
 			return addPedalMenu.create(menuButton, function (pedal) {
-				manager.AddPedal(pedal, popup.id, content);
+				manager.AddPedal(pedal, popup.id);
 			});
 		}
 		

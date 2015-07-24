@@ -281,18 +281,16 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 		 * Add the passed in pedal object to the board with id of @boardId. 
 		 * Optionally then appends the created dom element to @pedalContainer 
 		 *
-		 * @pedal:                     The pedal object to add to the board
-		 * @boardId:                   The id of the pedalboard to add the pedal to
-		 * @pedalContainer: [OPTIONAL] If provided, The jquery object to append the rendered pedal to
+		 * @pedal:          The pedal object to add to the board
+		 * @boardId:        The id of the pedalboard to add the pedal to
 		 *
-		 * @returns:                   JQuery $object of the rendered pedal.
+		 * @returns:        JQuery $object of the rendered pedal.
 		 */
-		manager.AddPedal = function (pedal, boardId, pedalContainer) {
+		manager.AddPedal = function (pedal, boardId) {
 			assertBoardIdExists(boardId);
 			
-			/* render the pedal and cache it so we can use it for removing/clearing */
+			/* render the pedal */
 			var rendered = pedalRenderer.render(pedal);
-			boards[boardId].__pedalEls.push(rendered);
 			
 			/* add the data pedal */
 			boards[boardId].data.Add(pedal);
@@ -303,8 +301,12 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 			/* call all of the change callbacks for this board id */
 			callChangeCallbacks(boardId);
 			
-			/* if the gave us something append the rendered pedal to, do it. */
-			if (pedalContainer) rendered.appendTo(pedalContainer);
+			/* Append the rendered pedal to the container */
+			/* TODO: don't hard code this lookup for the content region */
+			rendered.appendTo(boards[boardId].dom.el.find(".pedal-board"));
+			
+			/* Cache it so we can use it for removing/clearing */
+			boards[boardId].__pedalEls.push({ o: rendered.get(0), p: rendered.get(0).parentNode });
 			
 			return rendered;
 		};
@@ -325,7 +327,8 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 			removedPedal.index = index;
 			
 			/* Kill the dom element */
-			boards[boardId].__pedalEls[index].remove();
+			var pedalEl = boards[boardId].__pedalEls[index];
+			pedalEl.p.removeChild(pedalEl.o);
 			var i = 0;
 			boards[boardId].__pedalEls = helpers.where(boards[boardId].__pedalEls, function () {
 				return i++ !== index;
@@ -447,16 +450,13 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 				/* Add the board */
 				var domBoard = manager.Add(board.data.Name);
 				
-				/* TODO: don't hard code this lookup for the content region */
-				var pedalContainer = domBoard.el.find(".pedal-board");
-				
 				/* Place and size the popup as it previously was */
 				manager.Move(domBoard.id, board.clientRect);
 				manager.Resize(domBoard.id, board.clientRect);
 				
 				/* Add each of the pedals to the board */
 				helpers.forEach(board.data.pedals, function (pedal) {
-					manager.AddPedal(pedal, domBoard.id, pedalContainer);
+					manager.AddPedal(pedal, domBoard.id);
 				});
 			});
 		};

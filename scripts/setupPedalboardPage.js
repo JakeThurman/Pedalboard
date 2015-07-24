@@ -30,4 +30,25 @@ function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateRev
 				manager.AddChangeCallback(popup.addChange);
 			});
     });
+	
+	/* Setup ctrl+z undo handler */
+	var lastUndoOperations = 0;
+	var undoInProgress = false;
+	manager.AddChangeCallback(function () {
+		if (!undoInProgress)
+			lastUndoOperations = 0;
+	});
+	
+	var zKey = 90, yKey = 89;
+
+	$(document).keydown(function(e) {
+		if (e.ctrlKey && e.keyCode == zKey) {
+			undoInProgress = true;
+			stateReverter.revert(logger.changes[logger.changes.length - (1 + lastUndoOperations)], manager);
+			undoInProgress = false;
+			/* Count two. One to say we undid this change, one to say */
+			lastUndoOperations++;
+			lastUndoOperations++;
+		}
+	});
 });
