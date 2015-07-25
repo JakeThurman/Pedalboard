@@ -19,19 +19,21 @@ function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateRev
 		logger.batch(batchTypes.firstLoad, function () {
 			manager.Import(pedalBoardStorage.GetDefaultBoard());
 		});
+		
+	function save() { 
+		pedalBoardStorage.Save(logger.changes); 
+	}
 	
 	/* Setup the main page menu click handler */
    	pageMenuButton.click(function () {
-   	    mainPageMenuHandler.handle(pageMenuButton, manager, 
-			function () { /* save action */
-				pedalBoardStorage.Save(logger.changes); 
-			}, function () { /* open history action */
+   	    mainPageMenuHandler.handle(pageMenuButton, manager, save,
+			function () { /* open history action */
 				var popup = historyPopup.create(logger.changes);
 				manager.AddChangeCallback(popup.addChange);
 			});
     });
 	
-	/* Setup ctrl+z undo handler */
+	/* Setup ctrl+z undo handler, and ctrl+s save handler */
 	var lastUndoOperations = 0;
 	var undoInProgress = false;
 	manager.AddChangeCallback(function () {
@@ -39,16 +41,24 @@ function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateRev
 			lastUndoOperations = 0;
 	});
 	
-	var zKey = 90, yKey = 89;
+	var zKey = 90, yKey = 89, sKey = 83;
 
 	$(document).keydown(function(e) {
-		if (e.ctrlKey && e.keyCode == zKey) {
-			undoInProgress = true;
-			stateReverter.revert(logger.changes[logger.changes.length - (1 + lastUndoOperations)], manager);
-			undoInProgress = false;
-			/* Count two. One to say we undid this change, one for the change that was added by the undo opperation itself */
-			lastUndoOperations++;
-			lastUndoOperations++;
+		if (!e.ctrlKey)
+			return;
+		switch (e.keyCode) {
+			case zKey:
+				undoInProgress = true;
+				stateReverter.revert(logger.changes[logger.changes.length - (1 + lastUndoOperations)], manager);
+				undoInProgress = false;
+				/* Count two. One to say we undid this change, one for the change that was added by the undo opperation itself */
+				lastUndoOperations++;
+				lastUndoOperations++;
+				return false;
+				
+			case sKey:
+				save();
+				return false;
 		}
 	});
 });
