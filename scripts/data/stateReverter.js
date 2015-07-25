@@ -6,21 +6,30 @@ define([ "helperMethods", "changeTypes" ], function (helpers, changeTypes) {
 	/*
 	 * Replays all of the given change logger changes
 	 *
-	 * @changeStack: All changes to revert
-	 * @manager:     The pedalBoardManager instance to replay onto
+	 * @changeStack:     All changes to revert
+	 * @manager:         The pedalBoardManager instance to replay onto
+	 * @oldToNewIdCache: Used for recursive callback only!
 	 */
-	methods.replay = function (changeStack, manager) {
+	methods.replay = function (changeStack, manager, oldToNewIdCache) {
+		/* Validate the cache */
+		if (!helpers.isObject(oldToNewIdCache) && !helpers.isUndefined(oldToNewIdCache))
+			throw new TypeError("@oldToNewIdCache (used for recursive calls only) is invalid!");
+		
+		/* Reset the cache of the saved id to the real id (i.e. when creating a board, the id will be whatever it's generated with not what's logged.) */
+		oldToNewIdCache = oldToNewIdCache || {};
+		
 		helpers.forEach(changeStack, function (change) {
 			if (change.isBatch) {
-				methods.replay(change.changes, manager);
+				methods.replay(change.changes, manager, oldToNewIdCache);
 				return; /* That's all we want to do with a batch */
 			}
 			
-			var boardId = change.objId;
+			var boardId = oldToNewIdCache[change.objId] || change.objId;
 			
 			switch (change.changeType) {
 				case changeTypes.addBoard:
-					manager.Import(change.newValue);
+					/* Import and save the created id as the new id, add that to the cache */
+					oldToNewIdCache[boardId] = manager.Import(change.newValue)[0];
 					break;
 					
 				case changeTypes.renamedBoard:
@@ -61,18 +70,25 @@ define([ "helperMethods", "changeTypes" ], function (helpers, changeTypes) {
 	/*
 	 * Reverts all of the given change logger changes
 	 *
-	 * @changeStack: All changes to revert
-	 * @manager:     The pedalBoardManager instance to revert on
+	 * @changeStack:     All changes to revert
+	 * @manager:         The pedalBoardManager instance to revert on
+	 * @oldToNewIdCache: Used for recursive callback only!
 	 */
-	methods.revert = function (changeStack, manager) {
+	methods.revert = function (changeStack, manager, oldToNewIdCache) {
+		/* Validate the cache */
+		if (!helpers.isObject(oldToNewIdCache) && !helpers.isUndefined(oldToNewIdCache))
+			throw new TypeError("@oldToNewIdCache (used for recursive calls only) is invalid!");
+		
+		/* Reset the cache of the saved id to the real id (i.e. when creating a board, the id will be whatever it's generated with not what's logged.) */
+		oldToNewIdCache = oldToNewIdCache || {};
+		
 		helpers.forEach(changeStack, function (change) {
 			if (change.isBatch) {
-				methods.revert(helpers.reverse(change.changes), manager);
+				methods.revert(helpers.reverse(change.changes), manager, oldToNewIdCache);
 				return; /* That's all we want to do with a batch */
 			}
 			
-			var boardId = change.objId;
-			
+			var boardId = oldToNewIdCache[change.objId] || change.objId;
 			switch (change.changeType) {
 				case changeTypes.addBoard: /* Board was added, so remove it */
 					manager.Delete(boardId);
@@ -83,7 +99,8 @@ define([ "helperMethods", "changeTypes" ], function (helpers, changeTypes) {
 					break;
 					
 				case changeTypes.deleteBoard: /* Board was deleted, so add it back */
-					manager.Import(change.oldValue);
+					/* Import and save the created id as the new id, add that to the cache */
+					oldToNewIdCache[boardId] = manager.Import(change.oldValue)[0];
 					break;
 					
 				case changeTypes.moveBoard: /* Board was moved so move it back */

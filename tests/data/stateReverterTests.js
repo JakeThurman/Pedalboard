@@ -40,10 +40,10 @@ function (helpers, reverter, pedalBoardManager, changeLogger, $) {
 			/*Rename*/
 				managerFull.Rename(managerFull.GetBoard(a.id).data.Name + "-CHANGED", a.id);
 				managerFull.Rename(managerFull.GetBoard(a.id).data.Name + "-CHANGED", a.id);
-				managerFull.Rename(managerFull.GetBoard(a.id).data.Name + "-CHANGED", b.id);
-				managerFull.Rename(managerFull.GetBoard(a.id).data.Name + "-CHANGED", b.id);
-				managerFull.Rename(managerFull.GetBoard(a.id).data.Name + "-CHANGED", b.id);
-				managerFull.Rename(managerFull.GetBoard(a.id).data.Name + "-CHANGED", c.id);
+				managerFull.Rename(managerFull.GetBoard(b.id).data.Name + "-CHANGED", b.id);
+				managerFull.Rename(managerFull.GetBoard(b.id).data.Name + "-CHANGED", b.id);
+				managerFull.Rename(managerFull.GetBoard(b.id).data.Name + "-CHANGED", b.id);
+				managerFull.Rename(managerFull.GetBoard(c.id).data.Name + "-CHANGED", c.id);
 		
 			/* Fill Boards  */
 				/*A*/
@@ -83,12 +83,12 @@ function (helpers, reverter, pedalBoardManager, changeLogger, $) {
 				managerFull.RemovePedal(4, b.id);
 				
 				/*C*/
-				managerFull.RemovePedal(4,  c.id);
-				managerFull.RemovePedal(4,  c.id);
+				managerFull.RemovePedal(4, c.id);
+				managerFull.RemovePedal(4, c.id);
 				managerFull.RemovePedal(2, c.id);
-				managerFull.RemovePedal(0,  c.id);
-				managerFull.RemovePedal(0,  c.id);
-				managerFull.RemovePedal(0,  c.id);
+				managerFull.RemovePedal(0, c.id);
+				managerFull.RemovePedal(0, c.id);
+				managerFull.RemovePedal(0, c.id);
 				
 			/*Add more pedals*/
 				/*A*/
@@ -118,6 +118,18 @@ function (helpers, reverter, pedalBoardManager, changeLogger, $) {
 			/*Clear C*/
 				managerFull.Clear(c.id);
 			
+			/* Reorder pedals on a and b */
+				managerFull.ReorderPedal(0, 2, a.id);
+				managerFull.ReorderPedal(1, 0, a.id);
+				managerFull.ReorderPedal(2, 5, b.id);
+				managerFull.ReorderPedal(3, 2, b.id);
+				managerFull.ReorderPedal(0, 2, b.id);
+				managerFull.ReorderPedal(5, 2, a.id);
+				managerFull.ReorderPedal(4, 2, a.id);
+				managerFull.ReorderPedal(0, 1, b.id);
+				managerFull.ReorderPedal(4, 2, b.id);
+				managerFull.ReorderPedal(1, 0, a.id);
+			
 			/*Rename*/
 				managerFull.Rename(managerFull.GetBoard(a.id).data.Name + " Rename", a.id);
 				managerFull.Rename(managerFull.GetBoard(a.id).data.Name + " renmae", a.id);
@@ -130,7 +142,7 @@ function (helpers, reverter, pedalBoardManager, changeLogger, $) {
 			/*Delete A*/
 				managerFull.Delete(a.id);
 			
-			/*Add pedals to c*/
+			/*Add pedals to b and c*/
 				managerFull.AddPedal(dummyPedal,  b.id);
 				managerFull.AddPedal(dummyPedal,  b.id);
 				managerFull.AddPedal(dummyPedal2, c.id);
@@ -140,6 +152,18 @@ function (helpers, reverter, pedalBoardManager, changeLogger, $) {
 				managerFull.AddPedal(dummyPedal,  b.id);
 				managerFull.AddPedal(dummyPedal2, c.id);
 				managerFull.AddPedal(dummyPedal,  b.id);
+				
+			/* Reorder pedals on b and c */
+				managerFull.ReorderPedal(0, 1, b.id);
+				managerFull.ReorderPedal(2, 0, c.id);
+				managerFull.ReorderPedal(1, 0, c.id);
+				managerFull.ReorderPedal(3, 5, b.id);
+				managerFull.ReorderPedal(1, 0, c.id);
+				managerFull.ReorderPedal(0, 2, b.id);
+				managerFull.ReorderPedal(4, 2, b.id);
+				managerFull.ReorderPedal(1, 0, c.id);
+				managerFull.ReorderPedal(0, 2, b.id);
+				managerFull.ReorderPedal(4, 2, b.id);
 		};
 		
 		var doMoveResize = function(boards) {
@@ -215,6 +239,7 @@ function (helpers, reverter, pedalBoardManager, changeLogger, $) {
 			/*Add some pedals to a*/
 				managerFull.AddPedal(dummyPedal,  a.id);
 				managerFull.AddPedal(dummyPedal2, a.id);
+				managerFull.ReorderPedal(0, 1, a.id); /* Throw a reorder in there for good measure */
 				managerFull.AddPedal(dummyPedal,  a.id);
 				managerFull.AddPedal(dummyPedal,  a.id);
 				
@@ -224,16 +249,43 @@ function (helpers, reverter, pedalBoardManager, changeLogger, $) {
 			/*Rename a and b*/
 				managerFull.Rename(managerFull.GetBoard(a.id).data.Name + " Rename", a.id);
 				managerFull.Rename(managerFull.GetBoard(b.id).data.Name + "+rename", b.id);
-			
-			managerFull;
 		});
+
+		function pluck(collection, name) {
+			return helpers.select(collection, function (obj) {
+				return obj[name];
+			});
+		}
 		
 		describe("replay", function () {		
 			it("should replay a set of changes", function () {
 				reverter.replay(loggerFull.changes, managerEmpty);
 				
-				expect(managerEmpty.GetBoards().length).toEqual(mangerFull.GetBoards().length);
-				expect(loggerEmpty.changes).toEqual(loggerFull.changes);
+				var emptyBoards = managerEmpty.GetBoards();
+				var fullBoards  = managerFull.GetBoards();
+				
+				expect(emptyBoards.length).toEqual(fullBoards.length);
+				
+				var fullData  = pluck(fullBoards,  "data");
+				var emptyData = pluck(emptyBoards, "data");
+				
+				expect(JSON.stringify(pluck(fullData, "Name")))
+			  .toEqual(JSON.stringify(pluck(emptyData, "Name")));
+			  
+				var fullPedals  = pluck(fullData, "pedals");
+				var emptyPedals = pluck(emptyData, "pedals");
+				
+				expect(JSON.stringify(pluck(fullPedals,  "name")))
+			  .toEqual(JSON.stringify(pluck(emptyPedals, "name")));
+			  
+				expect(JSON.stringify(pluck(fullPedals,  "id")))
+			  .toEqual(JSON.stringify(pluck(emptyPedals, "id")));
+			  
+				expect(JSON.stringify(pluck(fullPedals,  "color")))
+			  .toEqual(JSON.stringify(pluck(emptyPedals, "color")));
+			  
+				expect(JSON.stringify(pluck(fullPedals,  "fullName")))
+			  .toEqual(JSON.stringify(pluck(emptyPedals, "fullName")));
 			});
 			
 			it("should not throw", function () {
@@ -248,8 +300,8 @@ function (helpers, reverter, pedalBoardManager, changeLogger, $) {
 			it("should revert a set of changes", function () {
 				var loggerLengthBefore = loggerFull.changes.length;
 				reverter.revert(helpers.reverse(loggerFull.changes), managerFull);
-				expect(mangerFull.GetBoards().length).toEqual(0);
-				expect(loggerFull.changes.length).toEqual(loggerLengthBefore * 2); /* all were reverted, so there should be a change for each plus a change for the revert change */
+				expect(managerFull.GetBoards().length).toEqual(0);
+				expect(loggerFull.changes.length).toBeGreaterThan(loggerLengthBefore * 2); /* all were reverted, so there should be a change for each plus a change for the revert change */
 			});
 			
 			it("should not throw", function () {
@@ -264,7 +316,7 @@ function (helpers, reverter, pedalBoardManager, changeLogger, $) {
 			it("should work together without error", function () {
 				var nonThrower = function () {
 					reverter.replay(loggerFull.changes, managerEmpty);
-					reverter.revert(helpers.reverse(loggerFull.changes), managerEmpty);
+					reverter.revert(helpers.reverse(loggerEmpty.changes), managerEmpty);
 				};
 				expect(nonThrower).not.toThrow();
 			});
@@ -276,7 +328,7 @@ function (helpers, reverter, pedalBoardManager, changeLogger, $) {
 					var a = managerEmpty.Add("test");
 					managerEmpty.AddPedal(dummyPedal, a.id);
 					
-					reverter.revert(helpers.reverse(loggerFull.changes), managerEmpty);
+					reverter.revert(helpers.reverse(loggerEmpty.changes), managerEmpty);
 				};
 				expect(nonThrower).not.toThrow();
 			});

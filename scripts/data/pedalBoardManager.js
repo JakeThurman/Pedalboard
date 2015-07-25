@@ -439,11 +439,12 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 		/*
 		 * Import function used for restore 
 		 * 
-		 * @boards:           The manager.GetBoards() obejct to be imported.
+		 * @boards:  The manager.GetBoards() obejct to be imported.
+		 * @returns: An array of the created boards.
 		 */
 		manager.Import = function (boards) {
 			/* Create a new board for each, and add all of its pedals */
-			helpers.forEach(boards, function(board) {
+			return helpers.select(boards, function(board) {
 				if (!board || !board.data || !board.clientRect || !board.data.pedals || !board.data.Name)
 					throw new TypeError("The board is not valid, it should be an object from manager.GetBoard([id])");
 				
@@ -458,6 +459,8 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 				helpers.forEach(board.data.pedals, function (pedal) {
 					manager.AddPedal(pedal, domBoard.id);
 				});
+				
+				return domBoard.id;
 			});
 		};
         
