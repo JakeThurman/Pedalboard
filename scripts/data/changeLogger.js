@@ -91,14 +91,8 @@ define([ "helperMethods" ], function ( helpers ) {
 			/* Create a new batch */		
 			batchStack.push(new Batch(batchType, objId, objName));
 			
-			try {
-				/* Run the code that will put changes inside this batch */
-				batchChanges();
-			}
-			catch (e){
-				batchStack.pop(); /* on fail, kill the batch */
-				throw e;
-			}
+			/* Run the code that will put changes inside this batch */
+			batchChanges();
 			
 			/* Remove the top batch since it's now done */
 			var batch = batchStack.pop();
