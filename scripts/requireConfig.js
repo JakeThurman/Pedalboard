@@ -39,6 +39,7 @@ requirejs.config({
 			"batchTypes":                    "data/changeInfo",
 			"objectTypes":                   "data/changeInfo",
 			"stateReverter":                 "data/stateReverter",
+			"undoHandler":                   "data/undoHandler",
 			
 			/*reporting*/
 			"reportTypes":                   "reporting/reportTypes",

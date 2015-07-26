@@ -1,5 +1,5 @@
-require(["pedalBoardManager", "jquery", "mainPageMenuHandler", "pedalBoardStorage", "stateReverter", "historyPopup", "changeLogger", "batchTypes", "domReady!"], 
-function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateReverter, historyPopup, changeLogger, batchTypes) {
+require(["pedalBoardManager", "jquery", "mainPageMenuHandler", "pedalBoardStorage", "stateReverter", "undoHandler", "historyPopup", "changeLogger", "batchTypes", "domReady!"], 
+function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateReverter, undoHandler, historyPopup, changeLogger, batchTypes) {
     "use strict";
 	
 	/* DOM variables */
@@ -9,6 +9,7 @@ function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateRev
 	/* Data variables */
 	var logger = changeLogger.create(pedalBoardStorage.Load());
 	var manager = pedalBoardManager.create(logger, mainContentContainer);
+	var undoer = undoHandler.create(manager, logger);
 	
 	/* Restore save data */	
 	if (pedalBoardStorage.HasSavedData()) /* We don't need to log that the page was reloaded! */
@@ -34,26 +35,18 @@ function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateRev
     });
 	
 	/* Setup ctrl+z undo handler, and ctrl+s save handler */
-	var lastUndoOperations = 0;
-	var undoInProgress = false;
-	manager.AddChangeCallback(function () {
-		if (!undoInProgress)
-			lastUndoOperations = 0;
-	});
-	
 	var zKey = 90, yKey = 89, sKey = 83;
-
+	
 	$(document).keydown(function(e) {
 		if (!e.ctrlKey)
 			return;
 		switch (e.keyCode) {
 			case zKey:
-				undoInProgress = true;
-				stateReverter.revert(logger.changes[logger.changes.length - (1 + lastUndoOperations)], manager);
-				undoInProgress = false;
-				/* Count two. One to say we undid this change, one for the change that was added by the undo opperation itself */
-				lastUndoOperations++;
-				lastUndoOperations++;
+				undoer.undo();
+				return false;
+				
+			case yKey:
+				undoer.redo();
 				return false;
 				
 			case sKey:
