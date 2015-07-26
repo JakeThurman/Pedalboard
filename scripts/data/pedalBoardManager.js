@@ -163,7 +163,7 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 				__pedalEls: [], /* we use this for caching the rendered pedals so that we can easily access them for removing/clearing */
 			};
 			
-			logger.log(changeTypes.addBoard, objectTypes.pedalboard, domboard.id, void(0), manager.GetBoard(domboard.id), name);
+			logger.log(changeTypes.addBoard, objectTypes.pedalboard, domboard.id, void(0), helpers.clone(manager.GetBoard(domboard.id)), name);
 			callChangeCallbacks();
 			
 			return domboard;
