@@ -29,7 +29,7 @@ define([ "helperMethods", "changeTypes" ], function (helpers, changeTypes) {
 			switch (change.changeType) {
 				case changeTypes.addBoard:
 					/* Import and save the created id as the new id, add that to the cache */
-					oldToNewIdCache[boardId] = manager.Import(change.newValue)[0];
+					oldToNewIdCache[boardId] = manager.Add(change.objName).Id;
 					break;
 					
 				case changeTypes.renameBoard:
