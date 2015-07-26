@@ -32,7 +32,7 @@ define([ "helperMethods", "changeTypes" ], function (helpers, changeTypes) {
 					oldToNewIdCache[boardId] = manager.Import(change.newValue)[0];
 					break;
 					
-				case changeTypes.renamedBoard:
+				case changeTypes.renameBoard:
 					manager.Rename(change.newValue, boardId);
 					break;
 					
@@ -94,7 +94,7 @@ define([ "helperMethods", "changeTypes" ], function (helpers, changeTypes) {
 					manager.Delete(boardId);
 					break;
 					
-				case changeTypes.renamedBoard: /* Board was renamed, so change it back */
+				case changeTypes.renameBoard: /* Board was renamed, so change it back */
 					manager.Rename(change.oldValue, boardId);
 					break;
 					

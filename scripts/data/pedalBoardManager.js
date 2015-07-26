@@ -185,7 +185,7 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 			boards[boardId].data.Name = name;
 
 			/* log this change to the history */
-			logger.log(changeTypes.renamedBoard, objectTypes.pedalboard, boardId, oldName, name, name, oldName);
+			logger.log(changeTypes.renameBoard, objectTypes.pedalboard, boardId, oldName, name, name, oldName);
 			
 			/* call all of the change callbacks for this board id */
 			callChangeCallbacks(boardId);

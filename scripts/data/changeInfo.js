@@ -1,14 +1,12 @@
 define("changeTypes", {
-	addPedalboard    : 0,
-	renamePedalboard : 1,
-	addBoard         : 2,
-	renamedBoard     : 3,
-	deleteBoard      : 4,
-	addPedal         : 5,
-	removedPedal     : 6,
-	resizeBoard      : 7,
-	moveBoard        : 8,
-	movePedal        : 9,
+	addBoard         : 0,
+	renameBoard      : 1,
+	deleteBoard      : 2,
+	addPedal         : 3,
+	removedPedal     : 4,
+	resizeBoard      : 5,
+	moveBoard        : 6,
+	movePedal        : 7,
 });
 
 define("objectTypes", {
