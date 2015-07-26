@@ -56,6 +56,16 @@ define(["helperMethods", "stateReverter"], function (helpers, stateReverter) {
 			undoInProgress = false;
 		};
 		
+		/* Returns a boolean. True if there are any undoneStack changes (that can be redone) */
+		methods.canRedo = function () {
+			return !!undoneStack.length; /* !!casts to boolean */
+		};
+		
+		/* Returns a boolean. True if there are any changes (that can be undone) */
+		methods.canUndo = function () {
+			return !!logger.changes.length; /* !!casts to boolean */
+		};
+		
 		return methods;
 	};
 	

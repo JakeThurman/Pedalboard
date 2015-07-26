@@ -16,6 +16,8 @@ define({
 	pedalBoardDragHelpText: "Drag and drop to change order or delete",
 	historyPopupTitle: "History",
 	pedalboardNoPedalsHelpText: "Add The First Pedal To This Board!",
+	undoLastChange: "Undo",
+	redoLastUndo: "Redo",
 	
 	/* change log resources */
 	change_AddBoard: "Created pedalboard \"{0}\"",

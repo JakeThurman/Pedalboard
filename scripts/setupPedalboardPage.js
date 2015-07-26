@@ -28,7 +28,7 @@ function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateRev
 	
 	/* Setup the main page menu click handler */
    	pageMenuButton.click(function () {
-   	    mainPageMenuHandler.handle(pageMenuButton, manager,
+   	    mainPageMenuHandler.handle(pageMenuButton, manager, undoer,
 			function () { /* open history action */
 				var popup = historyPopup.create(logger.changes);
 				manager.AddChangeCallback(popup.addChange);
