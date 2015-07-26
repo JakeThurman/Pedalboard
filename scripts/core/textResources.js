@@ -13,7 +13,6 @@ define({
 	singleBoardDeleteConfirm: "This will delete this pedalboard forever. Are you sure?",
 	clearPedalsFromBoard: "Clear",
 	clearPedalsFromBoardConfirm: "This will delete all of the pedals on this board. Are you sure?",
-	saveBoardsToStorageButton: "Save",
 	pedalBoardDragHelpText: "Drag and drop to change order or delete",
 	historyPopupTitle: "History",
 	pedalboardNoPedalsHelpText: "Add The First Pedal To This Board!",

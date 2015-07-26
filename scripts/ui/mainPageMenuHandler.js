@@ -4,10 +4,9 @@ define(["textResources", "_OptionMenu", "jquery"], function (resources, _OptionM
 	/*
 	 * @pageMenuButton:       the menu button that triggered this
 	 * @manager:              pedalBoardManager.js object to manage pedal boards with
-	 * @save:                 calling this function should save the current pedal board data
 	 * @openHistory:          calling this should open the history popup
 	 */
-	methods.handle = function(pageMenuButton, manager, save, openHistory) {
+	methods.handle = function(pageMenuButton, manager, openHistory) {
 		var addBoardButton = $("<div>")
 			.text(resources.addPedalBoardButtonText)
 			.click(function () {
@@ -34,10 +33,6 @@ define(["textResources", "_OptionMenu", "jquery"], function (resources, _OptionM
 					})
 					.focus();
 			});
-
-		var saveButton = $("<div>")
-			.text(resources.saveBoardsToStorageButton)
-			.click(save);
 				
 		var deleteAllBoards = $("<div>")
 			.text(resources.clearAllBoards)
@@ -50,7 +45,7 @@ define(["textResources", "_OptionMenu", "jquery"], function (resources, _OptionM
 			.text(resources.historyPopupTitle)
 			.click(openHistory);
 
-		var menuOptions = addBoardButton.add(saveButton).add(historyButon);
+		var menuOptions = addBoardButton.add(historyButon);
 
 		if (manager.Any())
 			menuOptions = menuOptions.add(deleteAllBoards);

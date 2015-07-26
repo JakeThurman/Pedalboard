@@ -20,22 +20,23 @@ function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateRev
 		logger.batch(batchTypes.firstLoad, function () {
 			manager.Import(pedalBoardStorage.GetDefaultBoard());
 		});
-		
-	function save() { 
+	
+	/* Save on change */
+	manager.AddChangeCallback(function save() { 
 		pedalBoardStorage.Save(logger.changes); 
-	}
+	});
 	
 	/* Setup the main page menu click handler */
    	pageMenuButton.click(function () {
-   	    mainPageMenuHandler.handle(pageMenuButton, manager, save,
+   	    mainPageMenuHandler.handle(pageMenuButton, manager,
 			function () { /* open history action */
 				var popup = historyPopup.create(logger.changes);
 				manager.AddChangeCallback(popup.addChange);
 			});
     });
 	
-	/* Setup ctrl+z undo handler, and ctrl+s save handler */
-	var zKey = 90, yKey = 89, sKey = 83;
+	/* Setup ctrl+z undo/ctrl+y redo handler*/
+	var zKey = 90, yKey = 89;
 	
 	$(document).keydown(function(e) {
 		if (!e.ctrlKey)
@@ -47,10 +48,6 @@ function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateRev
 				
 			case yKey:
 				undoer.redo();
-				return false;
-				
-			case sKey:
-				save();
 				return false;
 		}
 	});
