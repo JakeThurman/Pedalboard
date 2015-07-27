@@ -21,7 +21,7 @@ function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateRev
 	}
 	
 	/* Save on change */
-	logger.addCallback(function save() {
+	logger.addCallback(/* @waitForBatchCompletion: */ false, function save() {
 		pedalBoardStorage.Save(logger.changes); 
 	});
 	
@@ -30,7 +30,7 @@ function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateRev
    	    mainPageMenuHandler.handle(pageMenuButton, manager, undoer,
 			function () { /* open history action */
 				var popup = historyPopup.create(logger.changes);
-				logger.addCallback(/* @waitForBatchCompletion: */ true, popup.addChange);
+				logger.addCallback(popup.addChange);
 			});
     });
 	

@@ -75,7 +75,7 @@ define([ "helperMethods" ], function ( helpers ) {
 			var batchRunning = batchIsRunning();
 			
 			helpers.forEach(callbacks, function (callback) {
-				if (!callback.waitForBatchCompletion || !batchRunning)
+				if (!callback.waitForBatchCompletion || (callback.waitForBatchCompletion && !batchRunning))
 					callback.func(arg);
 			});
 		}
@@ -176,7 +176,7 @@ define([ "helperMethods" ], function ( helpers ) {
 		/*
 		 * Add a change callback
 		 *
-		 * @waitForBatchCompletion: [DEFAULT: false] Should this function be called on changes made inside of a batch?
+		 * @waitForBatchCompletion: [DEFAULT: true] Should this function be called on changes made inside of a batch?
 		 * @func:                   The action to be executed on every change.
 		 *                              params: @change: The change/batch object just created by the logger.
 		 *
@@ -186,7 +186,7 @@ define([ "helperMethods" ], function ( helpers ) {
 			/* If no @waitForBatchCompletion param was given, fix the variables */
 			if (helpers.isUndefined(func) && typeof waitForBatchCompletion === "function") {
 				func = waitForBatchCompletion;
-				waitForBatchCompletion = false;
+				waitForBatchCompletion = true;
 			}
 			if (typeof func !== "function")
 				throw new TypeError("changeLogger.addCallback takes a function to be called when a change is made.");
