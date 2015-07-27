@@ -76,7 +76,7 @@ define([ "helperMethods" ], function ( helpers ) {
 			if (typeof objId === "function" && helpers.isUndefined(batchChanges) && helpers.isUndefined(objName)) {
 				batchChanges = objId;
 				objId = void(0);
-			}			
+			}
 			else if (helpers.isUndefined(batchChanges) || (helpers.isUndefined(objName) !== helpers.isUndefined(objId)))
 				throw new TypeError("@batchChanges is required. Also, if @objName is given, @objId is required (and vice versa)");
 		
@@ -86,7 +86,10 @@ define([ "helperMethods" ], function ( helpers ) {
 			/* Make sure the changeType is a number */
 			
 			/* Do nothing if there is nothing to do */
-			if (!enabled || helpers.isUndefined(batchChanges)) return;
+			if (!enabled || helpers.isUndefined(batchChanges)) {
+				batchChanges();
+				return;
+			}
 			
 			/* Create a new batch */		
 			batchStack.push(new Batch(batchType, objId, objName));
