@@ -52,7 +52,7 @@ define(["helperMethods", "stateReverter"], function (helpers, stateReverter) {
 			
 			/* Replay the change */
 			undoInProgress = true;
-			stateReverter.replay(undoneStack.pop(), manager);
+			stateReverter.replay(undoneStack.pop(), manager, logger);
 			undoInProgress = false;
 		};
 		

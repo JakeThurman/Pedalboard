@@ -3,24 +3,31 @@ define([ "helperMethods", "changeTypes" ], function (helpers, changeTypes) {
 	
 	var methods = {};
 	
+	
+	var oldToNewIdCache; /* Used for replay. Reset every non-recursive call */
 	/*
 	 * Replays all of the given change logger changes
 	 *
-	 * @changeStack:     All changes to revert
-	 * @manager:         The pedalBoardManager instance to replay onto
-	 * @oldToNewIdCache: Used for recursive callback only!
+	 * @changeStack: All changes to revert
+	 * @manager:     The pedalBoardManager instance to replay onto
+	 * @logger:      The changeLogger instance used with @manager
+	 * @isRecursive: Used for recursive callback only!
 	 */
-	methods.replay = function (changeStack, manager, oldToNewIdCache) {
-		/* Validate the cache */
-		if (!helpers.isObject(oldToNewIdCache) && !helpers.isUndefined(oldToNewIdCache))
-			throw new TypeError("@oldToNewIdCache (used for recursive calls only) is invalid!");
+	methods.replay = function (changeStack, manager, logger, isRecursive) {
+		/* Validate the resursive flag */
+		if (!helpers.isUndefined(isRecursive) && typeof isRecursive !== "boolean")
+			throw new TypeError("@isRecursive (used for recursive calls only) is invalid!");
 		
 		/* Reset the cache of the saved id to the real id (i.e. when creating a board, the id will be whatever it's generated with not what's logged.) */
-		oldToNewIdCache = oldToNewIdCache || {};
+		if (!isRecursive)
+			oldToNewIdCache = {};
 		
 		helpers.forEach(changeStack, function (change) {
 			if (change.isBatch) {
-				methods.replay(change.changes, manager, oldToNewIdCache);
+				/* Replay it inside of a batch as well */
+				logger.batch(change.batchType, change.objId, change.objName, function () {
+					methods.replay(change.changes, manager, logger, true);
+				});
 				return; /* That's all we want to do with a batch */
 			}
 			
@@ -64,8 +71,7 @@ define([ "helperMethods", "changeTypes" ], function (helpers, changeTypes) {
 					throw new TypeError("@changeType is invalid, was: " + change.changeType);
 			}
 		});
-	};
-	
+	};	
 	
 	/*
 	 * Reverts all of the given change logger changes

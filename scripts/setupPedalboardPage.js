@@ -14,7 +14,7 @@ function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateRev
 	/* Restore save data */	
 	if (pedalBoardStorage.HasSavedData()) /* We don't need to log that the page was reloaded! */
 		logger.dontLog(function () {
-			stateReverter.replay(logger.changes, manager);
+			stateReverter.replay(logger.changes, manager, logger);
 		});
 	else /* First load should be in a batch though */
 		logger.batch(batchTypes.firstLoad, function () {
