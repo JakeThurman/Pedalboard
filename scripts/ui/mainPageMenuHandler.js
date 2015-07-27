@@ -70,16 +70,12 @@ define(["textResources", "_OptionMenu", "jquery"], function (resources, _OptionM
 		if (useUndo)
 			historySection.prepend(undoButton);
 
-		var menuOptions = (useUndo && useRedo)
+		var menuOptions = (useUndo || useRedo)
 			? addBoardSection.add(historySection)
-			: useUndo
-				? addBoardButton.add(undoButton).add(historyButton)
-				: useRedo
-					? addBoardButton.add(redoButton).add(historyButton)
-					: addBoardButton.add(historyButton);
+			: addBoardButton.add(historyButton);
 		
 		if (manager.Any())
-			menuOptions = menuOptions.add((useUndo && useRedo)
+			menuOptions = menuOptions.add((useUndo || useRedo)
 				? deleteAllSection
 				: deleteAllBoards);
 		
