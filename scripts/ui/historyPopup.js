@@ -22,7 +22,7 @@ function ( _Popup, resources, $, helpers, moment, changeTypes, batchTypes, objec
 				case changeTypes.addBoard: 
 					return replacer.replace(resources.change_AddBoard, objName);
 				
-				case changeTypes.renamedBoard:
+				case changeTypes.renameBoard:
 					return replacer.replace(resources.change_RenamedBoard, [ otherName, objName ]);
 					
 				case changeTypes.deleteBoard:
