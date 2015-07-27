@@ -99,17 +99,10 @@ define([ "helperMethods" ], function ( helpers ) {
 			}
 			else if (helpers.isUndefined(batchChanges) || (helpers.isUndefined(objName) !== helpers.isUndefined(objId)))
 				throw new TypeError("@batchChanges is required. Also, if @objName is given, @objId is required (and vice versa)");
-		
+			
 			/* Make sure the changeType is a number */
 			if (batchType === "" || isNaN(new Number(batchType)))
 				throw new TypeError("@batchType should be a number from the changeInfo.js batchType \"enum\". Was: " + batchType);
-			/* Make sure the changeType is a number */
-			
-			/* Do nothing if there is nothing to do */
-			if (!enabled || helpers.isUndefined(batchChanges)) {
-				batchChanges();
-				return;
-			}
 			
 			/* Create a new batch */		
 			batchStack.push(new Batch(batchType, objId, objName));
@@ -120,11 +113,12 @@ define([ "helperMethods" ], function ( helpers ) {
 			/* Remove the top batch since it's now done */
 			var batch = batchStack.pop();
 			
-			/* Push this batch as a change in the top batch/top level. */
-			getCurrentBatch().changes.push(batch);
-			
 			/* Trigger the callbacks */
 			callCallbacks(batch);
+			
+			/* Push this batch as a change in the top batch/top level. */
+			if (enabled) /* but only if we aren't inside a don't log */
+				getCurrentBatch().changes.push(batch);
 		};
 		
 		/*
@@ -139,9 +133,6 @@ define([ "helperMethods" ], function ( helpers ) {
 		 * @otherName:  Some secondary name (used in change description generation)
 		 */
 		changeLogger.log = function (changeType, objType, objId, oldValue, newValue, objName, otherName) {
-			/* If we are inside of a DontLog function, don't save any changes */
-			if (!enabled) return;
-			
 			/* Make sure the changeType is a number */
 			if (changeType === "" || isNaN(new Number(changeType)))
 				throw new TypeError("@changeType should be a number from the changeInfo.js changeTypes \"enum\". Was: " + changeType);
@@ -151,12 +142,15 @@ define([ "helperMethods" ], function ( helpers ) {
 			
 			/* Create a change object */
 			var change = new Change(changeType, objType, objId, oldValue, newValue, objName, otherName);
+				
+			/* Trigger the callbacks */
+			callCallbacks(change);
+
+			/* If we are inside of a DontLog function, don't save any changes */
+			if (!enabled) return;
 			
 			/* Push this change as a change in the top batch/top level. */
 			getCurrentBatch().changes.push(change);
-			
-			/* Trigger the callbacks */
-			callCallbacks(change);
 		};
 		
 		/*
