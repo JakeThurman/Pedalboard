@@ -41,13 +41,11 @@ function ( _Popup, resources, $, helpers, moment, changeTypes, batchTypes, objec
 					return replacer.replace(resources.change_RemovedPedal, [ otherName, objName ]);
 				
 				case changeTypes.movePedal:
-					var resource = newValue
+					var resource = newValue === 0
 						? resources.change_MovePedalToTop /* To Top */
 						: oldValue > newValue
 							? resources.change_MovePedalUp /* Up */
-							: newValue === (boards[boardId].data.pedals.length - 1)
-								? resources.change_MovePedalToBottom /* To Bottom */
-								: resources.change_MovePedalDown /* Down */
+							: resources.change_MovePedalDown /* Down */
 					return replacer.replace(resource, [ otherName, objName ]);
 				
 				default:
