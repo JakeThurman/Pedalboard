@@ -130,7 +130,7 @@ function (_Popup, $, resources, pedalRenderer, pedalboardPopupOptionsHandler, re
 		/* add a change callback to decide if the help text should be hidden */
 		var killCallback = logger.addCallback(function (change) {
 			/* Only handle changes to this board. */
-			if (change.objId !== popup.id || (change.objType === objectTypes.pedalBoard || change.objType === objectTypes.pedal))
+			if (change.objId !== popup.id || (change.objType !== objectTypes.pedalBoard && change.objType !== objectTypes.pedal))
 				return;
 			
 			if (manager.AnyPedals(popup.id)) {
