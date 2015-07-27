@@ -142,15 +142,13 @@ define([ "helperMethods" ], function ( helpers ) {
 			
 			/* Create a change object */
 			var change = new Change(changeType, objType, objId, oldValue, newValue, objName, otherName);
-				
-			/* Trigger the callbacks */
-			callCallbacks(change);
-
-			/* If we are inside of a DontLog function, don't save any changes */
-			if (!enabled) return;
 			
 			/* Push this change as a change in the top batch/top level. */
-			getCurrentBatch().changes.push(change);
+			if (enabled) /* If we are inside of a DontLog function, don't save any changes */
+				getCurrentBatch().changes.push(change);
+	
+			/* Trigger the callbacks */
+			callCallbacks(change);
 		};
 		
 		/*
