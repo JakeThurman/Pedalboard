@@ -259,7 +259,7 @@ function (helpers, reverter, pedalBoardManager, changeLogger, $) {
 		
 		describe("replay", function () {		
 			it("should replay a set of changes", function () {
-				reverter.replay(loggerFull.changes, managerEmpty);
+				reverter.replay(loggerFull.changes, managerEmpty, loggerEmpty);
 				
 				var emptyBoards = managerEmpty.GetBoards();
 				var fullBoards  = managerFull.GetBoards();
@@ -290,7 +290,7 @@ function (helpers, reverter, pedalBoardManager, changeLogger, $) {
 			
 			it("should not throw", function () {
 				var nonThrower = function () {
-					reverter.replay(loggerFull.changes, managerEmpty);
+					reverter.replay(loggerFull.changes, managerEmpty, loggerEmpty);
 				};
 				expect(nonThrower).not.toThrow();
 			});

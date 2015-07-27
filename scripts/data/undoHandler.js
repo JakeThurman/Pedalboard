@@ -15,7 +15,7 @@ define(["helperMethods", "stateReverter"], function (helpers, stateReverter) {
 		var undoInProgress = false;
 		
 		/* For every manager change, reset the stack of undone changes */
-		manager.AddChangeCallback(function () {
+		logger.addCallback(function () {
 			if (!undoInProgress)
 				undoneStack = [];
 		});

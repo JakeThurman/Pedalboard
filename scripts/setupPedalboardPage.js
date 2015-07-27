@@ -22,7 +22,7 @@ function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateRev
 		});
 	
 	/* Save on change */
-	manager.AddChangeCallback(function save() { 
+	logger.addCallback(function save() {
 		pedalBoardStorage.Save(logger.changes); 
 	});
 	
@@ -31,7 +31,7 @@ function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateRev
    	    mainPageMenuHandler.handle(pageMenuButton, manager, undoer,
 			function () { /* open history action */
 				var popup = historyPopup.create(logger.changes);
-				manager.AddChangeCallback(popup.addChange);
+				logger.addCallback(/* @waitForBatchCompletion: */ true, popup.addChange);
 			});
     });
 	

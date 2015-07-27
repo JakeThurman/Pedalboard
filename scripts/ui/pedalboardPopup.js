@@ -1,4 +1,5 @@
-define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOptionsHandler", "reporter", "addPedalMenu", "jquery-ui"], function (_Popup, $, resources, pedalRenderer, pedalboardPopupOptionsHandler, reporter, addPedalMenu) {
+define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOptionsHandler", "reporter", "addPedalMenu", "objectTypes", "jquery-ui"], 
+function (_Popup, $, resources, pedalRenderer, pedalboardPopupOptionsHandler, reporter, addPedalMenu, objectTypes) {
 	"use strict";
 	
 	var methods = {};
@@ -8,11 +9,12 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 		window.nextNewPedalBoardId = 1;
 	
 	/*Params:
-	 *  @title:    the inital title for the pedal board
-	 *  @appendTo: the main dom object to append and limit this board to.
-	 *  @manager:  the pedalBoardManager.js instance that created this
+	 *  @title:    The inital title for the pedal board
+	 *  @appendTo: The main dom object to append and limit this board to.
+	 *  @manager:  The pedalBoardManager.js instance that created this
+	 *  @logger:   The logger instance used by the manager
 	 */
-	methods.create =  function (title, appendTo, manager) {		
+	methods.create =  function (title, appendTo, manager, logger) {		
 		var content = $("<div>", { "class": "pedal-board display-none" });
 			
 		function startAddingPedals() {
@@ -39,7 +41,8 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 			id: "pedal-board-" + window.nextNewPedalBoardId++,
 			title: title,
 			header: menuButton,
-			init: init
+			init: init,
+			close: close,
 		});
 		
 		popup.el.draggable({ 
@@ -125,7 +128,11 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 			.appendTo(addFirstPedalHelp);
 		
 		/* add a change callback to decide if the help text should be hidden */
-		manager.AddChangeCallback(popup.id, function () {
+		var killCallback = logger.addCallback(function (change) {
+			/* Only handle changes to this board. */
+			if (change.objId !== popup.id || (change.objType === objectTypes.pedalBoard || change.objType === objectTypes.pedal))
+				return;
+			
 			if (manager.AnyPedals(popup.id)) {
 				helpText.add(content)
 					.removeClass("display-none");
@@ -140,6 +147,10 @@ define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOp
 					.click(startAddingPedals);
 			}
 		});
+		
+		function close() {
+			killCallback();
+		}
 		
 		/* return the popup */
 		return popup;

@@ -22,10 +22,6 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 		/* Where all of the managed boards are stored */
 		var boards = {};
 		
-		/* Separate from boards so that we can keep it more light weight for configuration logs */
-		var changeCallbacks = {};
-		var allBoardChangeCallbacks = [];
-		
 		/* Validation helper for board ids */
 		function assertBoardIdExists(id) {
 			if (!boards[id]) 
@@ -154,7 +150,7 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 		 * @returns:          JQuery $object for the rendered (new) pedalboard
 		 */
 		manager.Add = function (name) {	
-			var domboard = pedalBoardPopup.create(name, contentContainer, manager);
+			var domboard = pedalBoardPopup.create(name, contentContainer, manager, logger);
 		
 			boards[domboard.id] = { 
 				dom: domboard,
@@ -164,7 +160,6 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 			};
 			
 			logger.log(changeTypes.addBoard, objectTypes.pedalboard, domboard.id, void(0), helpers.clone(manager.GetBoard(domboard.id)), name);
-			callChangeCallbacks();
 			
 			return domboard;
 		};
@@ -186,9 +181,6 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 
 			/* log this change to the history */
 			logger.log(changeTypes.renameBoard, objectTypes.pedalboard, boardId, oldName, name, name, oldName);
-			
-			/* call all of the change callbacks for this board id */
-			callChangeCallbacks(boardId);
 		};
 		
 		/*
@@ -204,10 +196,8 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 			
 			boards[boardId].dom.el.remove();
 			delete boards[boardId];
-			delete changeCallbacks[boardId];
 							
 			logger.log(changeTypes.deleteBoard, objectTypes.pedalboard, boardId, boardToLog, void(0), boardToLog.data.Name);
-			callChangeCallbacks();
 		};
 		
 		/* Delete all of the boards on the page. */
@@ -257,7 +247,6 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 			boards[boardId].dom.el.css(boards[boardId].clientRect); /* Force make this true */
 			
 			logger.log(changeType, objectTypes.pedalboard, boardId, oldValue, boards[boardId].clientRect, boards[boardId].data.Name);
-			callChangeCallbacks(boardId);
 		}
 		
 		/*
@@ -298,9 +287,6 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 			/* log this change to the history */
 			logger.log(changeTypes.addPedal, objectTypes.pedal, boardId, void(0), pedal, boards[boardId].data.Name, pedal.fullName);
 				
-			/* call all of the change callbacks for this board id */
-			callChangeCallbacks(boardId);
-			
 			/* Append the rendered pedal to the container */
 			/* TODO: don't hard code this lookup for the content region */
 			rendered.appendTo(boards[boardId].dom.el.find(".pedal-board"));
@@ -336,9 +322,6 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 			
 			/* log this change to the history */
 			logger.log(changeTypes.removedPedal, objectTypes.pedal, boardId, removedPedal, void(0), boards[boardId].data.Name, removedPedal.fullName);
-			
-			/* call all of the change callbacks for this board id */
-			callChangeCallbacks(boardId);
 		};
 		
 		/*
@@ -389,51 +372,6 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 			}
 			
 			logger.log(changeTypes.movePedal, objectTypes.pedal, boardId, oldPedalIndex, newPedalIndex, boards[boardId].data.Name, reorderedPedal.fullName);
-			
-			/* call all of the change callbacks for this board id */
-			callChangeCallbacks(boardId);
-		};
-		
-		/* ! Change Callbacks ! */
-		/*
-		 * [PRIVATE] Calls all of the change callback functions for the given board id, and all global callbacks
-		 *
-		 * @boardId: [OPTIONAL] The id of the pedalboard to call changes for -> If not provided, only call globally scoped changes
-		 */
-		function callChangeCallbacks(boardId) {	
-			var change = logger.changes[logger.changes.length - 1];
-			
-			if (!helpers.isUndefined(boardId)) {
-				helpers.forEach(changeCallbacks[boardId], function (callback) {
-					callback(change);
-				});
-			}
-			helpers.forEach(allBoardChangeCallbacks, function (callback) {
-				callback(change);
-			});
-		}
-		
-		/*
-		 * Add a change callback to a board 
-		 *
-		 * @boardId: [OPTIONAL] The id of the pedalboard to call changes for -> If not provided, only call globally scoped changes
-		 * @func:               The action to be executed on every change.
-		 *                               params: @change: The change object just created by the logger.
-		 */
-		manager.AddChangeCallback = function (boardId, func) {
-			if (typeof func !== "function") {
-				if (typeof boardId === "function" && helpers.isUndefined(func)) { 
-					/* This is a global/all board callback*/
-					func = boardId; /* No board id was provided, it is the function */
-					allBoardChangeCallbacks.push(func);
-					return;
-				}
-				
-				throw new TypeError("AddChangeCallback takes a board id and secondly a function to be called when ever the pedals on a board are changed, or just a function to be called on any change from any board");
-			}
-			
-			changeCallbacks[boardId] = changeCallbacks[boardId] || [];
-			changeCallbacks[boardId].push(func);
 		};
 		
 		/*

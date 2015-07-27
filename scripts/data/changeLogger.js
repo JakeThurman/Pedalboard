@@ -55,7 +55,7 @@ define([ "helperMethods" ], function ( helpers ) {
 			this.isBatch = true;
 		}
 		
-		/* batch logic */
+		/* Batch Logic */
 		var batchStack = [];	
 		
 		function batchIsRunning() {
@@ -68,9 +68,29 @@ define([ "helperMethods" ], function ( helpers ) {
 			   : changeLogger;
 		}
 		
+		/* [PRIVATE] calls all of the change callbacks. */
+		var callbacks = [];
+		
+		function callCallbacks(arg) {
+			var batchRunning = batchIsRunning();
+			
+			helpers.forEach(callbacks, function (callback) {
+				if (!callback.waitForBatchCompletion || !batchRunning)
+					callback.func(arg);
+			});
+		}
+		
 		var enabled = true; /* Used by dontLog to temporarily disable logging */
 		
 		/* ! Public Methods ! */	
+		/*
+		 * Logs a change and calls the change callbacks (Unless this is nested inside of .dontLog call)
+		 *
+		 * @batchType:    The type of the batchType (from batchTypes "enum")
+		 * @objId:        The id of the object changed
+		 * @objName:      The name of the object (used in change description generation)
+		 * @batchChanges: A function to run to get the changes to log as children of this batch
+		 */
 		changeLogger.batch = function (batchType, objId, objName, batchChanges) {
 			/* If the optional param pair @objId & @objName were not given, fix the variables */
 			if (typeof objId === "function" && helpers.isUndefined(batchChanges) && helpers.isUndefined(objName)) {
@@ -102,8 +122,22 @@ define([ "helperMethods" ], function ( helpers ) {
 			
 			/* Push this batch as a change in the top batch/top level. */
 			getCurrentBatch().changes.push(batch);
+			
+			/* Trigger the callbacks */
+			callCallbacks(batch);
 		};
 		
+		/*
+		 * Logs a change and calls the change callbacks (Unless this is nested inside of .dontLog call)
+		 *
+		 * @changeType: The type of the change (from changeTypes "enum")
+		 * @objType:    The type of the object (from objectTypes "enum")
+		 * @objId:      The id of the object changed
+		 * @oldValue:   The old value of the object
+		 * @newValue:   The new value of the object
+		 * @objName:    The name of the object (used in change description generation)
+		 * @otherName:  Some secondary name (used in change description generation)
+		 */
 		changeLogger.log = function (changeType, objType, objId, oldValue, newValue, objName, otherName) {
 			/* If we are inside of a DontLog function, don't save any changes */
 			if (!enabled) return;
@@ -120,8 +154,16 @@ define([ "helperMethods" ], function ( helpers ) {
 			
 			/* Push this change as a change in the top batch/top level. */
 			getCurrentBatch().changes.push(change);
+			
+			/* Trigger the callbacks */
+			callCallbacks(change);
 		};
 		
+		/*
+		 * Don't log any changes made while this is logging.
+		 *
+		 * @func: Makes all containing logger.log calls no-opperation.
+		 */
 		changeLogger.dontLog = function (func) {
 			if (typeof func !== "function") throw new TypeError("dontLog takes a function")
 			
@@ -135,6 +177,34 @@ define([ "helperMethods" ], function ( helpers ) {
 			enabled = false; /* Temporarily disable logging */
 			func();
 			enabled = true; /* Re-enable logging */
+		};
+		
+		/*
+		 * Add a change callback
+		 *
+		 * @waitForBatchCompletion: [DEFAULT: false] Should this function be called on changes made inside of a batch?
+		 * @func:                   The action to be executed on every change.
+		 *                              params: @change: The change/batch object just created by the logger.
+		 *
+		 * @returns:                A kill function. Call the result of this function to kill the callback.
+		 */
+		changeLogger.addCallback = function (waitForBatchCompletion, func) {
+			/* If no @waitForBatchCompletion param was given, fix the variables */
+			if (helpers.isUndefined(func) && typeof waitForBatchCompletion === "function") {
+				func = waitForBatchCompletion;
+				waitForBatchCompletion = false;
+			}
+			if (typeof func !== "function")
+				throw new TypeError("changeLogger.addCallback takes a function to be called when a change is made.");
+			
+			callbacks.push({ func: func, waitForBatchCompletion: waitForBatchCompletion });
+			
+			/* Return a kill function */
+			return function () {
+				callbacks = helpers.where(callbacks, function (callback) {
+					return callback.func !== func && waitForBatchCompletion !== waitForBatchCompletion;
+				});
+			};
 		};
 
 		return changeLogger;
