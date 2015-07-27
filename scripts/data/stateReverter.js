@@ -7,7 +7,7 @@ define([ "helperMethods", "changeTypes" ], function (helpers, changeTypes) {
 	 * @manager:     The pedalBoardManager instance to replay onto
 	 * @logger:      The changeLogger instance used with @manager
 	 */
-	var reverter = function (manager, logger) {
+	return function (manager, logger) {
 		var methods = this;
 	
 		var replayOldToNewIdCache = {}; /* Used for replay. */
@@ -131,6 +131,4 @@ define([ "helperMethods", "changeTypes" ], function (helpers, changeTypes) {
 			});
 		};
 	};
-	
-	return reverter;
 });
