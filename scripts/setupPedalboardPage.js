@@ -7,15 +7,13 @@ function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateRev
    	var pageMenuButton = $("#page-main-menu");
    	
 	/* Data variables */
-	var logger = changeLogger.create(pedalBoardStorage.Load());
+	var logger = changeLogger.create();
 	var manager = pedalBoardManager.create(logger, mainContentContainer);
 	var undoer = undoHandler.create(manager, logger);
 	
 	/* Restore save data */	
-	if (pedalBoardStorage.HasSavedData()) /* We don't need to log that the page was reloaded! */
-		logger.dontLog(function () {
-			stateReverter.replay(logger.changes, manager, logger);
-		});
+	if (pedalBoardStorage.HasSavedData())
+		stateReverter.replay(pedalBoardStorage.Load(), manager, logger);
 	else /* First load should be in a batch though */
 		logger.batch(batchTypes.firstLoad, function () {
 			manager.Import(pedalBoardStorage.GetDefaultBoard());
