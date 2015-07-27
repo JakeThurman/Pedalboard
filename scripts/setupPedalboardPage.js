@@ -9,11 +9,12 @@ function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateRev
 	/* Data variables */
 	var logger = changeLogger.create();
 	var manager = pedalBoardManager.create(logger, mainContentContainer);
-	var undoer = undoHandler.create(manager, logger);
+	var reverter = new stateReverter(manager, logger);
+	var undoer = undoHandler.create(reverter, logger);
 	
 	/* Restore save data */	
 	if (pedalBoardStorage.HasSavedData()) {
-		stateReverter.replay(pedalBoardStorage.Load(), manager, logger);
+		reverter.replay(pedalBoardStorage.Load());
 	} else {/* This is the first load */
 		logger.batch(batchTypes.firstLoad, function () {
 			manager.Import(pedalBoardStorage.GetDefaultBoard());

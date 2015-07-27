@@ -6,10 +6,10 @@ define(["helperMethods", "stateReverter"], function (helpers, stateReverter) {
 	/*
 	 * Creates a handler for undo/redo events
 	 *
-	 * @manager: pedalBoardManager instance to act onLine
-	 * @logger:  The logger for the manager.
+	 * @reverter: The stateReverter instance to revert with.
+	 * @logger:   The logger for the manager we'd be reverting.
 	 */
-	actions.create = function (manager, logger) {
+	actions.create = function (reverter, logger) {
 		var methods = {};
 		var undoneStack = [];
 		var undoInProgress = false;
@@ -34,7 +34,7 @@ define(["helperMethods", "stateReverter"], function (helpers, stateReverter) {
 			/* Revert the change */
 			undoInProgress = true;
 			logger.dontLog(function () {
-				stateReverter.revert(change, manager);
+				reverter.revert(change);
 			});
 			undoInProgress = false;
 			
@@ -52,7 +52,7 @@ define(["helperMethods", "stateReverter"], function (helpers, stateReverter) {
 			
 			/* Replay the change */
 			undoInProgress = true;
-			stateReverter.replay(undoneStack.pop(), manager, logger);
+			reverter.replay(undoneStack.pop());
 			undoInProgress = false;
 		};
 		
