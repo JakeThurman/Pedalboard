@@ -12,12 +12,13 @@ function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateRev
 	var undoer = undoHandler.create(manager, logger);
 	
 	/* Restore save data */	
-	if (pedalBoardStorage.HasSavedData())
+	if (pedalBoardStorage.HasSavedData()) {
 		stateReverter.replay(pedalBoardStorage.Load(), manager, logger);
-	else /* First load should be in a batch though */
+	} else {/* This is the first load */
 		logger.batch(batchTypes.firstLoad, function () {
 			manager.Import(pedalBoardStorage.GetDefaultBoard());
 		});
+	}
 	
 	/* Save on change */
 	logger.addCallback(function save() {

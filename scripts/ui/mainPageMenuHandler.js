@@ -48,14 +48,12 @@ define(["textResources", "_OptionMenu", "jquery"], function (resources, _OptionM
 		var deleteAllSection = $("<div>", { "class": "section" })
 			.append(deleteAllBoards);
 			
-		var historyButon = $("<div>")
+		var historyButton = $("<div>")
 			.text(resources.historyPopupTitle)
 			.click(openHistory);
-
-		var historySection = $("<div>", { "class": "section" })
-			.append(historyButon);
 		
-		var undoSection = $("<div>", { "class": "section" });
+		var historySection = $("<div>", { "class": "section" })
+			.append(historyButton);
 		
 		var undoButton = $("<div>")
 			.text(resources.undoLastChange)
@@ -67,18 +65,18 @@ define(["textResources", "_OptionMenu", "jquery"], function (resources, _OptionM
 		
 		var useUndo = undoer.canUndo();
 		var useRedo = undoer.canRedo();
-		if (useUndo)
-			undoSection.append(undoButton);
 		if (useRedo)
-			undoSection.append(redoButton);
+			historySection.prepend(redoButton);
+		if (useUndo)
+			historySection.prepend(undoButton);
 
 		var menuOptions = (useUndo && useRedo)
-			? addBoardSection.add(undoSection).add(historySection)
+			? addBoardSection.add(historySection)
 			: useUndo
-				? addBoardButton.add(undoButton).add(historyButon)
+				? addBoardButton.add(undoButton).add(historyButton)
 				: useRedo
-					? addBoardButton.add(redoButton).add(historyButon)
-					: addBoardButton.add(historyButon);
+					? addBoardButton.add(redoButton).add(historyButton)
+					: addBoardButton.add(historyButton);
 		
 		if (manager.Any())
 			menuOptions = menuOptions.add((useUndo && useRedo)
