@@ -4,7 +4,7 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 	var methods = {};
 	
 	/* Expose this to callers for the sake of unit testing */
-	methods.historyStorageName = "pedalboardChangeHistory";
+	methods.HISTORY_STORAGE_NAME = "pedalboardChangeHistory";
 	
 	function supports_html5_storage() {
         try { 
@@ -19,7 +19,7 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 	 * Clears the currently saved history from the browser
 	 */
 	methods.Clear = function() {
-	    delete localStorage[methods.historyStorageName];
+	    delete localStorage[methods.HISTORY_STORAGE_NAME];
 	};
 	
 	/*
@@ -32,19 +32,19 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 			throw new TypeError("@history param to pedalBoardStorage.Save() must be an array of batches/changes.");
 	
 	    if (supports_html5_storage())
-			localStorage[methods.historyStorageName] = JSON.stringify(history);
+			localStorage[methods.HISTORY_STORAGE_NAME] = JSON.stringify(history);
 	};
 	
 	/*
 	 * Returns the saved history from previous edit periods as saved in local storage.
 	 */
 	methods.Load = function () {
-		if (supports_html5_storage() && localStorage[methods.historyStorageName])
-			return JSON.parse(localStorage[methods.historyStorageName]);
+		if (supports_html5_storage() && localStorage[methods.HISTORY_STORAGE_NAME])
+			return JSON.parse(localStorage[methods.HISTORY_STORAGE_NAME]);
 	};
 	
 	methods.HasSavedData = function () {
-		return supports_html5_storage() && !!localStorage[methods.historyStorageName];
+		return supports_html5_storage() && !!localStorage[methods.HISTORY_STORAGE_NAME];
 	};
 	
 	methods.GetDefaultBoard = function () {
