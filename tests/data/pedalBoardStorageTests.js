@@ -1,4 +1,6 @@
 define([ "pedalBoardStorage" ], function (storage) {
+	storage.historyStorageName = storage.historyStorageName + "-testing";
+
 	describe("data/pedalBoardStorage.js", function () {
 		describe("Clear", function () {
 			it("should clear the save", function () {
