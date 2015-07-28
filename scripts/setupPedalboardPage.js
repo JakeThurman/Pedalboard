@@ -1,5 +1,5 @@
-require(["PedalBoardManager", "jquery", "mainPageMenuHandler", "pedalBoardStorage", "StateReverter", "UndoHandler", "changeLogger", "batchTypes", "domReady!"], 
-function (PedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, StateReverter, UndoHandler, changeLogger, batchTypes) {
+require(["PedalBoardManager", "jquery", "mainPageMenuHandler", "pedalBoardStorage", "StateReverter", "UndoHandler", "ChangeLogger", "batchTypes", "domReady!"], 
+function (PedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, StateReverter, UndoHandler, ChangeLogger, batchTypes) {
     "use strict";
 	
 	/* DOM variables */
@@ -7,7 +7,7 @@ function (PedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, StateRev
    	var pageMenuButton = $("#page-main-menu");
    	
 	/* Data variables */
-	var logger = changeLogger.create();
+	var logger   = new ChangeLogger();
 	var manager  = new PedalBoardManager(logger, mainContentContainer);
 	var reverter = new StateReverter(manager, logger);
 	var undoer   = new UndoHandler(reverter, logger);

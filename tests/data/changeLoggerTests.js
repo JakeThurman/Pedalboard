@@ -1,15 +1,15 @@
-define([ "changeLogger", "changeTypes", "objectTypes" ], function ( changeLogger, changeTypes, objectTypes ) {
+define([ "ChangeLogger", "changeTypes", "objectTypes" ], function ( ChangeLogger, changeTypes, objectTypes ) {
 	"use strict";
-	
-	/* For the sake of easy test, make the callbacks happen imediately */
-	changeLogger.CALLBACK_ASYNC = false;
 	
 	describe("data/changeLogger.js", function () {
 		var logger;
 		var log;
 		
 		beforeEach(function () {
-			logger = changeLogger.create();
+			logger = new ChangeLogger();
+			
+			/* For the sake of easy test, make the callbacks happen imediately */
+			logger.CALLBACK_ASYNC = false;
 			
 			log = function () {
 				logger.log(-1, -1, -1);

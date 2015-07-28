@@ -34,10 +34,10 @@ requirejs.config({
 			"pedalBoardStorage":             "data/pedalBoardStorage",
 			"pedalDataAccess":               "data/pedalDataAccess",
 			"pedalsGetter":                  "data/pedalsGetter",
-			"changeLogger":                  "data/changeLogger",
 			"changeTypes":                   "data/changeInfo",
 			"batchTypes":                    "data/changeInfo",
 			"objectTypes":                   "data/changeInfo",
+			"ChangeLogger":                  "data/ChangeLogger",
 			
 			/* Data Classes */
 			"PedalBoardManager":             "data/PedalBoardManager",

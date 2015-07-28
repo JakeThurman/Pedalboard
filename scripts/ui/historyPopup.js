@@ -1,5 +1,5 @@
-define([ "_Popup", "textResources", "jquery", "helperMethods", "moment", "changeTypes", "batchTypes", "stringReplacer", "changeLogger", "async" ], 
-function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, replacer, changeLogger, async ) {
+define([ "_Popup", "textResources", "jquery", "helperMethods", "moment", "changeTypes", "batchTypes", "stringReplacer", "ChangeLogger", "async" ], 
+function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, replacer, ChangeLogger, async ) {
 	"use strict";
 	
 	var methods = {};
@@ -8,9 +8,8 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, repla
 	methods.RENDER_ASYNC = true;
 	
 	methods.create = function(logger) {
-		//TODO: uncomment this when changeLogger gets converted to be a class
-		//if (!(logger instanceof changeLogger))
-		//	throw new TypeError("@logger is required. Please pass in a valid changeLogger object to display changes from");
+		if (!(logger instanceof ChangeLogger))
+			throw new TypeError("@logger is required. Please pass in a valid ChangeLogger object to display changes from");
 	
 		function genBatchText(batchType, objName) {
 			switch (batchType) {

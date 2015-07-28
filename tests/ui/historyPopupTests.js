@@ -1,4 +1,4 @@
-define([ "historyPopup", "changeLogger", "jquery", "_Popup" ], function ( historyPopup, changeLogger, $, _Popup ) {
+define([ "historyPopup", "ChangeLogger", "jquery", "_Popup" ], function ( historyPopup, ChangeLogger, $, _Popup ) {
 	"use strict";
 	
 	/* It makes a small difference and makes testing much easier */
@@ -8,7 +8,9 @@ define([ "historyPopup", "changeLogger", "jquery", "_Popup" ], function ( histor
 		var logger;
 			
 		beforeEach(function () {
-			logger = changeLogger.create();
+			logger = new ChangeLogger();
+			logger.CALLBACK_ASYNC = false;
+			
 			var log = function () {
 				logger.log(4, -1, -1);
 			};
@@ -122,7 +124,8 @@ define([ "historyPopup", "changeLogger", "jquery", "_Popup" ], function ( histor
 		describe("performance", function () {
 			/* helper to create big change logs very easily */
 			function getChangeLogger(batches, changePerBatch) {
-				var logger = changeLogger.create();
+				var logger = new ChangeLogger();
+				logger.CALLBACK_ASYNC = false;
 							
 				var makeChange = function () {
 					for(var c = 0; c < changePerBatch; c++) {

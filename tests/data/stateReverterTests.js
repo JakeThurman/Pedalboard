@@ -1,5 +1,5 @@
-define([ "helperMethods", "StateReverter", "PedalBoardManager", "changeLogger", "jquery" ],
-function (helpers, Reverter, PedalBoardManager, changeLogger, $) {
+define([ "helperMethods", "StateReverter", "PedalBoardManager", "ChangeLogger", "jquery" ],
+function (helpers, Reverter, PedalBoardManager, ChangeLogger, $) {
 	"use strict";
 	
 	var reverterFull;
@@ -199,11 +199,11 @@ function (helpers, Reverter, PedalBoardManager, changeLogger, $) {
 		
 		beforeEach(function () {		
 			/* Create managers */
-			loggerFull = changeLogger.create();
+			loggerFull = new ChangeLogger();
 			var parentFull =  $("<div>");
 			managerFull = new PedalBoardManager(loggerFull, parentFull);
 			
-			loggerEmpty = changeLogger.create();
+			loggerEmpty = new ChangeLogger();
 			var parentEmpty = $("<div>");
 			managerEmpty = new PedalBoardManager(loggerEmpty, parentEmpty);
 			

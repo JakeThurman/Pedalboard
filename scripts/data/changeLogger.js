@@ -1,17 +1,21 @@
 define([ "helperMethods", "async" ], function ( helpers, async ) {
 	"use strict";
-
-	var methods = {};
-	
-	/* A param on methods so the caller can disable. (For unit tests) */
-	methods.CALLBACK_ASYNC = true;
-	
-	methods.create = function (initalChanges) {
+		
+	/*
+	 * The change logger "class"
+	 *
+	 * PARAMS:
+	 *   @initalChanges: [OPTIONAL] The Array<change/batch> to init logger.changes as
+	 */
+	return function (initalChanges) {
+		/* A param on methods so the caller can disable. (For unit tests) */
+		this.CALLBACK_ASYNC = true;
+		
 		/* assert that if the caller gave us an initalChanges changes collection that it is an array */
 		if (!helpers.isUndefined(initalChanges) && !helpers.isArray(initalChanges))
 			throw "initalChanges must be an array";
 		
-		var changeLogger = {};
+		var changeLogger = this;
 		
 		changeLogger.changes = initalChanges || [];
 		
@@ -86,7 +90,7 @@ define([ "helperMethods", "async" ], function ( helpers, async ) {
 		
 			var batchRunning = batchIsRunning();
 			
-			if (methods.CALLBACK_ASYNC)
+			if (changeLogger.CALLBACK_ASYNC)
 				async.run(call, callbacks, batchRunning, arg);
 			else
 				call(callbacks, batchRunning, arg);
@@ -210,9 +214,5 @@ define([ "helperMethods", "async" ], function ( helpers, async ) {
 				});
 			};
 		};
-
-		return changeLogger;
 	};
-	
-	return methods;
 });
