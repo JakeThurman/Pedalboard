@@ -20,13 +20,16 @@ define(["helperMethods", "textResources", "changeTypes"], function (helpers, res
 	methods.Clear = function() {
 	    delete localStorage[historyStorageName];
 	};
-		
+	
 	/*
 	 * Saves the current state for this browser.
 	 *
 	 * @history: [Array<Changes/Batches>]    All of the changes ever made
 	 */	 
 	methods.Save = function(history) {
+		if (!helpers.isArray(history))
+			throw new TypeError("@history param to pedalBoardStorage.Save() must be an array of batches/changes.");
+	
 	    if (supports_html5_storage())
 			localStorage[historyStorageName] = JSON.stringify(history);
 	};
@@ -40,7 +43,7 @@ define(["helperMethods", "textResources", "changeTypes"], function (helpers, res
 	};
 	
 	methods.HasSavedData = function () {
-		return supports_html5_storage() && localStorage[historyStorageName];
+		return supports_html5_storage() && !!localStorage[historyStorageName];
 	};
 	
 	methods.GetDefaultBoard = function () {
