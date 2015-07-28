@@ -121,14 +121,14 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, repla
 		}
 		
 		function appendChange(change) {
-			function append() { 
+			function append(content, change) {
 				content.append(renderChange(change, true)); 
 			}
 			
 			if (methods.RENDER_ASYNC)
-				async.run(append);
+				async.run(append, content, change);
 			else 
-				append();
+				append(content, change);
 		}
 		
 		helpers.forEach(logger.changes, appendChange);
