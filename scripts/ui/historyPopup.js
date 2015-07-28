@@ -1,5 +1,5 @@
-define([ "_Popup", "textResources", "jquery", "helperMethods", "moment", "changeTypes", "batchTypes", "stringReplacer", "ChangeLogger", "async" ], 
-function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, replacer, ChangeLogger, async ) {
+define([ "_Popup", "textResources", "jquery", "helperMethods", "moment", "changeTypes", "batchTypes", "objectTypes", "stringReplacer", "ChangeLogger", "async" ], 
+function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objectTypes, replacer, ChangeLogger, async ) {
 	"use strict";
 	
 	var methods = {};
@@ -7,61 +7,21 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, repla
 	/* This can be overriden for the sake of simple unit testing */
 	methods.RENDER_ASYNC = true;
 	
+	/*
+	 * Creates a history popup
+	 *
+	 * PARAMS:
+	 *   @logger: The that these changes have to do with
+	 *
+	 * @returns: The _Popup object for this popup: { id: ..., el: $(...) };
+	 */
 	methods.create = function(logger) {
 		if (!(logger instanceof ChangeLogger))
 			throw new TypeError("@logger is required. Please pass in a valid ChangeLogger object to display changes from");
 	
-		function genBatchText(batchType, objName) {
-			switch (batchType) {
-				case batchTypes.firstLoad:
-					return resources.firstStartupBatchName;
-				
-				case batchTypes.deleteAll:
-					return resources.change_DeleteAllBoards;
-				
-				case batchTypes.clearBoard:
-					return replacer.replace(resources.change_ClearedBoard, objName);
-			}
-		}
-		function genChangeText(changeType, objName, otherName, newValue, oldValue) {
-			switch (changeType) {
-				case changeTypes.addBoard: 
-					return replacer.replace(resources.change_AddBoard, objName);
-				
-				case changeTypes.renameBoard:
-					return replacer.replace(resources.change_RenamedBoard, [ otherName, objName ]);
-					
-				case changeTypes.deleteBoard:
-					return replacer.replace(resources.change_DeleteBoard, objName);
-					
-				case changeTypes.moveBoard:
-					return replacer.replace(resources.change_MoveBoard, objName);
-					
-				case changeTypes.resizeBoard:
-					return replacer.replace(resources.change_ResizeBoard, objName);
-					
-				case changeTypes.addPedal:
-					return replacer.replace(resources.change_AddPedal, [ otherName, objName ]);
-					
-				case changeTypes.removedPedal:
-					return replacer.replace(resources.change_RemovedPedal, [ otherName, objName ]);
-				
-				case changeTypes.movePedal:
-					var resource = newValue === 0
-						? resources.change_MovePedalToTop /* To Top */
-						: oldValue > newValue
-							? resources.change_MovePedalUp /* Up */
-							: resources.change_MovePedalDown; /* Down */
-					return replacer.replace(resource, [ otherName, objName ]);
-				
-				default:
-					throw new TypeError("@changeType is invalid, was: " + changeType);
-			}
-		}
-	
 		/* set up the user language for the moment library */
 		Moment.locale(window.navigator.userLanguage || window.navigator.language);
-	
+		
 		var content = $("<div>", { "class": "history-popup" });
 		
 		/* store all of the moment update intervals here so that we can kill them on close */
@@ -75,7 +35,7 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, repla
 			
 			if (change.isBatch) {
 				/* The text is the provided description */
-				description.text(genBatchText(change.batchType, change.objName));
+				description.text(genBatchText(change));
 				
 				/* So we can lazily render batch changes we need, but not multiple times */
 				var renderedSubChanges = false;
@@ -103,7 +63,7 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, repla
 			}
 			else {
 				/* Generate the resource for this change based */
-				description.text(genChangeText(change.changeType, change.objName, change.otherName, change.newValue, change.oldValue));
+				description.text(genChangeText(change));
 			
 				changeDiv.addClass("change");
 				
@@ -112,7 +72,8 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, repla
 					.appendTo(changeDiv);
 				
 				momentUpdateIntervals.push(setInterval(function () { /* every minute, refresh the "from now" */
-					timeStamp.text(new Moment(change.timeStamp).fromNow());
+					if (_Popup.isOpen(thisPopup.id))
+						timeStamp.text(new Moment(change.timeStamp).fromNow());
 				}, 60000)); /*60,000ms = 1min*/
 			}
 			
@@ -120,6 +81,10 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, repla
 		}
 		
 		function appendChange(change) {
+			/* Don't render changes about this popup! */
+			if (change.objType === objectTypes.historyPopup)
+				return;
+		
 			function append(content, change) {
 				content.append(renderChange(change, true)); 
 			}
@@ -133,19 +98,31 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, repla
 		helpers.forEach(logger.changes, appendChange);
 		
 		function init(popup) {
+			var oldRect = popup.el.get(0).getBoundingClientRect();
+			
 			popup.el.appendTo(document.body)
 				.addClass("history-popup-outer")
 				.draggable({ 
 					handle: ".header",
+					stop: function () {
+						/* Log the move */
+						var newRect = popup.el.get(0).getBoundingClientRect();
+						
+						logger.log(changeTypes.move, objectTypes.historyPopup, popup.id, oldRect, newRect);
+						
+						oldRect = newRect;
+					},
 				});
 		}
 		
 		var close = function () {
-			async.run(function () {
+			async.run(function (momentUpdateIntervals) {
 				helpers.forEach(momentUpdateIntervals, function (interval) {
 					clearInterval(interval);
 				});
-			});
+			}, momentUpdateIntervals);
+			
+			logger.log(changeTypes.remove, objectTypes.historyPopup, popup.id);
 		};
 				
 		var thisPopup = _Popup.create(content, {
@@ -161,8 +138,73 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, repla
 				appendChange(change);
 		});
 		
+		/* Log that this was opened */
+		logger.log(changeTypes.add, objectTypes.historyPopup, thisPopup.id);
+		
 		return thisPopup;
 	};
+	
+	function genBatchText(batch) {
+		switch (batch.batchType) {
+			case batchTypes.firstLoad:
+				return resources.firstStartupBatchName;
+			
+			case batchTypes.deleteAll:
+				return resources.change_DeleteAllBoards;
+			
+			case batchTypes.clearBoard:
+				return replacer.replace(resources.change_ClearedBoard, batch.objName);
+		}
+	}
+	function genChangeText(change) {
+		switch (change.objType) {
+			case objectTypes.pedalboard:
+				switch (change.changeType) {
+					case changeTypes.add: 
+						return replacer.replace(resources.change_AddBoard, change.objName);
+					
+					case changeTypes.rename:
+						return replacer.replace(resources.change_RenamedBoard, [ change.otherName, change.objName ]);
+						
+					case changeTypes.remove:
+						return replacer.replace(resources.change_DeleteBoard, change.objName);
+						
+					case changeTypes.move:
+						return replacer.replace(resources.change_MoveBoard, change.objName);
+						
+					case changeTypes.resize:
+						return replacer.replace(resources.change_ResizeBoard, change.objName);
+					
+					default:
+						throw new TypeError("@change.changeType is invalid, was: " + change.changeType);
+				}
+				break;
+			
+			case objectTypes.pedal:
+				switch (change.changeType) {
+					case changeTypes.add: 
+						return replacer.replace(resources.change_AddPedal, [ change.otherName, change.objName ]);
+						
+					case changeTypes.remove:
+						return replacer.replace(resources.change_RemovedPedal, [ change.otherName, change.objName ]);
+						
+					case changeTypes.move:
+						var resource = change.newValue === 0
+							? resources.change_MovePedalToTop /* To Top */
+							: change.oldValue > change.newValue
+								? resources.change_MovePedalUp /* Up */
+								: resources.change_MovePedalDown; /* Down */
+						return replacer.replace(resource, [ change.otherName, change.objName ]);
+					
+					default:
+						throw new TypeError("@change.changeType is invalid, was: " + change.changeType);
+				}
+				break;
+				
+			default:
+				throw new TypeError("@change.objType is invalid, was: " + change.objType);
+		}
+	}
 	
 	return methods;
 });

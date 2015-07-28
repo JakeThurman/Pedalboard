@@ -157,7 +157,7 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 				__pedalEls: [], /* we use this for caching the rendered pedals so that we can easily access them for removing/clearing */
 			};
 			
-			logger.log(changeTypes.addBoard, objectTypes.pedalboard, domboard.id, void(0), helpers.clone(manager.GetBoard(domboard.id)), name);
+			logger.log(changeTypes.add, objectTypes.pedalboard, domboard.id, void(0), helpers.clone(manager.GetBoard(domboard.id)), name);
 			
 			return domboard;
 		};
@@ -178,7 +178,7 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 			boards[boardId].data.Name = name;
 
 			/* log this change to the history */
-			logger.log(changeTypes.renameBoard, objectTypes.pedalboard, boardId, oldName, name, name, oldName);
+			logger.log(changeTypes.rename, objectTypes.pedalboard, boardId, oldName, name, name, oldName);
 		};
 		
 		/*
@@ -195,7 +195,7 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 			boards[boardId].dom.el.remove();
 			delete boards[boardId];
 							
-			logger.log(changeTypes.deleteBoard, objectTypes.pedalboard, boardId, boardToLog, void(0), boardToLog.data.Name);
+			logger.log(changeTypes.remove, objectTypes.pedalboard, boardId, boardToLog, void(0), boardToLog.data.Name);
 		};
 		
 		/* Delete all of the boards on the page. */
@@ -220,7 +220,7 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 		 * @clientRect: The javascript client rect object received from ([VANILLA JS DOM ELEMENT].getBoundingClientRect()) where the dom element is the pedalboard
 		 */
 		manager.Move = function (boardId, clientRect) {
-			changeVisual(boardId, clientRect, changeTypes.moveBoard);
+			changeVisual(boardId, clientRect, changeTypes.move);
 		};
 		
 		/*
@@ -230,7 +230,7 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 		 * @clientRect: The javascript client rect object recieved from ([VANILLA JS DOM ELEMENT].getBoundingClientRect()) where the dom element is the pedalboard
 		 */
 		manager.Resize = function (boardId, clientRect) {
-			changeVisual(boardId, clientRect, changeTypes.resizeBoard);
+			changeVisual(boardId, clientRect, changeTypes.resize);
 		};
 		
 		/* Helper, facoring out .Move and .Resize shared code. */
@@ -283,7 +283,7 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 			boards[boardId].data.Add(pedal);
 			
 			/* log this change to the history */
-			logger.log(changeTypes.addPedal, objectTypes.pedal, boardId, void(0), pedal, boards[boardId].data.Name, pedal.fullName);
+			logger.log(changeTypes.add, objectTypes.pedal, boardId, void(0), pedal, boards[boardId].data.Name, pedal.fullName);
 				
 			/* Append the rendered pedal to the container */
 			/* TODO: don't hard code this lookup for the content region */
@@ -319,7 +319,7 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 			});
 			
 			/* log this change to the history */
-			logger.log(changeTypes.removedPedal, objectTypes.pedal, boardId, removedPedal, void(0), boards[boardId].data.Name, removedPedal.fullName);
+			logger.log(changeTypes.remove, objectTypes.pedal, boardId, removedPedal, void(0), boards[boardId].data.Name, removedPedal.fullName);
 		};
 		
 		/*
@@ -369,7 +369,7 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 				boards[boardId].__pedalEls = orderedPedals;
 			}
 			
-			logger.log(changeTypes.movePedal, objectTypes.pedal, boardId, oldPedalIndex, newPedalIndex, boards[boardId].data.Name, reorderedPedal.fullName);
+			logger.log(changeTypes.move, objectTypes.pedal, boardId, oldPedalIndex, newPedalIndex, boards[boardId].data.Name, reorderedPedal.fullName);
 		};
 		
 		/*

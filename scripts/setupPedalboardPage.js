@@ -22,7 +22,7 @@ function (PedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, StateRev
 	}
 	
 	/* Save on change */
-	logger.addCallback(/* @waitForBatchCompletion: */ false, function save() {
+	logger.addCallback(/* @waitForBatchCompletion: */ false, function () {
 		pedalBoardStorage.Save(logger.changes); 
 	});
 	

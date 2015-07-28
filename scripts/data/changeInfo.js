@@ -1,17 +1,15 @@
 define("changeTypes", {
-	addBoard         : 0,
-	renameBoard      : 1,
-	deleteBoard      : 2,
-	addPedal         : 3,
-	removedPedal     : 4,
-	resizeBoard      : 5,
-	moveBoard        : 6,
-	movePedal        : 7,
+	add          : 0,
+	rename       : 1,
+	remove       : 2,
+	resize       : 3,
+	move         : 4,
 });
 
 define("objectTypes", {
-	pedalboard       : 0,
-	pedal            : 1,
+	pedalboard   : 0,
+	pedal        : 1,
+	historyPopup : 2,
 });
 
 define("batchTypes", {
