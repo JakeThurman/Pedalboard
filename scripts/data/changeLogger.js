@@ -1,7 +1,10 @@
-define([ "helperMethods" ], function ( helpers ) {
+define([ "helperMethods", "async" ], function ( helpers, async ) {
 	"use strict";
 
 	var methods = {};
+	
+	/* A param on methods so the caller can disable. (For unit tests) */
+	methods.CALLBACK_ASYNC = true;
 	
 	methods.create = function (initalChanges) {
 		/* assert that if the caller gave us an initalChanges changes collection that it is an array */
@@ -72,14 +75,21 @@ define([ "helperMethods" ], function ( helpers ) {
 		
 		/* [PRIVATE] calls all of the change callbacks. */
 		var callbacks = [];
-		
+				
 		function callCallbacks(arg) {
+			function call(callbacks, batchRunning, arg) {
+				helpers.forEach(callbacks, function (callback) {
+					if (!callback.waitForBatchCompletion || (callback.waitForBatchCompletion && !batchRunning))
+						callback.func(arg);
+				});
+			}
+		
 			var batchRunning = batchIsRunning();
 			
-			helpers.forEach(callbacks, function (callback) {
-				if (!callback.waitForBatchCompletion || (callback.waitForBatchCompletion && !batchRunning))
-					callback.func(arg);
-			});
+			if (methods.CALLBACK_ASYNC)
+				async.run(call, callbacks, batchRunning, arg);
+			else
+				call(callbacks, batchRunning, arg);
 		}
 		
 		var enabled = true; /* Used by dontLog to temporarily disable logging */

@@ -1,6 +1,9 @@
 define([ "changeLogger", "changeTypes", "objectTypes" ], function ( changeLogger, changeTypes, objectTypes ) {
 	"use strict";
 	
+	/* For the sake of easy test, make the callbacks happen imediately */
+	changeLogger.CALLBACK_ASYNC = false;
+	
 	describe("data/changeLogger.js", function () {
 		var logger;
 		var log;
