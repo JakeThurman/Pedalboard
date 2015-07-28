@@ -1,6 +1,9 @@
 define([ "historyPopup", "changeLogger", "jquery", "_Popup" ], function ( historyPopup, changeLogger, $, _Popup ) {
 	"use strict";
 	
+	/* It makes a small difference and makes testing much easier */
+	historyPopup.RENDER_ASYNC = false;
+	
 	describe("ui/historyPopup.js", function () {
 		var logger;
 			

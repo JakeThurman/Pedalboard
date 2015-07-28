@@ -1,8 +1,11 @@
-define([ "_Popup", "textResources", "jquery", "helperMethods", "moment", "changeTypes", "batchTypes", "stringReplacer", "changeLogger" ], 
-function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, replacer, changeLogger ) {
+define([ "_Popup", "textResources", "jquery", "helperMethods", "moment", "changeTypes", "batchTypes", "stringReplacer", "changeLogger", "async" ], 
+function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, replacer, changeLogger, async ) {
 	"use strict";
 	
 	var methods = {};
+	
+	/* This can be overriden for the sake of simple unit testing */
+	methods.RENDER_ASYNC = true;
 	
 	methods.create = function(logger) {
 		//TODO: uncomment this when changeLogger gets converted to be a class
@@ -118,7 +121,14 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, repla
 		}
 		
 		function appendChange(change) {
-			content.append(renderChange(change, true));
+			function append() { 
+				content.append(renderChange(change, true)); 
+			}
+			
+			if (methods.RENDER_ASYNC)
+				async.run(append);
+			else 
+				append();
 		}
 		
 		helpers.forEach(logger.changes, appendChange);
@@ -132,8 +142,10 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, repla
 		}
 		
 		var close = function () {
-			helpers.forEach(momentUpdateIntervals, function (interval) {
-				clearInterval(interval);
+			async.run(function () {
+				helpers.forEach(momentUpdateIntervals, function (interval) {
+					clearInterval(interval);
+				});
 			});
 		};
 				
