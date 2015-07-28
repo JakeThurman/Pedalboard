@@ -5,8 +5,13 @@ define([ "jquery" ], function ( $ ) {
 	var methods = {};
 
 	methods.close = function(popupId) {
+		openPopups[popupId].close();
 		openPopups[popupId].el.remove();
 		delete openPopups[popupId];
+	};
+	
+	methods.isOpen = function (popupId) {
+		return !!openPopups[popupId];
 	};
 
 	function assertOptionValidity(options) {
@@ -40,6 +45,7 @@ define([ "jquery" ], function ( $ ) {
 	 *		init: 			(function)					Safe place to put logic done after popup create 
 	 *														Params: { _Popup: object of this board (See top) }
 	 *		cancel:			(function)					Called on close button click.
+	 *      close:          (function)                  Called on close of any type.
 	 *		rename:			(function)					Called on rename.
 	 *														Params: { Name: new name, _Popup: object of this board (See top) }
 	 */
@@ -47,7 +53,7 @@ define([ "jquery" ], function ( $ ) {
 		//Make sure the options are valid.
 		assertOptionValidity(options);
 
-		if (openPopups[options.id])
+		if (methods.isOpen(options.id))
 			return methods.close(options.id);
 
 		//Create the popup
@@ -60,7 +66,9 @@ define([ "jquery" ], function ( $ ) {
 				.click(function () {
 					methods.close(options.id);
 					if (options.cancel)
-					options.cancel();
+						options.cancel();
+					if (options.close)
+						options.close();
 				});
 		}
 
@@ -126,7 +134,13 @@ define([ "jquery" ], function ( $ ) {
 		options.init(outputPopup);
 
 		//record that this popup is open
-		openPopups[options.id] = outputPopup;
+		openPopups[options.id] = { 
+			el: outputPopup.el,
+			close: function () { 
+				if (options.close)
+					options.close();
+			}
+		};
 
 		//return the popup
 		return outputPopup; //remeber this is undefined on close!

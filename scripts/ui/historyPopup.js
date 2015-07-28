@@ -1,10 +1,14 @@
-define([ "_Popup", "textResources", "jquery", "helperMethods", "moment", "changeTypes", "batchTypes", "stringReplacer" ], 
-function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, replacer ) {
+define([ "_Popup", "textResources", "jquery", "helperMethods", "moment", "changeTypes", "batchTypes", "stringReplacer", "changeLogger" ], 
+function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, replacer, changeLogger ) {
 	"use strict";
 	
 	var methods = {};
 	
-	methods.create = function(changeLog) {
+	methods.create = function(logger) {
+		//TODO: uncomment this when changeLogger gets converted to be a class
+		//if (!(logger instanceof changeLogger))
+		//	throw new TypeError("@logger is required. Please pass in a valid changeLogger object to display changes from");
+	
 		function genBatchText(batchType, objName) {
 			switch (batchType) {
 				case batchTypes.firstLoad:
@@ -69,7 +73,7 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, repla
 			
 			if (change.isBatch) {
 				/* The text is the provided description */
-				description.text(change.description || genBatchText(change.batchType, change.objName));
+				description.text(genBatchText(change.batchType, change.objName));
 				
 				/* So we can lazily render batch changes we need, but not multiple times */
 				var renderedSubChanges = false;
@@ -117,7 +121,7 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, repla
 			content.append(renderChange(change, true));
 		}
 		
-		helpers.forEach(changeLog, appendChange);
+		helpers.forEach(logger.changes, appendChange);
 		
 		function init(popup) {
 			popup.el.appendTo(document.body)
@@ -127,23 +131,26 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, repla
 				});
 		}
 		
-		function close() {
+		var close = function () {
 			helpers.forEach(momentUpdateIntervals, function (interval) {
 				clearInterval(interval);
 			});
-		}
-		
-		var popup = _Popup.create(content, {
+		};
+				
+		var thisPopup = _Popup.create(content, {
 			title: resources.historyPopupTitle,
 			id: "history",
 			init: init,
 			close: close,
 		});
 		
-		return {
-			popup: popup,
-			addChange: appendChange,
-		};
+		/* Display all new top level changes */
+		logger.addCallback(function (change) {
+			if (_Popup.isOpen(thisPopup.id))
+				appendChange(change);
+		});
+		
+		return thisPopup;
 	};
 	
 	return methods;

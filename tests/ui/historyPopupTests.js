@@ -1,11 +1,11 @@
-define([ "historyPopup", "changeLogger", "jquery" ], function ( historyPopup, changeLogger, $ ) {
+define([ "historyPopup", "changeLogger", "jquery", "_Popup" ], function ( historyPopup, changeLogger, $, _Popup ) {
 	"use strict";
 	
 	describe("ui/historyPopup.js", function () {
-		var changes;
+		var logger;
 			
 		beforeEach(function () {
-			var logger = changeLogger.create();
+			logger = changeLogger.create();
 			var log = function () {
 				logger.log(4, -1, -1);
 			};
@@ -31,20 +31,37 @@ define([ "historyPopup", "changeLogger", "jquery" ], function ( historyPopup, ch
 				log("sub 2");
 				log("sub 3");
 			});
-			
-			changes = logger.changes;
 		});
 		
-		describe("changeLog parameter", function () {
-			it("should be allowed to be an empty array or undefined", function () {
-				expect(function () { historyPopup.create(); }).not.toThrow();
-				expect(function () { historyPopup.create([]); }).not.toThrow();
+		describe("logger parameter", function () {
+			it("should be required", function () {			
+				expect(function () { 
+					var popup = historyPopup.create(); 
+					_Popup.close(popup.id);
+				}).toThrow();
+				
+				expect(function () { 
+					var popup = historyPopup.create([]);
+					_Popup.close(popup.id);
+				}).toThrow();
+				
+				expect(function () { 
+					var popup = historyPopup.create({ changes: [], addCallback: function () {} }); 
+					_Popup.close(popup.id);
+				}).toThrow();
+				
+				/* Clean up! */
+				
+				expect(function () { 
+					var popup = historyPopup.create(logger); 
+					_Popup.close(popup.id);
+				}).not.toThrow();
 			});
 		});
 		
 		describe("batches", function () {
 			it("should be able to collapse/expanded (show/hidden)", function () {
-				var popup = historyPopup.create(changes).popup;
+				var popup = historyPopup.create(logger);
 				
 				var batch = $(popup.el.find(".batch").get(0));
 				var batchExpand = batch.children("i");
@@ -75,22 +92,33 @@ define([ "historyPopup", "changeLogger", "jquery" ], function ( historyPopup, ch
 				 * and having css hide child elements if it doesn't have it like we're doing.
 				 */
 				/* expect(visibleBatchChanges().length).toEqual(0); */
+				
+				/* Clean up! */
+				_Popup.close(popup.id);
 			});
 			
 			it("should be handled even when containing sub-batches", function () {
 				/* the test change data contains a sub batch already */
-				expect(function () { historyPopup.create(changes); }).not.toThrow();
+				var hPopupId;
+				expect(function () { hPopupId = historyPopup.create(logger).id; }).not.toThrow();
+				
+				/* Clean up! */
+				_Popup.close(hPopupId);
 			});
 						
 			it("should be handled even when there are multiple", function () {
 				/* the test change data contains a multiple batches already */
-				expect(function () { historyPopup.create(changes); }).not.toThrow();
+				var hPopupId;
+				expect(function () { hPopupId = historyPopup.create(logger).id; }).not.toThrow();
+				
+				/* Clean up! */
+				_Popup.close(hPopupId);
 			});
 		});
 		
 		describe("performance", function () {
 			/* helper to create big change logs very easily */
-			function getChanges(batches, changePerBatch) {
+			function getChangeLogger(batches, changePerBatch) {
 				var logger = changeLogger.create();
 							
 				var makeChange = function () {
@@ -103,46 +131,73 @@ define([ "historyPopup", "changeLogger", "jquery" ], function ( historyPopup, ch
 					logger.batch(0, makeChange);
 				}
 				
-				return logger.changes;
+				return logger;
 			}
 			
 			it("should be under 300ms to render 200 batches with 200 changes each, (40,000 changes)", function () {
-				var changes = getChanges(200, 200);
+				var logger = getChangeLogger(200, 200);
 				
 				var start = new Date().getTime();
-
-				historyPopup.create(changes);
-
+				var hPopup = historyPopup.create(logger);
 				var end = new Date().getTime();
 				
 				expect(end - start).toBeLessThan(300);
+				
+				/* Clean up! */
+				_Popup.close(hPopup.id);
 			});
 		});
 		
-		describe("addChange callback", function () {
+		describe("new changes logged while the popup is open should be rendered.", function () {
 			it("should add a passed in change to the page", function () {
-				var hPopup = historyPopup.create(changes);
+				var hPopup = historyPopup.create(logger);
 				var desc = "A very long string that is also very specificly something that would not have been rendered previously." + new Date();
 				
-				var contains = function(str) {
-					return hPopup.popup.el.get(0).innerHTML.indexOf(str) != -1;
+				var length = function(str) {
+					return hPopup.el.get(0).innerHTML.length;
 				};
 				
-				/* should not contain it before adding it! */
-				expect(contains(desc)).toBe(false);
+				/* Should not contain it before adding it! */
+				var lengthBefore = length();
 				
-				/* add it */
-				hPopup.addChange({
-					isBatch: true, /* only batches have a non generated description */
-					description: desc,
-					timeStamp: new Date(),
+				/* Add it */
+				logger.log(4, -1, -1);
+				
+				/* Now it should contain it */
+				expect(length()).toBeGreaterThan(lengthBefore);
+				
+				hPopup.el.remove();
+				
+				/* Clean up! */
+				_Popup.close(hPopup.id);
+			});		
+			
+			it("should not display changes made in a non-complete batch", function () {
+				var hPopup = historyPopup.create(logger);
+				
+				var contains = function(str) {
+					return hPopup.el.get(0).innerHTML.indexOf(str) != -1;
+				};
+				
+				var getTopLevelChangesCount = function() {
+					/* TODO: Hard coding ".history-popup" is bad */
+					return hPopup.el.find(".history-popup").children().length;
+				};
+				var childrenBefore = getTopLevelChangesCount();
+				
+				/* Add it */
+				logger.batch(0, function () {
+					logger.log(4, -1, -1);
+					logger.log(4, -1, -1);
+					logger.log(4, -1, -1);
 				});
 				
-				/* now it should contain it */
-				expect(contains(desc)).toBe(true);
+				/* Now it should contain it */
+				expect(getTopLevelChangesCount()).toBe(childrenBefore + 1);
 				
-				hPopup.popup.el.remove();
-			});			
+				/* Clean up! */
+				_Popup.close(hPopup.id);
+			});						
 		});
 	});
 });

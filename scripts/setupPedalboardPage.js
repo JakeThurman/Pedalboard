@@ -1,5 +1,5 @@
-require(["PedalBoardManager", "jquery", "mainPageMenuHandler", "pedalBoardStorage", "StateReverter", "UndoHandler", "historyPopup", "changeLogger", "batchTypes", "domReady!"], 
-function (PedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, StateReverter, UndoHandler, historyPopup, changeLogger, batchTypes) {
+require(["PedalBoardManager", "jquery", "mainPageMenuHandler", "pedalBoardStorage", "StateReverter", "UndoHandler", "changeLogger", "batchTypes", "domReady!"], 
+function (PedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, StateReverter, UndoHandler, changeLogger, batchTypes) {
     "use strict";
 	
 	/* DOM variables */
@@ -28,11 +28,7 @@ function (PedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, StateRev
 	
 	/* Setup the main page menu click handler */
    	pageMenuButton.click(function () {
-   	    mainPageMenuHandler.handle(manager, undoer,
-			function () { /* open history action */
-				var popup = historyPopup.create(logger.changes);
-				logger.addCallback(popup.addChange);
-			});
+   	    mainPageMenuHandler.handle(manager, logger, undoer);
     });
 	
 	/* Setup ctrl+z undo/ctrl+y redo handler*/
