@@ -1,4 +1,4 @@
-define([ "PedalBoardManager", "jquery", "helperMethods" ], function (pedalBoardManager, $, helpers) {	"use strict";	
+define([ "PedalBoardManager", "jquery", "helperMethods" ], function (PedalBoardManager, $, helpers) {	"use strict";	
     describe("data/pedalBoardManager.js", function () {
 		var manager;
 		var $fakeEl;
@@ -13,7 +13,7 @@ define([ "PedalBoardManager", "jquery", "helperMethods" ], function (pedalBoardM
 		};				var dummyPedal2 = {			name: "Kindgom",			id: 2,			price: 16900,			identifier: 2,			type: 6,		};
 		
 		beforeEach(function () {			$fakeEl = $("<div>");
-			manager = new pedalBoardManager({ 				log: function () {},				changes: [],				batch: function (first, second, thrid, func) { 					/* Just call whichever is the function */					typeof second === "function"						? second() 						: func();				},				addCallback: function () {},			}, $fakeEl);
+			manager = new PedalBoardManager({ 				log: function () {},				changes: [],				batch: function (first, second, thrid, func) { 					/* Just call whichever is the function */					typeof second === "function"						? second() 						: func();				},				addCallback: function () {},			}, $fakeEl);
 		});
 		
 		
@@ -67,7 +67,7 @@ define([ "PedalBoardManager", "jquery", "helperMethods" ], function (pedalBoardM
 				
 				expect(manager.Any(function (board) {
 				   return board.data.Name === "Joe is the name of this one";
-				})).toBe(false)
+				})).toBe(false);
 			});
 			
 			it("should return true if there are any boards that match the filter", function () {
@@ -76,7 +76,7 @@ define([ "PedalBoardManager", "jquery", "helperMethods" ], function (pedalBoardM
 				
 				expect(manager.Any(function (board) {
 				   return board.data.Name === boardName;
-				})).toBe(true)
+				})).toBe(true);
 			});
 		});
 		
@@ -97,7 +97,7 @@ define([ "PedalBoardManager", "jquery", "helperMethods" ], function (pedalBoardM
 				
 				expect(manager.Multiple(function (board) {
 				   return board.data.Name === "Joe is the name of this one";
-				})).toBe(false)
+				})).toBe(false);
 			});
 			
 			it("should return true if there are one of more boards that match the filter", function () {
@@ -107,7 +107,7 @@ define([ "PedalBoardManager", "jquery", "helperMethods" ], function (pedalBoardM
 			
 				expect(manager.Multiple(function (board) {
 				   return board.data.Name === boardName;
-				})).toBe(true)
+				})).toBe(true);
 			});
 		});
 		
@@ -202,8 +202,6 @@ define([ "PedalBoardManager", "jquery", "helperMethods" ], function (pedalBoardM
 		describe("Delete", function () {
 			it("should delete the board", function () {
 				var board = manager.Add("test board", $fakeEl);
-					
-				var newName = "test new name";
 				manager.Delete(board.id);
 				
 				expect(manager.GetBoard(board.id)).toBeUndefined();
@@ -428,4 +426,4 @@ define([ "PedalBoardManager", "jquery", "helperMethods" ], function (pedalBoardM
 			});
 		});				describe("Reorder Pedal", function () {			it("should place the pedal at the given old index to the given new index", function () {				var board = manager.Add("Board Name", $fakeEl);								manager.AddPedal(dummyPedal,  board.id);				manager.AddPedal(dummyPedal2, board.id);								var pedalsBefore = manager.GetBoard(board.id).data.pedals;								expect(pedalsBefore[0]).toEqual(dummyPedal);				expect(pedalsBefore[1]).toEqual(dummyPedal2);								manager.ReorderPedal(0, 1, board.id);								var pedalsAfter = manager.GetBoard(board.id).data.pedals;								expect(pedalsAfter[0]).toEqual(dummyPedal2);				expect(pedalsAfter[1]).toEqual(dummyPedal);			});						it("should throw a Error if @oldPedalIndex is invalid", function () {				var board = manager.Add("Board Name", $fakeEl);				manager.AddPedal(dummyPedal, board.id);				manager.AddPedal(dummyPedal2, board.id);								var thrower = function () {					manager.ReorderPedal(9, 1, board.id);				};				expect(thrower).toThrowError();			});						it("should throw a Error if @newPedalIndex is invalid", function () {				var board = manager.Add("Board Name", $fakeEl);				manager.AddPedal(dummyPedal, board.id);				manager.AddPedal(dummyPedal2, board.id);								var thrower = function () {					manager.ReorderPedal(1, 9, board.id);				};				expect(thrower).toThrowError();			});						it("should throw a Error if @oldPedalIndex and @newPedalIndex are invalid", function () {				var board = manager.Add("Board Name", $fakeEl);								var thrower = function () {					manager.ReorderPedal(0, 1, board.id);				};				expect(thrower).toThrowError();			});											it("should throw a Error if @oldPedalIndex is negative", function () {				var board = manager.Add("Board Name", $fakeEl);				manager.AddPedal(dummyPedal, board.id);				manager.AddPedal(dummyPedal2, board.id);								var thrower = function () {					manager.ReorderPedal(-1, 1, board.id);				};				expect(thrower).toThrowError();			});						it("should throw a Error if @newPedalIndex is negative", function () {				var board = manager.Add("Board Name", $fakeEl);				manager.AddPedal(dummyPedal, board.id);				manager.AddPedal(dummyPedal2, board.id);								var thrower = function () {					manager.ReorderPedal(1, -1, board.id);				};				expect(thrower).toThrowError();			});						it("should throw a Error if @oldPedalIndex and @newPedalIndex are negative", function () {				var board = manager.Add("Board Name", $fakeEl);				manager.AddPedal(dummyPedal, board.id);				manager.AddPedal(dummyPedal2, board.id);								var thrower = function () {					manager.ReorderPedal(-1, -1, board.id);				};				expect(thrower).toThrowError();			});						it("should throw an exception if an invalid board id is provided", function () {				var thrower = function () {					manager.Resize(0, 0, "not a reaL_board-iD" + new Date());				};								expect(thrower).toThrow();			});		});				describe("Import", function () {			it("should add a copy of pedalboards given", function () {				var added = manager.Add("Test");				expect(manager.GetBoards().length).toEqual(1);								manager.Import(manager.GetBoard(added.id));				expect(manager.GetBoards().length).toEqual(2);				});						it("should not be able to import the value returned from manager.Add()", function () {				var added = manager.Add("Test");				expect(manager.GetBoards().length).toEqual(1);								expect(function () {					manager.Import(added);				}).toThrowError(TypeError);			});						it("should not continue to keep copied boards up to date!", function () {				var added = manager.Add("Test");				expect(manager.GetBoards().length).toEqual(1);								manager.Import(manager.GetBoard(added.id));				expect(manager.GetBoards().length).toEqual(2);				expect(manager.GetBoard(added.id).data.pedals.length).toEqual(0);				expect(manager.GetBoards()[1].data.pedals.length).toEqual(0);				manager.AddPedal(dummyPedal, added.id);				expect(manager.GetBoard(added.id).data.pedals.length).toEqual(1);				expect(manager.GetBoards()[1].data.pedals.length).toEqual(0);			});						it("should import an array of boards", function () {				manager.Add("Test");				expect(manager.GetBoards().length).toEqual(1);								manager.Add("Test 2");				expect(manager.GetBoards().length).toEqual(2);								manager.Import(manager.GetBoards());				expect(manager.GetBoards().length).toEqual(4);			});						it("should throw no error for undefined for @boards", function () {				var thrower = function () {					manager.Import(void(0));				};				expect(thrower).not.toThrow();			});						it("should throw no error for nothing for @boards", function () {				var thrower = function () {					manager.Import();				};				expect(thrower).not.toThrow();			});						it("should throw no error for an empty array for @boards", function () {				var thrower = function () {					manager.Import([]);				};				expect(thrower).not.toThrow();			});						it("should throw an error if any of the objects in the @boards array are invalid", function () {				var thrower = function () {					manager.Import(["not a board"]);				};				expect(thrower).toThrowError();								var board = manager.Add("Board Name");				manager.AddPedal(dummyPedal, board.id);				manager.AddPedal(dummyPedal2, board.id);								var thrower2 = function () {					manager.Import([board, "not a board"]);				};				expect(thrower2).toThrowError();			});		});
 	});
-})
+});

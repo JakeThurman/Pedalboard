@@ -1,4 +1,6 @@
-define([ "changeLogger", "changeTypes", "objectTypes" ], function ( changeLogger, changeTypes, objectTypes ) {	
+define([ "changeLogger", "changeTypes", "objectTypes" ], function ( changeLogger, changeTypes, objectTypes ) {
+	"use strict";
+	
 	describe("data/changeLogger.js", function () {
 		var logger;
 		var log;
@@ -6,7 +8,7 @@ define([ "changeLogger", "changeTypes", "objectTypes" ], function ( changeLogger
 		beforeEach(function () {
 			logger = changeLogger.create();
 			
-			log = function (desc) {
+			log = function () {
 				logger.log(-1, -1, -1);
 			};
 		});
@@ -177,7 +179,7 @@ define([ "changeLogger", "changeTypes", "objectTypes" ], function ( changeLogger
 					logger.dontLog(function () {
 						log("inner");
 					});
-				})
+				});
 				
 				expect(logger.changes.length).toEqual(0);
 			});
@@ -297,7 +299,6 @@ define([ "changeLogger", "changeTypes", "objectTypes" ], function ( changeLogger
 			});
 			
 			it("should throw an error if the callback is not given", function () {				
-				var hit = false;
 				var thrower = function () {
 					logger.addCallback();
 				};
@@ -307,7 +308,6 @@ define([ "changeLogger", "changeTypes", "objectTypes" ], function ( changeLogger
 			});
 			
 			it("should throw an error if the callback is not given, but @waitUntilBatchComplete is", function () {				
-				var hit = false;
 				var thrower = function () {
 					logger.addCallback(true);
 				};
@@ -318,7 +318,6 @@ define([ "changeLogger", "changeTypes", "objectTypes" ], function ( changeLogger
 			
 			
 			it("should throw an error if the callback is undefined", function () {				
-				var hit = false;
 				var thrower = function () {
 					logger.addCallback(void(0));
 				};
@@ -328,7 +327,6 @@ define([ "changeLogger", "changeTypes", "objectTypes" ], function ( changeLogger
 			});
 			
 			it("should throw an error if the callback is undefined, and @waitUntilBatchComplete is given", function () {				
-				var hit = false;
 				var thrower = function () {
 					logger.addCallback(true, void(0));
 				};

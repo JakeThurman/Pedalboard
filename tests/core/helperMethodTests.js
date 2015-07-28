@@ -1,14 +1,16 @@
 define([ "helperMethods" ], function ( helpers, undef ) {
+	"use strict";
+	
     describe("core/helperMethods.js", function () {
         describe("throwThis", function () {				 
 			it("should throw the passed in string", function () {
 				var msg = "This is a test error message";
 		
 				var thrower = function () {
-					helpers.throwThis(msg)
+					helpers.throwThis(msg);
 				};
 				
-				expect(thrower).toThrow()
+				expect(thrower).toThrow();
 				expect(thrower).toThrowError(msg);
 			});
 		});
@@ -286,21 +288,21 @@ define([ "helperMethods" ], function ( helpers, undef ) {
 				it("should return the same array if the predicate always returns true", function () {
 					var data = [1, 2, 3];
 						
-					var filtered = helpers.where(data, function (num) {
+					var filtered = helpers.where(data, function () {
 						return true; /* Keep all */
 					});
 						
-						expect(filtered).toEqual(data);
+					expect(filtered).toEqual(data);
 				});
 										
 				it("should return the an empty array if the predicate finds no maches", function () {
 					var data = [1, 2, 3];
 						
-						var filtered = helpers.where(data, function (num) {
-							return false; /* throw away all */
-						});
-						
-						expect(filtered).toEqual([]);
+					var filtered = helpers.where(data, function () {
+						return false; /* throw away all */
+					});
+					
+					expect(filtered).toEqual([]);
 				});
 		});
 		
@@ -578,4 +580,4 @@ define([ "helperMethods" ], function ( helpers, undef ) {
 			});
 		});
 	});
-})
+});

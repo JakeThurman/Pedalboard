@@ -1,11 +1,14 @@
 define([ "pedalBoardStorage" ], function (storage) {
+	"use strict";
+	
+	/* Change the localStorage item name so as not to overwrite the real save. */
 	storage.historyStorageName = storage.historyStorageName + "-testing";
 
 	describe("data/pedalBoardStorage.js", function () {
 		describe("Clear", function () {
 			it("should clear the save", function () {
 				expect(function () {
-					storage.Clear()
+					storage.Clear();
 				}).not.toThrow();
 			});
 		});

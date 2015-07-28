@@ -1,4 +1,6 @@
 define([ "colorEffects" ], function (colorEffects) {
+	"use strict";
+	
 	describe("reporting/colorEffects.js", function () {
 		describe("round", function () {
 			it("should return an object with a name and a color property", function () {

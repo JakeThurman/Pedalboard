@@ -1,5 +1,5 @@
 define([ "helperMethods", "StateReverter", "PedalBoardManager", "changeLogger", "jquery" ],
-function (helpers, reverter, pedalBoardManager, changeLogger, $) {
+function (helpers, Reverter, PedalBoardManager, changeLogger, $) {
 	"use strict";
 	
 	var reverterFull;
@@ -201,11 +201,11 @@ function (helpers, reverter, pedalBoardManager, changeLogger, $) {
 			/* Create managers */
 			loggerFull = changeLogger.create();
 			var parentFull =  $("<div>");
-			managerFull = new pedalBoardManager(loggerFull, parentFull);
+			managerFull = new PedalBoardManager(loggerFull, parentFull);
 			
 			loggerEmpty = changeLogger.create();
 			var parentEmpty = $("<div>");
-			managerEmpty = new pedalBoardManager(loggerEmpty, parentEmpty);
+			managerEmpty = new PedalBoardManager(loggerEmpty, parentEmpty);
 			
 			/* ! Load ManagerFull ! */
 			/* Add boards */
@@ -253,8 +253,8 @@ function (helpers, reverter, pedalBoardManager, changeLogger, $) {
 				managerFull.Rename(managerFull.GetBoard(a.id).data.Name + " Rename", a.id);
 				managerFull.Rename(managerFull.GetBoard(b.id).data.Name + "+rename", b.id);
 				
-			reverterFull = new reverter(managerFull, loggerFull);
-			reverterEmpty = new reverter(managerEmpty, loggerEmpty);
+			reverterFull = new Reverter(managerFull, loggerFull);
+			reverterEmpty = new Reverter(managerEmpty, loggerEmpty);
 		});
 
 		function pluck(collection, name) {

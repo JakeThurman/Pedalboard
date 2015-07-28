@@ -1,4 +1,6 @@
 define([ "helperMethods", "pedalDataAccess" ], function (helpers, pedalDataAccess) {
+	"use strict";
+	
 	describe("data/pedalDataAccess", function () {
 		/* if there was an error with unique ids, this helper logs the bad items */
 		function logBad(distincts, all) {

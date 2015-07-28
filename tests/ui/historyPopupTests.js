@@ -37,8 +37,8 @@ define([ "historyPopup", "changeLogger", "jquery" ], function ( historyPopup, ch
 		
 		describe("changeLog parameter", function () {
 			it("should be allowed to be an empty array or undefined", function () {
-				expect(function () { historyPopup.create() }).not.toThrow();
-				expect(function () { historyPopup.create([]) }).not.toThrow();
+				expect(function () { historyPopup.create(); }).not.toThrow();
+				expect(function () { historyPopup.create([]); }).not.toThrow();
 			});
 		});
 		
@@ -93,12 +93,14 @@ define([ "historyPopup", "changeLogger", "jquery" ], function ( historyPopup, ch
 			function getChanges(batches, changePerBatch) {
 				var logger = changeLogger.create();
 							
+				var makeChange = function () {
+					for(var c = 0; c < changePerBatch; c++) {
+						logger.log(-1, -1, -1);
+					}
+				};
+				
 				for (var b = 0; b < batches; b++) {
-					logger.batch(0, function () {
-						for(var c = 0; c < changePerBatch; c++) {
-							logger.log(-1, -1, -1);
-						}
-					});
+					logger.batch(0, makeChange);
 				}
 				
 				return logger.changes;
@@ -109,7 +111,7 @@ define([ "historyPopup", "changeLogger", "jquery" ], function ( historyPopup, ch
 				
 				var start = new Date().getTime();
 
-				var nothing = historyPopup.create(changes);
+				historyPopup.create(changes);
 
 				var end = new Date().getTime();
 				

@@ -19,6 +19,7 @@ define([ "reporter", "reportTypes", "pedalBoardClasses", "pedalDataAccess" ], fu
 			});
 			
 			it("should throw a error if the type is not valid", function () {
+				var board = new classes.PedalBoard();
 				expect(function () { reporter.compare(board, {}); }).toThrowError(Error);
 			});
 		});
@@ -167,9 +168,6 @@ define([ "reporter", "reportTypes", "pedalBoardClasses", "pedalDataAccess" ], fu
 				var color3 = "a18b8c";
 				var name3  = "name_2";
 				var price3 = -100.8;
-				
-				/* Just take the first one, this should really be mocked out anyway */
-				var myType = pedalDataAccess.types[0];
 				
 				expect(function () {
 					result = getColorData([{ 

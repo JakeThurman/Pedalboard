@@ -1,4 +1,6 @@
 define([ "stringReplacer" ], function ( replacer ) {
+	"use strict";
+	
     describe("core/stringReplacer.js", function () {
 	    describe("replace", function () {		
 		    it("should replace string resources from an object", function () {
