@@ -2,6 +2,9 @@ define([ "helperMethods", "stateReverter", "pedalBoardManager", "changeLogger", 
 function (helpers, reverter, pedalBoardManager, changeLogger, $) {
 	"use strict";
 	
+	var reverterFull;
+	var reverterEmpty;
+	
 	describe("data/stateReverter.js", function () {		
 		/* Copied at random from pedalsGetter.js */
 		var dummyPedal = {
@@ -194,7 +197,7 @@ function (helpers, reverter, pedalBoardManager, changeLogger, $) {
 			});
 		};
 		
-		beforeEach(function () {
+		beforeEach(function () {		
 			/* Create managers */
 			loggerFull = changeLogger.create();
 			var parentFull =  $("<div>");
@@ -249,6 +252,9 @@ function (helpers, reverter, pedalBoardManager, changeLogger, $) {
 			/*Rename a and b*/
 				managerFull.Rename(managerFull.GetBoard(a.id).data.Name + " Rename", a.id);
 				managerFull.Rename(managerFull.GetBoard(b.id).data.Name + "+rename", b.id);
+				
+			reverterFull = new reverter(managerFull, loggerFull);
+			reverterEmpty = new reverter(managerEmpty, loggerEmpty);
 		});
 
 		function pluck(collection, name) {
@@ -259,7 +265,7 @@ function (helpers, reverter, pedalBoardManager, changeLogger, $) {
 		
 		describe("replay", function () {		
 			it("should replay a set of changes", function () {
-				reverter.replay(loggerFull.changes, managerEmpty, loggerEmpty);
+				reverterEmpty.replay(loggerFull.changes);
 				
 				var emptyBoards = managerEmpty.GetBoards();
 				var fullBoards  = managerFull.GetBoards();
@@ -290,7 +296,7 @@ function (helpers, reverter, pedalBoardManager, changeLogger, $) {
 			
 			it("should not throw", function () {
 				var nonThrower = function () {
-					reverter.replay(loggerFull.changes, managerEmpty, loggerEmpty);
+					reverterEmpty.replay(loggerFull.changes);
 				};
 				expect(nonThrower).not.toThrow();
 			});
@@ -299,14 +305,14 @@ function (helpers, reverter, pedalBoardManager, changeLogger, $) {
 		describe("revert", function () {
 			it("should revert a set of changes", function () {
 				var loggerLengthBefore = loggerFull.changes.length;
-				reverter.revert(helpers.reverse(loggerFull.changes), managerFull);
+				reverterFull.revert(helpers.reverse(loggerFull.changes));
 				expect(managerFull.GetBoards().length).toEqual(0);
 				expect(loggerFull.changes.length).toBeGreaterThan(loggerLengthBefore * 2); /* all were reverted, so there should be a change for each plus a change for the revert change */
 			});
 			
 			it("should not throw", function () {
 				var nonThrower = function () {
-					reverter.revert(helpers.reverse(loggerFull.changes), managerFull);
+					reverterFull.revert(helpers.reverse(loggerFull.changes));
 				};
 				expect(nonThrower).not.toThrow();
 			});
@@ -315,20 +321,20 @@ function (helpers, reverter, pedalBoardManager, changeLogger, $) {
 		describe("revert and replay", function () {
 			it("should work together without error", function () {
 				var nonThrower = function () {
-					reverter.replay(loggerFull.changes, managerEmpty);
-					reverter.revert(helpers.reverse(loggerEmpty.changes), managerEmpty);
+					reverterEmpty.replay(loggerFull.changes);
+					reverterEmpty.revert(helpers.reverse(loggerEmpty.changes));
 				};
 				expect(nonThrower).not.toThrow();
 			});
 			
 			it("should be able to work together even with outside changes in between each", function () {
 				var nonThrower = function () {
-					reverter.replay(loggerFull.changes, managerEmpty);
+					reverterEmpty.replay(loggerFull.changes);
 					
 					var a = managerEmpty.Add("test");
 					managerEmpty.AddPedal(dummyPedal, a.id);
 					
-					reverter.revert(helpers.reverse(loggerEmpty.changes), managerEmpty);
+					reverterEmpty.revert(helpers.reverse(loggerEmpty.changes));
 				};
 				expect(nonThrower).not.toThrow();
 			});
