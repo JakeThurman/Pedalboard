@@ -191,5 +191,171 @@ define([ "changeLogger", "changeTypes", "objectTypes" ], function ( changeLogger
 				expect(thrower).toThrow();
 			});
 		});
+		
+		describe("addCallback", function () {
+			it ("should not call callbacks as a part of adding callbacks", function () {
+				var calls = 0;
+				logger.addCallback(function () {
+					calls++;
+				});
+				logger.addCallback(function () {
+					calls++;
+				});
+				
+				expect(calls).toBe(0);
+			});
+			
+			it("should add a callback to be called on log", function () {				
+				var calls = 0;
+				logger.addCallback(function () {
+					calls++;
+				});
+				
+				log();
+				
+				expect(calls).toBe(1);
+			});
+			
+			it("should add a callback to be called on batch complete and log when @waitUntilBatchComplete is false", function () {				
+				var calls = 0;
+				logger.addCallback(false, function () {
+					calls++;
+				});
+				
+				logger.batch(-1, function () {
+					log();
+				});
+				
+				expect(calls).toEqual(2);
+			});
+			
+			it("should add a callback to be called on (no change) batch complete", function () {				
+				var calls = 0;
+				logger.addCallback(function () {
+					calls++;
+				});
+				
+				logger.batch(-1, function () {});
+				
+				expect(calls).toEqual(1);
+			});
+			
+			it("should call the callbacks even inside a dontLog wrapper", function () {				
+				var calls = 0;
+				logger.addCallback(function () {
+					calls++;
+				});
+				
+				logger.dontLog(function () {
+					logger.batch(-1, function () {
+						log();
+					});
+				});
+				
+				expect(calls).toEqual(1);
+			});
+			
+			it("should not call the callbacks on log that pass in true for @waitUntilBatchCompletion", function () {				
+				var calls = 0;
+				logger.addCallback(true, function () {
+					calls++;
+				});
+				
+				logger.batch(-1, function () {
+					log();
+				});
+				
+				expect(calls).toEqual(1);
+			});
+			
+			it("should not call the callbacks on log that pass in true for @waitUntilBatchCompletion inside of a don't log block", function () {				
+				var calls = 0;
+				logger.addCallback(true, function () {
+					calls++;
+				});
+				
+				logger.dontLog(function () {
+					logger.batch(-1, function () {
+						log();
+					});
+				});
+				
+				expect(calls).toEqual(1);
+			});
+						
+			it("should not call the callbacks on log that don't pass in anything for @waitUntilBatchCompletion (i.e. it should default to true)", function () {				
+				var calls = 0;
+				logger.addCallback(function () {
+					calls++;
+				});
+				
+				logger.batch(-1, function () {
+					log();
+				});
+				
+				expect(calls).toEqual(1);
+			});
+			
+			it("should throw an error if the callback is not given", function () {				
+				var hit = false;
+				var thrower = function () {
+					logger.addCallback();
+				};
+				
+				expect(thrower).toThrow();
+				expect(thrower).toThrowError();
+			});
+			
+			it("should throw an error if the callback is not given, but @waitUntilBatchComplete is", function () {				
+				var hit = false;
+				var thrower = function () {
+					logger.addCallback(true);
+				};
+				
+				expect(thrower).toThrow();
+				expect(thrower).toThrowError();
+			});
+			
+			
+			it("should throw an error if the callback is undefined", function () {				
+				var hit = false;
+				var thrower = function () {
+					logger.addCallback(void(0));
+				};
+				
+				expect(thrower).toThrow();
+				expect(thrower).toThrowError();
+			});
+			
+			it("should throw an error if the callback is undefined, and @waitUntilBatchComplete is given", function () {				
+				var hit = false;
+				var thrower = function () {
+					logger.addCallback(true, void(0));
+				};
+				
+				expect(thrower).toThrow();
+				expect(thrower).toThrowError();
+			});
+			
+			it("should be able to handle multiple callbacks", function () {
+				var hit1 = false;
+				logger.addCallback(function () {
+					hit1 = true;
+				});
+				
+				var hit2 = false;
+				logger.addCallback(function () {
+					hit2 = true;
+				});
+				
+				expect(hit1).toBe(false);
+				expect(hit2).toBe(false);
+				
+				log();
+										
+				expect(hit1).toBe(true);
+				expect(hit2).toBe(true);
+			});
+		});
 	});
 });
