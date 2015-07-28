@@ -198,11 +198,11 @@ function (helpers, reverter, pedalBoardManager, changeLogger, $) {
 			/* Create managers */
 			loggerFull = changeLogger.create();
 			var parentFull =  $("<div>");
-			managerFull = pedalBoardManager.create(loggerFull, parentFull);
+			managerFull = new pedalBoardManager(loggerFull, parentFull);
 			
 			loggerEmpty = changeLogger.create();
 			var parentEmpty = $("<div>");
-			managerEmpty = pedalBoardManager.create(loggerEmpty, parentEmpty);
+			managerEmpty = new pedalBoardManager(loggerEmpty, parentEmpty);
 			
 			/* ! Load ManagerFull ! */
 			/* Add boards */

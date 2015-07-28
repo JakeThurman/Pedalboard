@@ -1,19 +1,17 @@
 define(["pedalBoardClasses", "pedalboardPopup", "pedalRenderer", "textResources", "helperMethods", "changeTypes", "batchTypes", "objectTypes"], 
 function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTypes, batchTypes, objectTypes) {
 	"use strict";
-	
-	var actions = {};
 		
 	/*
-	 * Creates an instance of pedalboardManager to handle all your pedal needs!
+	 * PedalboardManager "class" - To handle all your pedal needs!
 	 *
 	 * @logger:            Change Logger instance to log changes to
 	 * @contentContainer:  The container for added pedalboards in the dom
 	 *
 	 * @returns:           The manager instance
 	 */
-	actions.create = function (logger, contentContainer) {
-		var manager = {};
+	return function (logger, contentContainer) {
+		var manager = this;
 		
 		/* Assert that the logger is valid */
 		if (!logger.changes || !logger.log || !logger.batch)
@@ -401,9 +399,5 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 				return domBoard.id;
 			});
 		};
-        
-        return manager;
 	};
-		
-	return actions;
 });
