@@ -135,6 +135,7 @@ define([ "helperMethods", "changeTypes", "objectTypes" ], function (helpers, cha
 							default:
 								throw new TypeError("@changeType is invalid, was: " + change.changeType);
 						}
+						break;
 						
 					case objectTypes.pedal:
 						switch (change.changeType) {								
