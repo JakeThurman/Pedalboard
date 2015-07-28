@@ -12,6 +12,7 @@ requirejs.config({
 			"helperMethods":                 "core/helperMethods",
 			"textResources":				 "core/textResources",
 			"stringReplacer":                "core/stringReplacer",
+			"async":                         "core/async",
 			
 			/* UI Core */
 			"_Popup":                        "ui-core/Popup",
