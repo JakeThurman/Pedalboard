@@ -1,4 +1,5 @@
 define([ "jquery" ], function ( $ ) {
+	"use strict";
 	var openPopups = {};
 
 	var methods = {};
@@ -6,7 +7,7 @@ define([ "jquery" ], function ( $ ) {
 	methods.close = function(popupId) {
 		openPopups[popupId].el.remove();
 		delete openPopups[popupId];
-	}
+	};
 
 	function assertOptionValidity(options) {
 		var errorMessage = "";
@@ -18,7 +19,7 @@ define([ "jquery" ], function ( $ ) {
 		if (!options.id)
 			 errorMessage += "options.id is required! ";
 			 
-		if (errorMessage != "")
+		if (errorMessage !== "")
 			 throw errorMessage;
 	}
 
@@ -108,7 +109,7 @@ define([ "jquery" ], function ( $ ) {
 				renameBox.replaceWith(title);
 				options.header.show();
 				title.click(rename); /*make the next click rename too!*/
-			}
+			};
 				
 			var renameBox = $("<input>", { type: "text", "class": "full-width" })
 				.val(title.text());
@@ -129,7 +130,7 @@ define([ "jquery" ], function ( $ ) {
 
 		//return the popup
 		return outputPopup; //remeber this is undefined on close!
-	} 
+	};
 
 	return methods;
 });

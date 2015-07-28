@@ -1,5 +1,5 @@
-require(["pedalBoardManager", "jquery", "mainPageMenuHandler", "pedalBoardStorage", "stateReverter", "undoHandler", "historyPopup", "changeLogger", "batchTypes", "domReady!"], 
-function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateReverter, undoHandler, historyPopup, changeLogger, batchTypes) {
+require(["PedalBoardManager", "jquery", "mainPageMenuHandler", "pedalBoardStorage", "StateReverter", "UndoHandler", "historyPopup", "changeLogger", "batchTypes", "domReady!"], 
+function (PedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, StateReverter, UndoHandler, historyPopup, changeLogger, batchTypes) {
     "use strict";
 	
 	/* DOM variables */
@@ -8,9 +8,9 @@ function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateRev
    	
 	/* Data variables */
 	var logger = changeLogger.create();
-	var manager  = new pedalBoardManager(logger, mainContentContainer);
-	var reverter = new stateReverter(manager, logger);
-	var undoer   = new undoHandler(reverter, logger);
+	var manager  = new PedalBoardManager(logger, mainContentContainer);
+	var reverter = new StateReverter(manager, logger);
+	var undoer   = new UndoHandler(reverter, logger);
 	
 	/* Restore save data */	
 	if (pedalBoardStorage.HasSavedData()) {
@@ -28,7 +28,7 @@ function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateRev
 	
 	/* Setup the main page menu click handler */
    	pageMenuButton.click(function () {
-   	    mainPageMenuHandler.handle(pageMenuButton, manager, undoer,
+   	    mainPageMenuHandler.handle(manager, undoer,
 			function () { /* open history action */
 				var popup = historyPopup.create(logger.changes);
 				logger.addCallback(popup.addChange);

@@ -1,5 +1,5 @@
-define(["_Popup", "jquery", "textResources", "pedalRenderer", "pedalboardPopupOptionsHandler", "reporter", "addPedalMenu", "objectTypes", "jquery-ui"], 
-function (_Popup, $, resources, pedalRenderer, pedalboardPopupOptionsHandler, reporter, addPedalMenu, objectTypes) {
+define(["_Popup", "jquery", "textResources", "pedalboardPopupOptionsHandler", "reporter", "addPedalMenu", "objectTypes", "jquery-ui"], 
+function (_Popup, $, resources, pedalboardPopupOptionsHandler, reporter, addPedalMenu, objectTypes) {
 	"use strict";
 	
 	var methods = {};
@@ -26,7 +26,8 @@ function (_Popup, $, resources, pedalRenderer, pedalboardPopupOptionsHandler, re
 		var helpText = $("<div>", { "class": "help-text display-none" })
 			.text(resources.pedalBoardDragHelpText);
 			
-		var addPedalsQuickIcon = $("<i>", { "class": "fa fa-plus float-left" })
+		/* add pedals quick link icon */
+		$("<i>", { "class": "fa fa-plus float-left" })
 			.prependTo(helpText)
 			.click(function () {
 				startAddingPedals()

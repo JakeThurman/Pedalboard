@@ -1,4 +1,4 @@
-define(["helperMethods", "textResources", "changeTypes"], function (helpers, resources, changeTypes) {
+define(["helperMethods", "textResources"], function (helpers, resources) {
     "use strict";
 	
 	var methods = {};
@@ -8,7 +8,7 @@ define(["helperMethods", "textResources", "changeTypes"], function (helpers, res
 	
 	function supports_html5_storage() {
         try { 
-			return 'localStorage' in window && window['localStorage'] !== null; 
+			return 'localStorage' in window && !helpers.isUndefined(window.localStorage); 
 		}
 		catch (e) { 
 			return false; 

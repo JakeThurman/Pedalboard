@@ -1,17 +1,17 @@
 define(["textResources", "_OptionMenu", "jquery"], function (resources, _OptionMenu, $) {
+	"use strict";
     var methods = {};
 		
 	/*
-	 * @pageMenuButton:       the menu button that triggered this
 	 * @manager:              pedalBoardManager.js object to manage pedal boards with
 	 * @undoer:               undoHandler instance
 	 * @openHistory:          calling this should open the history popup
 	 */
-	methods.handle = function(pageMenuButton, manager, undoer, openHistory) {
+	methods.handle = function(manager, undoer, openHistory) {
 		var addBoardButton = $("<div>")
 			.text(resources.addPedalBoardButtonText)
 			.click(function () {
-				var newNameBox = $("<input>", { type: "text", "class": "no-hover", placeholder: resources.newBoardNamePlaceholder })
+				var newNameBox = $("<input>", { type: "text", "class": "no-hover", placeholder: resources.newBoardNamePlaceholder });
 
 				var nameMenu = _OptionMenu.create(newNameBox).addClass("main-page-menu");
 

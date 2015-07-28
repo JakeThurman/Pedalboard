@@ -1,4 +1,6 @@
 define([ "helperMethods" ], function ( helpers ) {
+	"use strict";
+
 	var methods = {};
 	
 	methods.create = function (initalChanges) {
@@ -23,7 +25,7 @@ define([ "helperMethods" ], function ( helpers ) {
 			function (change) { /* @getChildCollectionAction */
 				return change.changes;
 			},
-			function (change) { /* @bottomAction */
+			function () { /* @bottomAction */
 				topChangeId++;
 			});
 		
@@ -157,7 +159,7 @@ define([ "helperMethods" ], function ( helpers ) {
 		 * @func: Makes all containing logger.log calls no-opperation.
 		 */
 		changeLogger.dontLog = function (func) {
-			if (typeof func !== "function") throw new TypeError("dontLog takes a function")
+			if (typeof func !== "function") throw new TypeError("dontLog takes a function");
 			
 			/* If logging is already disabled don't try to do it again, if we did
 			   that we would also stop logging after the deepest dontLog finishes */

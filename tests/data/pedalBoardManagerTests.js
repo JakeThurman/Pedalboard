@@ -1,4 +1,4 @@
-define([ "pedalBoardManager", "jquery", "helperMethods" ], function (pedalBoardManager, $, helpers) {	"use strict";	
+define([ "PedalBoardManager", "jquery", "helperMethods" ], function (pedalBoardManager, $, helpers) {	"use strict";	
     describe("data/pedalBoardManager.js", function () {
 		var manager;
 		var $fakeEl;

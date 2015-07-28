@@ -1,5 +1,5 @@
-define([ "_Popup", "textResources", "jquery", "helperMethods", "moment", "changeTypes", "batchTypes", "objectTypes", "stringReplacer" ], 
-function ( _Popup, resources, $, helpers, moment, changeTypes, batchTypes, objectTypes, replacer ) {
+define([ "_Popup", "textResources", "jquery", "helperMethods", "moment", "changeTypes", "batchTypes", "stringReplacer" ], 
+function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, replacer ) {
 	"use strict";
 	
 	var methods = {};
@@ -45,7 +45,7 @@ function ( _Popup, resources, $, helpers, moment, changeTypes, batchTypes, objec
 						? resources.change_MovePedalToTop /* To Top */
 						: oldValue > newValue
 							? resources.change_MovePedalUp /* Up */
-							: resources.change_MovePedalDown /* Down */
+							: resources.change_MovePedalDown; /* Down */
 					return replacer.replace(resource, [ otherName, objName ]);
 				
 				default:
@@ -54,9 +54,9 @@ function ( _Popup, resources, $, helpers, moment, changeTypes, batchTypes, objec
 		}
 	
 		/* set up the user language for the moment library */
-		moment.locale(window.navigator.userLanguage || window.navigator.language)
+		Moment.locale(window.navigator.userLanguage || window.navigator.language);
 	
-		var content = $("<div>", { "class": "history-popup" })
+		var content = $("<div>", { "class": "history-popup" });
 		
 		/* store all of the moment update intervals here so that we can kill them on close */
 		var momentUpdateIntervals = [];
@@ -102,11 +102,11 @@ function ( _Popup, resources, $, helpers, moment, changeTypes, batchTypes, objec
 				changeDiv.addClass("change");
 				
 				var timeStamp = $("<div>", { "class": "time-stamp" })
-					.text(new moment(change.timeStamp).fromNow())
+					.text(new Moment(change.timeStamp).fromNow())
 					.appendTo(changeDiv);
 				
 				momentUpdateIntervals.push(setInterval(function () { /* every minute, refresh the "from now" */
-					timeStamp.text(new moment(change.timeStamp).fromNow());
+					timeStamp.text(new Moment(change.timeStamp).fromNow());
 				}, 60000)); /*60,000ms = 1min*/
 			}
 			
@@ -127,7 +127,7 @@ function ( _Popup, resources, $, helpers, moment, changeTypes, batchTypes, objec
 				});
 		}
 		
-		function close(popup) {
+		function close() {
 			helpers.forEach(momentUpdateIntervals, function (interval) {
 				clearInterval(interval);
 			});
@@ -143,7 +143,7 @@ function ( _Popup, resources, $, helpers, moment, changeTypes, batchTypes, objec
 		return {
 			popup: popup,
 			addChange: appendChange,
-		}
+		};
 	};
 	
 	return methods;

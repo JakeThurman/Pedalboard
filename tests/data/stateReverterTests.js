@@ -1,4 +1,4 @@
-define([ "helperMethods", "stateReverter", "pedalBoardManager", "changeLogger", "jquery" ],
+define([ "helperMethods", "StateReverter", "PedalBoardManager", "changeLogger", "jquery" ],
 function (helpers, reverter, pedalBoardManager, changeLogger, $) {
 	"use strict";
 	

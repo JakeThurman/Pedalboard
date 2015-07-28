@@ -1,4 +1,6 @@
 define([ "helperMethods" ], function (helpers) {
+	"use strict";
+
 	var classes = {};
 
 	classes.PedalBoard = function (name, pedals) {
@@ -47,7 +49,7 @@ define([ "helperMethods" ], function (helpers) {
 				: oldPedalIndex;
 				
 			/* No need to loop through the first part since we'll just copy it straight */
-			var orderedPedals = thisBoard.pedals.slice(0, smallerIndex)			
+			var orderedPedals = thisBoard.pedals.slice(0, smallerIndex);
 			
 			/* loop through the rest to find the pedal that we need to move and move it */
 			for (var i = smallerIndex; i < thisBoard.pedals.length; i++) {

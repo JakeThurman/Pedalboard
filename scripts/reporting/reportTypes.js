@@ -1,4 +1,6 @@
 define(function () {
+	"use strict";
+	
 	/* the class */
 	function ReportType(id, resource, forCompare, forReport, totalTemplate, options) {
 		this.id = id;

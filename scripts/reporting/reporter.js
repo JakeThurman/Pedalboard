@@ -137,7 +137,7 @@ function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDa
 			data = getColorData(pedals);
 			total = data.length;
 		} else {
-			throw new Error("Type param is not valid or not implemented!")
+			throw new Error("Type param is not valid or not implemented!");
 		}
 		
 		/* set up the display */
@@ -148,7 +148,7 @@ function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDa
 			.append(canvas);
 		
 		/* Add the total */
-		var total = makeTotal(total, count, type.totalTemplate)
+		var totalEl = makeTotal(total, count, type.totalTemplate)
 			.appendTo(reportContainer);
 		
 		var chart;
@@ -156,7 +156,7 @@ function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDa
 		/* Return all of the values so that they can be added as needed */
 		return {
 			container: reportContainer,
-			total: total,
+			total: totalEl,
 			getChart: function () { /* "lazy" chart return */
 				chart = chart || (new Chart(canvas.getContext("2d")).Doughnut(data, type.options));
 				return chart;
@@ -226,7 +226,7 @@ function (reportTypes, boardDiffEngine, colorEffects, $, Chart, helpers, pedalDa
 		
 		/* Add it all */
 		handleDisplay(display, title, document.body);
-	}
+	};
 	
 	methods.compare = function (boardA, boardB, type) {
 		assertIsPedalBoard(boardA);

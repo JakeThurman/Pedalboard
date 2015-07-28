@@ -351,7 +351,7 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 					: oldPedalIndex;
 					
 				/* No need to loop through the first part since we'll just copy it straight */
-				var orderedPedals = boards[boardId].__pedalEls.slice(0, smallerIndex)			
+				var orderedPedals = boards[boardId].__pedalEls.slice(0, smallerIndex);
 				
 				/* loop through the rest to find the pedal that we need to move and move it */
 				for (var i = smallerIndex; i < boards[boardId].__pedalEls.length; i++) {

@@ -67,7 +67,7 @@ define([ "helperMethods", "textResources" ], function (helpers, resources) {
 			name: resources[color_names[index]],
 			color: (leadingHash ? "#": "") + base_colors[index]
 		};
-	}
+	};
 	
 	/* function content taken from http://www.sitepoint.com/javascript-generate-lighter-darker-color/ */
 	methods.highlight = function(hex, luminance) {
@@ -83,7 +83,7 @@ define([ "helperMethods", "textResources" ], function (helpers, resources) {
 		}
 
 		return rgb;
-	}
+	};
 	
 	return methods;
 });

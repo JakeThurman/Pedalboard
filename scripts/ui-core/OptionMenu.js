@@ -1,4 +1,5 @@
-define(["jquery", "helperMethods"], function ($, helpers) {
+define(["jquery"], function ($) {
+	"use strict";
     var methods = {};
 	
 	/*

@@ -11,7 +11,7 @@ define(["_OptionMenu", "jquery", "textResources", "reportTypeMenu", "compareToMe
 	 *  @startReport:       calling this function should start a report on it with the given type paramCompare
 	 *  @startCompare:      calling this function should start a comparative report of the given type against board with the given boardId
 	 */
-	methods.handle = function (id, menuButton, manager, addPedals, startReport, startCompare) {	
+	methods.handle = function (id, menuButton, manager, addPedals, startReport, startCompare) {
 		var deleteLink = $("<div>")
 			.text(resources.deletePedalBoard)
 			.click(function () {
@@ -40,7 +40,7 @@ define(["_OptionMenu", "jquery", "textResources", "reportTypeMenu", "compareToMe
 			.text(resources.boardCompareButton)
 			.click(function () {
 				compareToMenu.create(id, menuButton, manager, startCompare);
-			});;
+			});
 		
 		/* ! Setting up which options are valid and adding them ! */
 		var addSection = $("<div>", { "class": "section" })
@@ -55,7 +55,7 @@ define(["_OptionMenu", "jquery", "textResources", "reportTypeMenu", "compareToMe
 			useReportSection = true;
 		}
 		/* if this board has any pedals, and there are multiple boards with any pedals, add the compare button */
-		if (manager.AnyPedals(id) && manager.Multiple(function (pedalboard) { return manager.AnyPedals(pedalboard.id) })) {
+		if (manager.AnyPedals(id) && manager.Multiple(function (pedalboard) { return manager.AnyPedals(pedalboard.id); })) {
 			compareButton.appendTo(reportSection);
 			useReportSection = true;
 		}
@@ -77,7 +77,7 @@ define(["_OptionMenu", "jquery", "textResources", "reportTypeMenu", "compareToMe
 			.click(function () {
 				$(this).remove();
 			});
-    }
+    };
 		
 	return methods;
 });

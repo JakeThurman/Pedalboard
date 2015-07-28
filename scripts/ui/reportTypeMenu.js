@@ -12,7 +12,7 @@ define([ "_OptionMenu", "jquery", "textResources", "reportTypes" ], function (_O
 	
 	methods.create = function (link, isCompare, startAction) {
 		var options = $("<div>", { "class": "help-text no-hover" })
-			.text(resources.reportInWhatWayHelpText);;
+			.text(resources.reportInWhatWayHelpText);
 		
 		var isKey = isCompare ? "forCompare": "forReport";
 		

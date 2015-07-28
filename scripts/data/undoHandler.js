@@ -1,4 +1,4 @@
-define(["helperMethods", "stateReverter"], function (helpers, stateReverter) {
+define(function () {
 	"use strict";
 	
 	/*

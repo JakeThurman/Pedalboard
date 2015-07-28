@@ -30,7 +30,6 @@ requirejs.config({
 			
 			/* Data */
 			"pedalBoardClasses":             "data/pedalBoardClasses",
-			"pedalBoardManager":             "data/pedalBoardManager",
 			"pedalBoardStorage":             "data/pedalBoardStorage",
 			"pedalDataAccess":               "data/pedalDataAccess",
 			"pedalsGetter":                  "data/pedalsGetter",
@@ -38,10 +37,13 @@ requirejs.config({
 			"changeTypes":                   "data/changeInfo",
 			"batchTypes":                    "data/changeInfo",
 			"objectTypes":                   "data/changeInfo",
-			"stateReverter":                 "data/stateReverter",
-			"undoHandler":                   "data/undoHandler",
 			
-			/*reporting*/
+			/* Data Classes */
+			"PedalBoardManager":             "data/PedalBoardManager",
+			"StateReverter":                 "data/StateReverter",
+			"UndoHandler":                   "data/UndoHandler",
+			
+			/* Reporting */
 			"reportTypes":                   "reporting/reportTypes",
 			"reporter":                      "reporting/reporter",
 			"boardDiffEngine":               "reporting/boardDiffEngine",

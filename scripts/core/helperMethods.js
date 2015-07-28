@@ -1,4 +1,6 @@
 define(function () {
+	"use strict";
+	
 	var helpers = {};
 	
 	/* Just throws the msg, makes for easier inlining of logic. */
@@ -28,7 +30,7 @@ define(function () {
 	
 	/* If the param is an array, it returns it, other wise it returns the object as an array of one */
 	helpers.asArray = function (maybeArray) {
-		if (helpers.isUndefined(maybeArray)) 
+		if (helpers.isUndefined(maybeArray))
 			return [];
 		if (!helpers.isArray(maybeArray))
 			return [maybeArray];
