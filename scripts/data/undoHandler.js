@@ -1,16 +1,13 @@
 define(["helperMethods", "stateReverter"], function (helpers, stateReverter) {
 	"use strict";
 	
-	var actions = {};
-	
 	/*
-	 * Creates a handler for undo/redo events
+	 * Undo/redo event handler "class"
 	 *
 	 * @reverter: The stateReverter instance to revert with.
 	 * @logger:   The logger for the manager we'd be reverting.
 	 */
-	actions.create = function (reverter, logger) {
-		var methods = {};
+	return function (reverter, logger) {
 		var undoneStack = [];
 		var undoInProgress = false;
 		
@@ -23,7 +20,7 @@ define(["helperMethods", "stateReverter"], function (helpers, stateReverter) {
 		/*
 		 * Undoes the most recent change
 		 */
-		methods.undo = function () {
+		this.undo = function () {
 			/* Grab the change to undo */
 			var change = logger.changes.pop();
 			
@@ -45,7 +42,7 @@ define(["helperMethods", "stateReverter"], function (helpers, stateReverter) {
 		/*
 		 * Redoes the most recent undo
 		 */
-		methods.redo = function () {
+		this.redo = function () {
 			/* If there's nothing to do, do nothing */
 			if (!undoneStack.length)
 				return;
@@ -57,17 +54,13 @@ define(["helperMethods", "stateReverter"], function (helpers, stateReverter) {
 		};
 		
 		/* Returns a boolean. True if there are any undoneStack changes (that can be redone) */
-		methods.canRedo = function () {
+		this.canRedo = function () {
 			return !!undoneStack.length; /* !!casts to boolean */
 		};
 		
 		/* Returns a boolean. True if there are any changes (that can be undone) */
-		methods.canUndo = function () {
+		this.canUndo = function () {
 			return !!logger.changes.length; /* !!casts to boolean */
 		};
-		
-		return methods;
 	};
-	
-	return actions;
 });

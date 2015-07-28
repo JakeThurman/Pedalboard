@@ -10,7 +10,7 @@ function (pedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, stateRev
 	var logger = changeLogger.create();
 	var manager = pedalBoardManager.create(logger, mainContentContainer);
 	var reverter = new stateReverter(manager, logger);
-	var undoer = undoHandler.create(reverter, logger);
+	var undoer   = new undoHandler(reverter, logger);
 	
 	/* Restore save data */	
 	if (pedalBoardStorage.HasSavedData()) {
