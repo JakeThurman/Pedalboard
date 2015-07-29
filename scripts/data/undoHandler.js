@@ -1,11 +1,13 @@
-define(function () {
+define([ "helperMethods" ], function (helpers) {
 	"use strict";
 	
 	/*
 	 * Undo/redo event handler "class"
 	 *
-	 * @reverter: The stateReverter instance to revert with.
-	 * @logger:   The logger for the manager we'd be reverting.
+	 * PARAMS:
+	 *   @reverter:       The stateReverter instance to revert with.
+	 *   @logger:         The logger for the manager we'd be reverting.
+	 *   @initRedoables: [OPTIONAL] The stack to initialize with as the undone but redoable change stack.
 	 */
 	return function (reverter, logger) {
 		var undoneStack = [];
@@ -61,6 +63,11 @@ define(function () {
 		/* Returns a boolean. True if there are any changes (that can be undone) */
 		this.canUndo = function () {
 			return !!logger.changes.length; /* !!casts to boolean */
+		};
+		
+		/* Returns the current stack of undone but redoable changes */
+		this.getUndoneStack = function () {
+			return undoneStack;
 		};
 	};
 });

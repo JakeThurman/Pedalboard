@@ -2,7 +2,7 @@ define([ "pedalBoardStorage" ], function (storage) {
 	"use strict";
 	
 	/* Change the localStorage item name so as not to overwrite the real save. */
-	storage.HISTORY_STORAGE_NAME = storage.HISTORY_STORAGE_NAME + "-testing";
+	storage.SOTORAGE_NAME_PREFIX = "testing-";
 
 	describe("data/pedalBoardStorage.js", function () {
 		describe("Clear", function () {

@@ -5,26 +5,32 @@ function (PedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, StateRev
 	/* DOM variables */
    	var mainContentContainer = $("#content-container");
    	var pageMenuButton = $("#page-main-menu");
-   	
+	
+	/* Reload from last save */
+	var lastSaveData = pedalBoardStorage.Load();
+	
 	/* Data variables */
 	var logger   = new ChangeLogger();
 	var manager  = new PedalBoardManager(logger, mainContentContainer);
 	var reverter = new StateReverter(manager, logger);
-	var undoer   = new UndoHandler(reverter, logger);
+	var undoer   = new UndoHandler(reverter, logger, lastSaveData.undo);
+	
+	function save() {
+		pedalBoardStorage.Save(logger.changes, undoer.getUndoneStack());
+	}
 	
 	/* Restore save data */	
-	if (pedalBoardStorage.HasSavedData()) {
-		reverter.replay(pedalBoardStorage.Load());
-	} else {/* This is the first load */
+	reverter.replay(lastSaveData.history);
+	
+	/* This is the first load */
+	if (!lastSaveData.history) {
 		logger.batch(batchTypes.firstLoad, function () {
 			manager.Import(pedalBoardStorage.GetDefaultBoard());
 		});
 	}
 	
 	/* Save on change */
-	logger.addCallback(/* @waitForBatchCompletion: */ false, function () {
-		pedalBoardStorage.Save(logger.changes); 
-	});
+	logger.addCallback(/* @waitForBatchCompletion: */ false, save);
 	
 	/* Setup the main page menu click handler */
    	pageMenuButton.click(function () {
