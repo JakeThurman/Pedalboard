@@ -1,4 +1,4 @@
-define([ "async" ], function (async) {
+define([ "helperMethods", "async" ], function (helpers, async) {
 	"use strict";
 	
 	/*
@@ -9,8 +9,11 @@ define([ "async" ], function (async) {
 	 *   @logger:         The logger for the manager we'd be reverting.
 	 *   @initRedoables: [OPTIONAL] The stack to initialize with as the undone but redoable change stack.
 	 */
-	return function (reverter, logger) {
-		var undoneStack = [];
+	return function (reverter, logger, initRedoables) {
+		if (!helpers.isUndefined(initRedoables) && !helpers.isArray(initRedoables))
+			throw new TypeError("@initRedoables is invalid. It should be an array or changes/batches. was: " + initRedoables);
+		
+		var undoneStack = initRedoables || [];
 		var undoInProgress = false;
 		
 		/* For every manager change, reset the stack of undone changes */

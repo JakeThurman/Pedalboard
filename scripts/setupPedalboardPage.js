@@ -13,14 +13,15 @@ function (PedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, StateRev
 	var logger   = new ChangeLogger();
 	var manager  = new PedalBoardManager(logger, mainContentContainer);
 	var reverter = new StateReverter(manager, logger);
-	var undoer   = new UndoHandler(reverter, logger, lastSaveData.undo);
-	
-	function save() {
-		pedalBoardStorage.Save(logger.changes, undoer.getUndoneStack());
-	}
 	
 	/* Restore save data */	
+	/* Temporarily disable calling back async for the restore calls so we can avoid errors like the redo stack getting cleared */
+	logger.CALLBACK_ASYNC = false;
 	reverter.replay(lastSaveData.history);
+	logger.CALLBACK_ASYNC = true;
+	
+	/* Setup the undo handler AFTER replay to avoid clearing the redo stack */
+	var undoer   = new UndoHandler(reverter, logger, lastSaveData.undo);
 	
 	/* This is the first load */
 	if (!lastSaveData.history) {
@@ -30,7 +31,9 @@ function (PedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, StateRev
 	}
 	
 	/* Save on change */
-	logger.addCallback(/* @waitForBatchCompletion: */ false, save);
+	logger.addCallback(/* @waitForBatchCompletion: */ false, function () {
+		pedalBoardStorage.Save(logger.changes, undoer.getUndoneStack());
+	});
 	
 	/* Setup the main page menu click handler */
    	pageMenuButton.click(function () {
