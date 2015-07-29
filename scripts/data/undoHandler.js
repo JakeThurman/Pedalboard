@@ -1,4 +1,4 @@
-define([ "helperMethods" ], function (helpers) {
+define([ "helperMethods", "async" ], function (helpers, async) {
 	"use strict";
 	
 	/*
@@ -19,6 +19,17 @@ define([ "helperMethods" ], function (helpers) {
 				undoneStack = [];
 		});
 	
+		function doChange(func) {
+			undoInProgress = true;
+			
+			func();
+			
+			/* Add to the end of the async queue a handler to disable the undoInProgress flag. */
+			async.run(function () {
+				undoInProgress = false;
+			});
+		}
+	
 		/*
 		 * Undoes the most recent change
 		 */
@@ -31,11 +42,11 @@ define([ "helperMethods" ], function (helpers) {
 				return;
 			
 			/* Revert the change */
-			undoInProgress = true;
-			logger.dontLog(function () {
-				reverter.revert(change);
+			doChange(function () {
+				logger.dontLog(function () {
+					reverter.revert(change);
+				});
 			});
-			undoInProgress = false;
 			
 			/* Record the change as undo in case of the case of redo */
 			undoneStack.push(change);
@@ -50,9 +61,9 @@ define([ "helperMethods" ], function (helpers) {
 				return;
 			
 			/* Replay the change */
-			undoInProgress = true;
-			reverter.replay(undoneStack.pop());
-			undoInProgress = false;
+			doChange(function () {
+				reverter.replay(undoneStack.pop());
+			});
 		};
 		
 		/* Returns a boolean. True if there are any undoneStack changes (that can be redone) */
