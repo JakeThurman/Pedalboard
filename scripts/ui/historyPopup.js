@@ -122,7 +122,7 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 				});
 			}, momentUpdateIntervals);
 			
-			logger.log(changeTypes.remove, objectTypes.historyPopup, popup.id);
+			logger.log(changeTypes.remove, objectTypes.historyPopup, thisPopup.id);
 		};
 				
 		var thisPopup = _Popup.create(content, {

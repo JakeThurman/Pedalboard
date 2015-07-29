@@ -84,7 +84,7 @@ define([ "helperMethods", "async" ], function ( helpers, async ) {
 			function call(callbacks, batchRunning, arg) {
 				helpers.forEach(callbacks, function (callback) {
 					if (!callback.waitForBatchCompletion || (callback.waitForBatchCompletion && !batchRunning))
-						callback.func(arg);
+						callback.func.apply(null, [arg].concat(callback.args));
 				});
 			}
 		
@@ -193,19 +193,30 @@ define([ "helperMethods", "async" ], function ( helpers, async ) {
 		 * @waitForBatchCompletion: [DEFAULT: true] Should this function be called on changes made inside of a batch?
 		 * @func:                   The action to be executed on every change.
 		 *                              params: @change: The change/batch object just created by the logger.
+		 *                              params: @args:   All of the arguments passed in after @func.
 		 *
 		 * @returns:                A kill function. Call the result of this function to kill the callback.
 		 */
 		changeLogger.addCallback = function (waitForBatchCompletion, func) {
+			var sliceAfter = 2;
+			
 			/* If no @waitForBatchCompletion param was given, fix the variables */
 			if (helpers.isUndefined(func) && typeof waitForBatchCompletion === "function") {
 				func = waitForBatchCompletion;
 				waitForBatchCompletion = true;
+				sliceAfter = 1; /* there is no @waitForBatchCompletion, so the arguments start after 1 param. */
 			}
 			if (typeof func !== "function")
 				throw new TypeError("changeLogger.addCallback takes a function to be called when a change is made.");
 			
-			callbacks.push({ func: func, waitForBatchCompletion: waitForBatchCompletion });
+			var slice = Array.prototype.slice;
+			var args = slice.call(arguments, sliceAfter);
+			
+			callbacks.push({ 
+				func: func, 
+				waitForBatchCompletion: waitForBatchCompletion,
+				args: args,
+			});
 			
 			/* Return a kill function */
 			return function () {

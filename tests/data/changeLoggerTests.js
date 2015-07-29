@@ -357,6 +357,23 @@ define([ "ChangeLogger", "changeTypes", "objectTypes" ], function ( ChangeLogger
 				expect(hit1).toBe(true);
 				expect(hit2).toBe(true);
 			});
+			
+			it("should give any extra params as extra args", function () {
+				var input = "this is a test of text " + new Date();
+				var output;
+				var input2 = "this is another test of text ------ " + new Date();
+				var output2;
+				logger.addCallback(function (value, value2) {
+					output = value;
+					output2 = value2;
+				}, input, input2);
+				
+				expect(output).toBeUndefined();
+				expect(output2).toBeUndefined();
+				log();
+				expect(output).toEqual(input);
+				expect(output2).toEqual(input2);
+			});
 		});
 	});
 });
