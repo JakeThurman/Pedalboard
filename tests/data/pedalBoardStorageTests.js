@@ -5,6 +5,10 @@ define([ "pedalBoardStorage" ], function (storage) {
 	storage.SOTORAGE_NAME_PREFIX = "testing-";
 
 	describe("data/pedalBoardStorage.js", function () {
+		afterEach(function () {
+			storage.Clear();
+		});
+	
 		describe("Clear", function () {
 			it("should clear the save", function () {
 				expect(function () {
@@ -16,7 +20,7 @@ define([ "pedalBoardStorage" ], function (storage) {
 		describe("Save", function () {
 			it("should save", function () {
 				expect(function () {
-					storage.Save([]);
+					storage.Save([], []);
 				}).not.toThrow();
 			});
 		});
@@ -29,19 +33,11 @@ define([ "pedalBoardStorage" ], function (storage) {
 			});
 			
 			it("should load the save", function () {
-				storage.Save([{ test: 123 }]);
+				storage.Save([{ test: 123 }], ["undo"]);
 			
-				expect(storage.Load()).toEqual([{ test: 123 }]);
-			});
-		});
-		
-		describe("HasSavedData", function () {
-			it("should return true or false", function () {
-				storage.Clear();
-				expect(storage.HasSavedData()).toBe(false);
-				
-				storage.Save([]);			
-				expect(storage.HasSavedData()).toBe(true);
+				expect(storage.Load()).toEqual({ history: [{ test: 123 }], undo: ["undo"] });
+				expect(storage.Load().history).toEqual([{ test: 123 }]);
+				expect(storage.Load().undo).toEqual(["undo"]);
 			});
 		});
 		

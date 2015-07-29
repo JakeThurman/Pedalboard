@@ -18,7 +18,7 @@ define([ "ChangeLogger", "changeTypes", "objectTypes" ], function ( ChangeLogger
 		
 	    describe("log", function () {
 		    it("should log changes", function () {
-				logger.log(changeTypes.addPedal, -1, objectTypes.pedalboard);
+				logger.log(changeTypes.add, -1, objectTypes.pedalboard);
 				expect(logger.changes.length).toEqual(1);
 			});
 			
@@ -363,7 +363,7 @@ define([ "ChangeLogger", "changeTypes", "objectTypes" ], function ( ChangeLogger
 				var output;
 				var input2 = "this is another test of text ------ " + new Date();
 				var output2;
-				logger.addCallback(function (value, value2) {
+				logger.addCallback(function (change, value, value2) {
 					output = value;
 					output2 = value2;
 				}, input, input2);

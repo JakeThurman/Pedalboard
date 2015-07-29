@@ -12,7 +12,7 @@ define([ "historyPopup", "ChangeLogger", "jquery", "_Popup" ], function ( histor
 			logger.CALLBACK_ASYNC = false;
 			
 			var log = function () {
-				logger.log(4, -1, -1);
+				logger.log(4, 1, 1);
 			};
 			
 			log("1");
@@ -125,11 +125,10 @@ define([ "historyPopup", "ChangeLogger", "jquery", "_Popup" ], function ( histor
 			/* helper to create big change logs very easily */
 			function getChangeLogger(batches, changePerBatch) {
 				var logger = new ChangeLogger();
-				logger.CALLBACK_ASYNC = false;
 							
 				var makeChange = function () {
 					for(var c = 0; c < changePerBatch; c++) {
-						logger.log(-1, -1, -1);
+						logger.log(1, 1, -1);
 					}
 				};
 				
@@ -167,7 +166,7 @@ define([ "historyPopup", "ChangeLogger", "jquery", "_Popup" ], function ( histor
 				var lengthBefore = length();
 				
 				/* Add it */
-				logger.log(4, -1, -1);
+				logger.log(4, 1, 1);
 				
 				/* Now it should contain it */
 				expect(length()).toBeGreaterThan(lengthBefore);
@@ -193,9 +192,9 @@ define([ "historyPopup", "ChangeLogger", "jquery", "_Popup" ], function ( histor
 				
 				/* Add it */
 				logger.batch(0, function () {
-					logger.log(4, -1, -1);
-					logger.log(4, -1, -1);
-					logger.log(4, -1, -1);
+					logger.log(4, 1, 1);
+					logger.log(4, 1, 1);
+					logger.log(4, 1, 1);
 				});
 				
 				/* Now it should contain it */

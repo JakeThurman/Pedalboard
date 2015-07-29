@@ -1,4 +1,4 @@
-define([ "helperMethods", "async" ], function (helpers, async) {
+define([ "async" ], function (async) {
 	"use strict";
 	
 	/*

@@ -201,7 +201,7 @@ define([ "helperMethods", "async" ], function ( helpers, async ) {
 			var sliceAfter = 2;
 			
 			/* If no @waitForBatchCompletion param was given, fix the variables */
-			if (helpers.isUndefined(func) && typeof waitForBatchCompletion === "function") {
+			if (typeof waitForBatchCompletion === "function") {
 				func = waitForBatchCompletion;
 				waitForBatchCompletion = true;
 				sliceAfter = 1; /* there is no @waitForBatchCompletion, so the arguments start after 1 param. */
