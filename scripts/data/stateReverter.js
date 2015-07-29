@@ -86,27 +86,20 @@ define([ "helperMethods", "changeTypes", "objectTypes" ], function (helpers, cha
 			});
 		};	
 		
+		var revertOldToNewIdCache = {}; /* Used for revert. */
 		/*
 		 * Reverts all of the given change logger changes
 		 *
 		 * @changeStack:     All changes to revert
-		 * @oldToNewIdCache: Used for recursive callback only!
 		 */
-		methods.revert = function (changeStack, oldToNewIdCache) {
-			/* Validate the cache */
-			if (!helpers.isObject(oldToNewIdCache) && !helpers.isUndefined(oldToNewIdCache))
-				throw new TypeError("@oldToNewIdCache (used for recursive calls only) is invalid!");
-			
-			/* Reset the cache of the saved id to the real id (i.e. when creating a board, the id will be whatever it's generated with not what's logged.) */
-			oldToNewIdCache = oldToNewIdCache || {};
-			
+		methods.revert = function (changeStack) {
 			helpers.forEach(changeStack, function (change) {
 				if (change.isBatch) {
-					methods.revert(helpers.reverse(change.changes), manager, oldToNewIdCache);
+					methods.revert(helpers.reverse(change.changes), manager);
 					return; /* That's all we want to do with a batch */
 				}
 				
-				var boardId = oldToNewIdCache[change.objId] || change.objId;
+				var boardId = revertOldToNewIdCache[change.objId] || change.objId;
 				
 				switch (change.objType) {
 					case objectTypes.pedalboard:
@@ -121,7 +114,7 @@ define([ "helperMethods", "changeTypes", "objectTypes" ], function (helpers, cha
 								
 							case changeTypes.remove: /* Board was deleted, so add it back */
 								/* Import and save the created id as the new id, add that to the cache */
-								oldToNewIdCache[boardId] = manager.Import(change.oldValue)[0];
+								revertOldToNewIdCache[boardId] = manager.Import(change.oldValue)[0];
 								break;
 								
 							case changeTypes.move: /* Board was moved so move it back */
@@ -138,7 +131,7 @@ define([ "helperMethods", "changeTypes", "objectTypes" ], function (helpers, cha
 						break;
 						
 					case objectTypes.pedal:
-						switch (change.changeType) {								
+						switch (change.changeType) {
 							case changeTypes.add: /* Pedal was added, so remove it */
 								/* The pedal was just added so it will be at the end, so get the last index and delete that one */
 								var lastPedalIndex = manager.GetBoard(boardId).data.pedals.length - 1;
@@ -150,7 +143,7 @@ define([ "helperMethods", "changeTypes", "objectTypes" ], function (helpers, cha
 								/* Now, put it back to the right position */
 								/* The pedal was just added so it will be at the end, so get the last index and move that one to the right place */
 								var lastPedalIndex = manager.GetBoard(boardId).data.pedals.length - 1;
-								manager.ReorderPedal(lastPedalIndex, change.oldValue.index, boardId); 
+								//manager.ReorderPedal(lastPedalIndex, change.oldValue.index, boardId); 
 								break;
 								
 							case changeTypes.move:
