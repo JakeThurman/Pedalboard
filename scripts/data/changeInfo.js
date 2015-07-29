@@ -9,11 +9,11 @@ define("changeTypes", {
 define("objectTypes", {
 	pedalboard   : 0,
 	pedal        : 1,
-	historyPopup : 2,
+	history      : 2,
 });
 
 define("batchTypes", {
-	firstLoad        : 0,
-	clearBoard       : 1,
-	deleteAll        : 2,
+	firstLoad    : 0,
+	clearBoard   : 1,
+	deleteAll    : 2,
 });

@@ -82,7 +82,7 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 		
 		function appendChange(change) {
 			/* Don't render changes about this popup! */
-			if (change.objType === objectTypes.historyPopup)
+			if (change.objType === objectTypes.history)
 				return;
 		
 			function append(content, change) {
@@ -108,7 +108,7 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 						/* Log the move */
 						var newRect = popup.el.get(0).getBoundingClientRect();
 						
-						logger.log(changeTypes.move, objectTypes.historyPopup, popup.id, oldRect, newRect);
+						logger.log(changeTypes.move, objectTypes.history, popup.id, oldRect, newRect);
 						
 						oldRect = newRect;
 					},
@@ -122,7 +122,7 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 				});
 			}, momentUpdateIntervals);
 			
-			logger.log(changeTypes.remove, objectTypes.historyPopup, thisPopup.id);
+			logger.log(changeTypes.remove, objectTypes.history, thisPopup.id);
 		};
 				
 		var thisPopup = _Popup.create(content, {
@@ -139,7 +139,7 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 		});
 		
 		/* Log that this was opened */
-		logger.log(changeTypes.add, objectTypes.historyPopup, thisPopup.id);
+		logger.log(changeTypes.add, objectTypes.history, thisPopup.id);
 		
 		return thisPopup;
 	};

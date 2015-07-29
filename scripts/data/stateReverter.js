@@ -76,7 +76,7 @@ define([ "helperMethods", "changeTypes", "objectTypes" ], function (helpers, cha
 						}
 						break;
 						
-					case objectTypes.historyPopup:
+					case objectTypes.history:
 						console.warn("TODO: objectTypes.historyPopup replay");
 						break;
 						
@@ -143,7 +143,7 @@ define([ "helperMethods", "changeTypes", "objectTypes" ], function (helpers, cha
 								/* Now, put it back to the right position */
 								/* The pedal was just added so it will be at the end, so get the last index and move that one to the right place */
 								var lastPedalIndex = manager.GetBoard(boardId).data.pedals.length - 1;
-								//manager.ReorderPedal(lastPedalIndex, change.oldValue.index, boardId); 
+								manager.ReorderPedal(lastPedalIndex, change.oldValue.index, boardId); 
 								break;
 								
 							case changeTypes.move:
@@ -155,7 +155,7 @@ define([ "helperMethods", "changeTypes", "objectTypes" ], function (helpers, cha
 						}
 						break;
 					
-					case objectTypes.historyPopup:
+					case objectTypes.history:
 						console.warn("TODO: objectTypes.historyPopup revert");
 						break;
 						
