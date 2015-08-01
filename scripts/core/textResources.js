@@ -32,7 +32,9 @@ define({
 	change_MovePedalUp: "Moved {0} up on pedalboard \"{1}\"",
 	change_MovePedalDown: "Moved {0} down on pedalboard \"{1}\"",
 	change_MovePedalToTop: "Moved {0} to the top of pedalboard \"{1}\"",
-	firstStartupBatchName: "Let the games begin!",
+	batch_firstStartup: "Let the games begin!",
+	batch_mixedChanges_pedalboard: "Made changes to pedalboard \"{0}\"",
+	batch_mixedChanges_history: "Made changes to the history popup",
 	
 	/*reporting*/
 	boardReportButton: "Report",

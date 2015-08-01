@@ -200,7 +200,7 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 		
 		/* Delete all of the boards on the page. */
 		manager.DeleteAll = function () {
-			logger.batch(batchTypes.deleteAll, function () { /* log deleting each board as a batch */
+			logger.batch(batchTypes.deleteAll, objectTypes.pedalboard, function () { /* log deleting each board as a batch */
 				for(var key in boards)
 					manager.Delete(key);
 			});
@@ -255,7 +255,7 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 		manager.Clear = function (boardId) {
 			assertBoardIdExists(boardId);
 			
-			logger.batch(batchTypes.clearBoard, boardId, boards[boardId].data.Name, function () {
+			logger.batch(batchTypes.clearBoard, objectTypes.pedalboard, boardId, boards[boardId].data.Name, function () {
 				var pedalsCount = boards[boardId].data.pedals.length;
 				for (var i = 0; i < pedalsCount; i++) {
 					manager.RemovePedal(0, boardId);

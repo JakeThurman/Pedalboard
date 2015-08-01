@@ -37,12 +37,13 @@ requirejs.config({
 			"changeTypes":                   "data/changeInfo",
 			"batchTypes":                    "data/changeInfo",
 			"objectTypes":                   "data/changeInfo",
-			"ChangeLogger":                  "data/ChangeLogger",
 			
 			/* Data Classes */
 			"PedalBoardManager":             "data/PedalBoardManager",
 			"StateReverter":                 "data/StateReverter",
 			"UndoHandler":                   "data/UndoHandler",
+			"ChangeLogger":                  "data/ChangeLogger",
+			"SmartChangeLogger":             "data/SmartChangeLogger",
 			
 			/* Reporting */
 			"reportTypes":                   "reporting/reportTypes",

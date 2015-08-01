@@ -20,7 +20,7 @@ define([ "helperMethods", "changeTypes", "objectTypes" ], function (helpers, cha
 			helpers.forEach(changeStack, function (change) {
 				if (change.isBatch) {
 					/* Replay it inside of a batch as well */
-					logger.batch(change.batchType, change.objId, change.objName, function () {
+					logger.batch(change.batchType, change.objType, change.objId, change.objName, function () {
 						methods.replay(change.changes, manager, logger, true);
 					});
 					return; /* That's all we want to do with a batch */

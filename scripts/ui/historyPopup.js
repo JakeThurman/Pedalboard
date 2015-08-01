@@ -147,13 +147,19 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 	function genBatchText(batch) {
 		switch (batch.batchType) {
 			case batchTypes.firstLoad:
-				return resources.firstStartupBatchName;
+				return resources.batch_firstStartup;
 			
 			case batchTypes.deleteAll:
 				return resources.change_DeleteAllBoards;
 			
 			case batchTypes.clearBoard:
 				return replacer.replace(resources.change_ClearedBoard, batch.objName);
+				
+			case batchTypes.mixed:
+				return replacer.replace(resources.batch_mixedChanges_pedalboard, batch.objName);
+				
+			default:
+				throw new TypeError("@batch.batchType is invalid. Expected to be a batchType \"enum\" value. Was: " + batch.batchType);
 		}
 	}
 	function genChangeText(change) {

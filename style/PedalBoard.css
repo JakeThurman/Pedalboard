@@ -573,11 +573,13 @@ a, a:visited {
 	margin-top: 1px;
 }
 
-.history-popup .batch:not(.expanded) > .change {
+.history-popup .batch:not(.expanded) > .change,
+.history-popup .batch:not(.expanded) > .batch {
 	display: none;
 }
 
-.history-popup .batch > .change {
+.history-popup .batch > .change,
+.history-popup .batch > .batch {
 	margin-left: 10px;
 }
 
@@ -595,7 +597,7 @@ a, a:visited {
 .history-popup .batch > .description {
 	cursor: pointer;
 	font-weight: bold;
-	font-size: 1.1em;
+	font-size: 1em;
 }
 
 .history-popup .batch > .description:hover {

@@ -8,7 +8,7 @@ define([ "helperMethods", "async" ], function ( helpers, async ) {
 	 *   @initalChanges: [OPTIONAL] The Array<change/batch> to init logger.changes as
 	 */
 	return function (initalChanges) {
-		/* A param on methods so the caller can disable. (For unit tests) */
+		/* A param on methods so the caller can disable. */
 		this.CALLBACK_ASYNC = true;
 		
 		/* assert that if the caller gave us an initalChanges changes collection that it is an array */
@@ -52,9 +52,10 @@ define([ "helperMethods", "async" ], function ( helpers, async ) {
 			this.newValue = newValue;
 		}
 		
-		function Batch(batchType, objId, objName) {
+		function Batch(batchType, objType, objId, objName) {
 			/* Info */
 			this.batchType = batchType;
+			this.objType = objType;
 			this.objId = objId;
 			this.changes = [];
 			/* Resource information helper */
@@ -71,7 +72,7 @@ define([ "helperMethods", "async" ], function ( helpers, async ) {
 		   return batchStack.length !== 0;
 		}
 		
-		function getCurrentBatch() {
+		changeLogger.getCurrentBatch = function () {
 		   return batchIsRunning() 
 			   ? batchStack[batchStack.length - 1]
 			   : changeLogger;
@@ -103,25 +104,29 @@ define([ "helperMethods", "async" ], function ( helpers, async ) {
 		 * Logs a change and calls the change callbacks (Unless this is nested inside of .dontLog call)
 		 *
 		 * @batchType:    The type of the batchType (from batchTypes "enum")
+		 * @objType:      The type of the object (from objectTypes "enum")
 		 * @objId:        The id of the object changed
 		 * @objName:      The name of the object (used in change description generation)
 		 * @batchChanges: A function to run to get the changes to log as children of this batch
 		 */
-		changeLogger.batch = function (batchType, objId, objName, batchChanges) {
+		changeLogger.batch = function (batchType, objType, objId, objName, batchChanges) {
 			/* If the optional param pair @objId & @objName were not given, fix the variables */
 			if (typeof objId === "function" && helpers.isUndefined(batchChanges) && helpers.isUndefined(objName)) {
 				batchChanges = objId;
 				objId = void(0);
 			}
-			else if (helpers.isUndefined(batchChanges) || (helpers.isUndefined(objName) !== helpers.isUndefined(objId)))
-				throw new TypeError("@batchChanges is required. Also, if @objName is given, @objId is required (and vice versa)");
+			else if (helpers.isUndefined(batchChanges))
+				throw new TypeError("@batchChanges is required.");
 			
 			/* Make sure the changeType is a number */
 			if (batchType === "" || isNaN(new Number(batchType)))
 				throw new TypeError("@batchType should be a number from the changeInfo.js batchType \"enum\". Was: " + batchType);
+			/* Make sure the objectType is a number */
+			if (objType === "" || isNaN(new Number(objType)))
+				throw new TypeError("@objType should be a number from the changeInfo.js objectTypes \"enum\". Was: " + objType);
 			
 			/* Create a new batch */		
-			batchStack.push(new Batch(batchType, objId, objName));
+			batchStack.push(new Batch(batchType, objType, objId, objName));
 			
 			/* Run the code that will put changes inside this batch */
 			batchChanges();
@@ -129,12 +134,8 @@ define([ "helperMethods", "async" ], function ( helpers, async ) {
 			/* Remove the top batch since it's now done */
 			var batch = batchStack.pop();
 			
-			/* Trigger the callbacks */
-			callCallbacks(batch);
-			
-			/* Push this batch as a change in the top batch/top level. */
-			if (enabled) /* but only if we aren't inside a don't log */
-				getCurrentBatch().changes.push(batch);
+			/* Push this batch as a change in the now top batch/top level. */
+			changeLogger.push(batch);
 		};
 		
 		/*
@@ -152,7 +153,7 @@ define([ "helperMethods", "async" ], function ( helpers, async ) {
 			/* Make sure the changeType is a number */
 			if (changeType === "" || isNaN(new Number(changeType)))
 				throw new TypeError("@changeType should be a number from the changeInfo.js changeTypes \"enum\". Was: " + changeType);
-			/* Make sure the changeType is a number */
+			/* Make sure the objectType is a number */
 			if (objType === "" || isNaN(new Number(objType)))
 				throw new TypeError("@objType should be a number from the changeInfo.js objectTypes \"enum\". Was: " + objType);
 			
@@ -160,17 +161,46 @@ define([ "helperMethods", "async" ], function ( helpers, async ) {
 			var change = new Change(changeType, objType, objId, oldValue, newValue, objName, otherName);
 			
 			/* Push this change as a change in the top batch/top level. */
-			if (enabled) /* If we are inside of a DontLog function, don't save any changes */
-				getCurrentBatch().changes.push(change);
-	
-			/* Trigger the callbacks */
-			callCallbacks(change);
+			changeLogger.push(change);
+		};
+		
+		/*
+		 * Pushes a change into the change stack (includes running batch handling).
+		 *
+		 * PARAMS:
+		 *    @changes: A Change or Batch object to push into the current batch/top level change stack.
+		 */
+		changeLogger.push = function (changes) {
+			helpers.forEach(changes, function (change) {
+				/* If we are inside of a DontLog function, don't save any changes */
+				if (enabled) 
+					changeLogger.getCurrentBatch().changes.push(change);
+				
+				/* Trigger the callbacks */
+				callCallbacks(change);
+			});
+		};
+		
+		/*
+		 * Removes and returns the most recent change. Includes running batch handling.
+		 *
+		 * PARAMS:
+		 *    @remove: [DEFAULT: true] should this pop actually pop, or just get the top change?
+		 */
+		changeLogger.pop = function (remove) {
+			var changes = changeLogger.getCurrentBatch().changes;
+			
+			if (helpers.isUndefined(remove) || remove)
+				return changes.pop();
+			else 
+				return changes[changes.length - 1];
 		};
 		
 		/*
 		 * Don't log any changes made while this is logging.
 		 *
-		 * @func: Makes all containing logger.log calls no-opperation.
+		 * PARAMS:
+		 *     @func: Makes all containing logger.log calls no-operation.
 		 */
 		changeLogger.dontLog = function (func) {
 			if (typeof func !== "function") throw new TypeError("dontLog takes a function");
