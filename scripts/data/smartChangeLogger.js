@@ -32,7 +32,7 @@ define([ "ChangeLogger", "batchTypes", "objectTypes" ], function ( ChangeLogger,
 		 * @objName:    The name of the object (used in change description generation)
 		 * @otherName:  Some secondary name (used in change description generation)
 		 */
-		logger.log = function () {			
+		logger.log = function () {
 			var args = arguments;
 			function base() {
 				baseLog.apply(null, args);

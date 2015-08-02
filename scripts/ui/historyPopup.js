@@ -16,6 +16,7 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 	 * @returns: The _Popup object for this popup: { id: ..., el: $(...) };
 	 */
 	methods.create = function(logger) {
+		
 		if (!(logger instanceof ChangeLogger))
 			throw new TypeError("@logger is required. Please pass in a valid ChangeLogger object to display changes from");
 	
@@ -26,6 +27,11 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 		
 		/* store all of the moment update intervals here so that we can kill them on close */
 		var momentUpdateIntervals = [];
+		
+		/* Stores the last rendered change */
+		var lastChangeRendered;
+		var lastRender;
+		var lastRenderedIsBatch = false;
 		
 		function renderChange(change) {
 			var changeDiv = $("<div>");
@@ -60,6 +66,8 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 				
 				changeDiv.prepend(expander)
 					.addClass("batch");
+				
+				lastRenderedIsBatch = true;
 			}
 			else {
 				/* Generate the resource for this change based */
@@ -75,8 +83,12 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 					if (_Popup.isOpen(thisPopup.id))
 						timeStamp.text(new Moment(change.timeStamp).fromNow());
 				}, 60000)); /*60,000ms = 1min*/
+				
+				lastChangeRendered = change;
+				lastRenderedIsBatch = false;
 			}
 			
+			lastRender = changeDiv;
 			return changeDiv;
 		}
 		
@@ -85,17 +97,22 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 			if (change.objType === objectTypes.history)
 				return;
 		
-			function append(content, change) {
-				content.append(renderChange(change, true)); 
-			}
+			if (lastRenderedIsBatch)
+				
+		
+			if (lastChangeRendered.objId == change.objId)
 			
-			if (methods.RENDER_ASYNC)
-				async.run(append, content, change);
-			else 
-				append(content, change);
+			content.append(renderChange(change)); 
 		}
 		
-		helpers.forEach(logger.changes, appendChange);
+		function renderAll(changes) {
+			helpers.forEach(changes, appendChange);
+		};
+		
+		if (methods.RENDER_ASYNC)
+			async.run(renderAll, logger.changes);
+		else 
+			renderAll(logger.changes);
 		
 		function init(popup) {
 			var oldRect = popup.el.get(0).getBoundingClientRect();

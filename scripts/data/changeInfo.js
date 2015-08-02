@@ -16,5 +16,4 @@ define("batchTypes", {
 	firstLoad    : 0,
 	clearBoard   : 1,
 	deleteAll    : 2,
-	mixed        : 3,
 });

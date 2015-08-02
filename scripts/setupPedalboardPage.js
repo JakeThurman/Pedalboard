@@ -1,5 +1,5 @@
-require(["PedalBoardManager", "jquery", "mainPageMenuHandler", "pedalBoardStorage", "StateReverter", "UndoHandler", "SmartChangeLogger", "batchTypes", "objectTypes", "domReady!"], 
-function (PedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, StateReverter, UndoHandler, SmartChangeLogger, batchTypes, objectTypes) {
+require(["PedalBoardManager", "jquery", "mainPageMenuHandler", "pedalBoardStorage", "StateReverter", "UndoHandler", "ChangeLogger", "batchTypes", "objectTypes", "domReady!"], 
+function (PedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, StateReverter, UndoHandler, ChangeLogger, batchTypes, objectTypes) {
     "use strict";
 	
 	/* DOM variables */
@@ -10,7 +10,7 @@ function (PedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, StateRev
 	var lastSaveData = pedalBoardStorage.Load();
 	
 	/* Data variables */
-	var logger   = new SmartChangeLogger();
+	var logger   = new ChangeLogger();
 	var manager  = new PedalBoardManager(logger, mainContentContainer);
 	var reverter = new StateReverter(manager, logger);
 	
