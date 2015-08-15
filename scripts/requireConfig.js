@@ -39,11 +39,11 @@ requirejs.config({
 			"objectTypes":                   "data/changeInfo",
 			
 			/* Data Classes */
-			"PedalBoardManager":             "data/PedalBoardManager",
-			"StateReverter":                 "data/StateReverter",
-			"UndoHandler":                   "data/UndoHandler",
-			"ChangeLogger":                  "data/ChangeLogger",
-			"SmartChangeLogger":             "data/SmartChangeLogger",
+			"PedalBoardManager":             "data/pedalBoardManager",
+			"StateReverter":                 "data/stateReverter",
+			"UndoHandler":                   "data/undoHandler",
+			"ChangeLogger":                  "data/changeLogger",
+			"SmartChangeLogger":             "data/smartChangeLogger",
 			
 			/* Reporting */
 			"reportTypes":                   "reporting/reportTypes",
