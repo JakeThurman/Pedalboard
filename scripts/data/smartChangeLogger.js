@@ -65,7 +65,7 @@ define([ "ChangeLogger", "batchTypes", "objectTypes" ], function ( ChangeLogger,
 			
 			var logChanges = function () {
 				/* Log the matched previous change */
-				if (lastChange.isBatch && lastChange.batchType === batchTypes.mixed)
+				if (lastChange.isBatch && lastChange.batchType === batchTypes.smartBatch)
 					logger.push(lastChange.changes);
 				else 
 					logger.push(lastChange);
@@ -74,8 +74,8 @@ define([ "ChangeLogger", "batchTypes", "objectTypes" ], function ( ChangeLogger,
 				base();
 			};
 			
-			/* Log the changes in the new mixed change batch */
-			logger.batch(batchTypes.mixed, objType, objId, objName, logChanges);
+			/* Log the changes in the new smartBatch change batch */
+			logger.batch(batchTypes.smartBatch, objType, objId, objName, logChanges);
 		};
 		
 		return logger;

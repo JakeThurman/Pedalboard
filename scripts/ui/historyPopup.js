@@ -29,9 +29,13 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 		var momentUpdateIntervals = [];
 		
 		/* Stores the last rendered change */
-		var lastChangeRendered;
+		var lastRendered;
 		var lastRender;
-		var lastRenderedIsBatch = false;
+		var lastRenderedBatch;
+		var lastBatchRender;
+		var lastRenderedIsBatch = function () {
+			return content.children().last().hasClass("batch");
+		};
 		
 		function renderChange(change) {
 			var changeDiv = $("<div>");
@@ -67,7 +71,8 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 				changeDiv.prepend(expander)
 					.addClass("batch");
 				
-				lastRenderedIsBatch = true;
+				lastRenderedBatch = change;
+				lastBatchRender = changeDiv;
 			}
 			else {
 				/* Generate the resource for this change based */
@@ -83,26 +88,49 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 					if (_Popup.isOpen(thisPopup.id))
 						timeStamp.text(new Moment(change.timeStamp).fromNow());
 				}, 60000)); /*60,000ms = 1min*/
-				
-				lastChangeRendered = change;
-				lastRenderedIsBatch = false;
 			}
 			
+			lastRendered = change;
 			lastRender = changeDiv;
 			return changeDiv;
+		}
+		
+		function render(change) {
+			content.append(renderChange(change));
 		}
 		
 		function appendChange(change) {
 			/* Don't render changes about this popup! */
 			if (change.objType === objectTypes.history)
 				return;
-		
-			if (lastRenderedIsBatch)
-				
-		
-			if (lastChangeRendered.objId == change.objId)
 			
-			content.append(renderChange(change)); 
+			/* The first change rendered will have not set this yet, so just render this change */
+			if (!lastRendered)
+				return render(change);
+			
+			var isForSameObj = lastRendered.objId === change.objId;
+			
+			/* If the last change was a smart batch for the same object */
+			if (lastRenderedIsBatch() && lastRenderedBatch.batchType == batchTypes.smartBatch && isForSameObj) {
+				
+				lastBatchRender.append(renderChange(change));
+			
+			/* If the last change rendered was for the same object */
+			} else if (isForSameObj) {
+				
+				lastRender.remove();
+				render({
+					isBatch: true,
+					batchType: batchTypes.smartBatch,
+					objId: change.objId,
+					objName: change.objName,
+					changes: [lastRendered, change],
+				});
+			
+			/* Otherwise, just render the change normally */
+			} else {
+				render(change);
+			}
 		}
 		
 		function renderAll(changes) {
@@ -172,7 +200,7 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 			case batchTypes.clearBoard:
 				return replacer.replace(resources.change_ClearedBoard, batch.objName);
 				
-			case batchTypes.mixed:
+			case batchTypes.smartBatch:
 				return replacer.replace(resources.batch_mixedChanges_pedalboard, batch.objName);
 				
 			default:
