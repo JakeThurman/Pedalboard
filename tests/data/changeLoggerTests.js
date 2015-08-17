@@ -67,7 +67,7 @@ define([ "ChangeLogger", "changeTypes", "objectTypes" ], function ( ChangeLogger
 		
 		describe("batch", function () {
 			it("should log changes all into one batch", function () {
-				logger.batch(0, function () {
+				logger.batch(0, 0, function () {
 					log("a change was made");
 					log("another change was made");					
 				});
@@ -76,7 +76,7 @@ define([ "ChangeLogger", "changeTypes", "objectTypes" ], function ( ChangeLogger
 			});
 			
 			it("should be able to handle batches and changes at the same level", function () {
-				logger.batch(0, function () {
+				logger.batch(0, 0, function () {
 					log("a change was made");
 					log("another change was made");					
 				});
@@ -87,8 +87,8 @@ define([ "ChangeLogger", "changeTypes", "objectTypes" ], function ( ChangeLogger
 			});
 			
 			it("should log changes into sub batches", function () {
-				logger.batch(0, function () {
-					logger.batch(0, function () {
+				logger.batch(0, 0, function () {
+					logger.batch(0, 0, function () {
 						log("a change was made");
 						log("another change was made");					
 					});
@@ -103,7 +103,7 @@ define([ "ChangeLogger", "changeTypes", "objectTypes" ], function ( ChangeLogger
 			it("should not throw an exception if no object name/id are provided", function () {
 				var hit = false;
 				var notThrower = function () {
-					logger.batch(0, function () {
+					logger.batch(0, 0, function () {
 						log("something");
 						hit = true;
 					});
@@ -115,7 +115,7 @@ define([ "ChangeLogger", "changeTypes", "objectTypes" ], function ( ChangeLogger
 			it("should throw an exception if only object name is provided", function () {
 				var hit = false;
 				var thrower = function () {
-					logger.batch(0, "Test", function () {
+					logger.batch(0, 0, "Test", function () {
 						log("something");
 						hit = true;
 					});
@@ -127,7 +127,7 @@ define([ "ChangeLogger", "changeTypes", "objectTypes" ], function ( ChangeLogger
 			it("should throw an exception if only object id is provided", function () {
 				var hit = false;
 				var thrower = function () {
-					logger.batch(0, 0, function () {
+					logger.batch(0, 0, 0, function () {
 						log("something");
 						hit = true;
 					});
@@ -139,7 +139,7 @@ define([ "ChangeLogger", "changeTypes", "objectTypes" ], function ( ChangeLogger
 			it("should not throw an exception if everything is provided", function () {
 				var hit = false;
 				var notThrower = function () {
-					logger.batch(0, "name", "id", function () {
+					logger.batch(0, 0, "name", "id", function () {
 						log("something");
 						hit = true;
 					});
@@ -152,7 +152,7 @@ define([ "ChangeLogger", "changeTypes", "objectTypes" ], function ( ChangeLogger
 		describe("dontLog", function () {
 		    it("should ignore all changes logged inside of a dontLog function", function () {
 				logger.dontLog(function () {
-					logger.batch(0, function () {
+					logger.batch(0, 0, function () {
 						log("a change was made");
 						log("another change was made");					
 					});
@@ -227,7 +227,7 @@ define([ "ChangeLogger", "changeTypes", "objectTypes" ], function ( ChangeLogger
 					calls++;
 				});
 				
-				logger.batch(-1, function () {
+				logger.batch(-1, 0, function () {
 					log();
 				});
 				
@@ -240,7 +240,7 @@ define([ "ChangeLogger", "changeTypes", "objectTypes" ], function ( ChangeLogger
 					calls++;
 				});
 				
-				logger.batch(-1, function () {});
+				logger.batch(-1, 0, function () {});
 				
 				expect(calls).toEqual(1);
 			});
@@ -252,7 +252,7 @@ define([ "ChangeLogger", "changeTypes", "objectTypes" ], function ( ChangeLogger
 				});
 				
 				logger.dontLog(function () {
-					logger.batch(-1, function () {
+					logger.batch(-1, 0, function () {
 						log();
 					});
 				});
@@ -266,7 +266,7 @@ define([ "ChangeLogger", "changeTypes", "objectTypes" ], function ( ChangeLogger
 					calls++;
 				});
 				
-				logger.batch(-1, function () {
+				logger.batch(-1, 0, function () {
 					log();
 				});
 				
@@ -280,7 +280,7 @@ define([ "ChangeLogger", "changeTypes", "objectTypes" ], function ( ChangeLogger
 				});
 				
 				logger.dontLog(function () {
-					logger.batch(-1, function () {
+					logger.batch(-1, 0, function () {
 						log();
 					});
 				});
@@ -294,7 +294,7 @@ define([ "ChangeLogger", "changeTypes", "objectTypes" ], function ( ChangeLogger
 					calls++;
 				});
 				
-				logger.batch(-1, function () {
+				logger.batch(-1, 0, function () {
 					log();
 				});
 				

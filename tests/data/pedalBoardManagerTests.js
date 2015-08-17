@@ -13,7 +13,7 @@ define([ "PedalBoardManager", "jquery", "helperMethods" ], function (PedalBoardM
 		};				var dummyPedal2 = {			name: "Kindgom",			id: 2,			price: 16900,			identifier: 2,			type: 6,		};
 		
 		beforeEach(function () {			$fakeEl = $("<div>");
-			manager = new PedalBoardManager({ 				log: function () {},				changes: [],				batch: function (first, second, thrid, func) { 					/* Just call whichever is the function */					typeof second === "function"						? second() 						: func();				},				addCallback: function () {},			}, $fakeEl);
+			manager = new PedalBoardManager({ 				log: function () {},				changes: [],				batch: function (one, two, threeOrFunc, four, func) { 					/* Just call whichever is the function */					typeof threeOrFunc === "function"						? threeOrFunc()						: func();				},				addCallback: function () {},			}, $fakeEl);
 		});
 		
 		

@@ -19,19 +19,19 @@ define([ "historyPopup", "ChangeLogger", "jquery", "_Popup" ], function ( histor
 			log("2");
 			log("3");
 			
-			logger.batch(0, function () {
+			logger.batch(0, 0, 0, "a", function () {
 				log("sub 1");
 				log("sub 2");
 				log("sub 3");
 				
-				logger.batch(0, function () {
+				logger.batch(0, 0, 0, "a", function () {
 					log("double sub 1");
 					log("double sub 2");
 					log("double sub 3");
 				});
 			});
 			
-			logger.batch(0, function () {
+			logger.batch(0, 0, 0, "a", function () {
 				log("sub 1");
 				log("sub 2");
 				log("sub 3");
@@ -68,7 +68,10 @@ define([ "historyPopup", "ChangeLogger", "jquery", "_Popup" ], function ( histor
 			it("should be able to collapse/expanded (show/hidden)", function () {
 				var popup = historyPopup.create(logger);
 				
-				var batch = $(popup.el.find(".batch").get(0));
+				/* Expand the smart batch */
+				popup.el.find(".batch").click();
+				
+				var batch = popup.el.find(".batch > .batch").first();
 				var batchExpand = batch.children("i");
 				
 				var batchChanges = function () { return batch.find(".change"); };
@@ -133,7 +136,7 @@ define([ "historyPopup", "ChangeLogger", "jquery", "_Popup" ], function ( histor
 				};
 				
 				for (var b = 0; b < batches; b++) {
-					logger.batch(0, makeChange);
+					logger.batch(0, 0, makeChange);
 				}
 				
 				return logger;
@@ -156,9 +159,8 @@ define([ "historyPopup", "ChangeLogger", "jquery", "_Popup" ], function ( histor
 		describe("new changes logged while the popup is open should be rendered.", function () {
 			it("should add a passed in change to the page", function () {
 				var hPopup = historyPopup.create(logger);
-				var desc = "A very long string that is also very specificly something that would not have been rendered previously." + new Date();
 				
-				var length = function(str) {
+				var length = function() {
 					return hPopup.el.get(0).innerHTML.length;
 				};
 				
@@ -175,7 +177,7 @@ define([ "historyPopup", "ChangeLogger", "jquery", "_Popup" ], function ( histor
 				
 				/* Clean up! */
 				_Popup.close(hPopup.id);
-			});		
+			});
 			
 			it("should not display changes made in a non-complete batch", function () {
 				var hPopup = historyPopup.create(logger);
@@ -191,7 +193,7 @@ define([ "historyPopup", "ChangeLogger", "jquery", "_Popup" ], function ( histor
 				var childrenBefore = getTopLevelChangesCount();
 				
 				/* Add it */
-				logger.batch(0, function () {
+				logger.batch(1, 1, 1, "", function () {
 					logger.log(4, 1, 1);
 					logger.log(4, 1, 1);
 					logger.log(4, 1, 1);
@@ -202,7 +204,132 @@ define([ "historyPopup", "ChangeLogger", "jquery", "_Popup" ], function ( histor
 				
 				/* Clean up! */
 				_Popup.close(hPopup.id);
-			});						
+			});
+		});
+		
+		describe("The smart batch engine", function () {
+			it("should group a new change (after open) with the same objId as the last logged smart batch inside of it", function () {
+				var logger = new ChangeLogger();
+				logger.log(5, 2, 2);
+				
+				var hPopup = historyPopup.create(logger);
+
+				var getChildren = function () {
+					return hPopup.el.find(".history-popup").children();
+				};
+				
+				var before = getChildren().last();
+				var countBefore = getChildren().length;
+				
+				logger.log(5, 2 ,2) 
+				
+				var after = getChildren().last();
+				var countAfter = getChildren().length;
+				
+				/* Expect that before there was a change and after there was a batch */
+				expect(before.hasClass("change")).toBe(true);
+				expect(before.hasClass("batch")).toBe(false);
+				expect(after.hasClass("change")).toBe(false);
+				expect(after.hasClass("batch")).toBe(true);
+				
+				/* Expect that the old was removed */
+				expect(countAfter).toBe(1);
+				expect(countBefore).toBe(1);
+				
+				/* Expand the batch */
+				after.click();
+				
+				var batchChildrenCount = after.children().length;
+				
+				/* Expect the batch to contain both changes */
+				expect(batchChildrenCount).toBe(2);
+				
+				/* Expect both to be changes */
+				var changes = after.children();
+				
+				expect(changes.first().hasClass("change")).toBe(true);
+				expect(changes.first().hasClass("batch")).toBe(false);
+				expect(changes.last().hasClass("change")).toBe(true);
+				expect(changes.last().hasClass("batch")).toBe(false);
+				
+				/* Clean up! */
+				_Popup.close(hPopup.id);
+			});
+			
+			it("should not change the expand/colapse state when adding a new change to a smart batch", function () {
+				var logger = new ChangeLogger();
+				logger.log(5, 2, 2);
+				logger.log(5, 2, 2);
+				logger.log(5, 2, 2);
+				
+				var hPopup = historyPopup.create(logger);
+
+				var getChildren = function () {
+					return hPopup.el.find(".history-popup").children();
+				};
+				
+				var batch = getChildren().last();
+				
+				expect(batch.hasClass("expanded")).toBe(false);
+				batch.click();
+				expect(batch.hasClass("expanded")).toBe(true);
+				
+				logger.log(5, 2, 2);
+				
+				expect(batch.hasClass("expanded")).toBe(true);
+				batch.click();
+				expect(batch.hasClass("expanded")).toBe(false);
+				
+				logger.log(5, 2, 2);
+				
+				expect(batch.hasClass("expanded")).toBe(false);
+				
+				/* Clean up! */
+				_Popup.close(hPopup.id);
+			});
+			
+			it("should group changes logged made to the same objId together.", function () {	
+				var logger = new ChangeLogger();
+				logger.log(5, 2, 2);
+				logger.log(5, 2, 2);
+				logger.log(5, 2, 2);
+				
+				var hPopup = historyPopup.create(logger);
+
+				var getChildren = function () {
+					return hPopup.el.find(".history-popup").children();
+				};
+				
+				/* Make suret that they were created in the same batch */
+				expect(getChildren().length).toBe(1);
+				expect(getChildren().last().hasClass("change")).toBe(false);
+				expect(getChildren().last().hasClass("batch")).toBe(true);
+				
+				/* Expand the batch */
+				var batch = getChildren().last().click();
+				
+				expect(batch.children().length).toBe(3);
+				expect(batch.children().first().hasClass("change")).toBe(true);
+				expect(batch.children().first().hasClass("batch")).toBe(false);
+				expect($(batch.children()[1]).hasClass("change")).toBe(true);
+				expect($(batch.children()[1]).hasClass("batch")).toBe(false);
+				expect(batch.children().last().hasClass("change")).toBe(true);
+				expect(batch.children().last().hasClass("batch")).toBe(false);
+				
+				/* Clean up! */
+				_Popup.close(hPopup.id);
+			});
+						
+			/*
+			it("should not group for different objIds", function () {
+			});
+			
+			it("should not group for different objNames", function () {
+			});
+			
+			it("should group for different objTypes", function () {
+			});
+			*/
 		});
 	});
 });

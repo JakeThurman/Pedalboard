@@ -160,7 +160,14 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 				});
 		}
 		
+		/* Display all new top level changes */
+		var killCallback = logger.addCallback(function (change) {
+			appendChange(change);
+		});
+		
 		var close = function () {
+			killCallback();
+			
 			async.run(function (momentUpdateIntervals) {
 				helpers.forEach(momentUpdateIntervals, function (interval) {
 					clearInterval(interval);
@@ -176,13 +183,7 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 			init: init,
 			close: close,
 		});
-		
-		/* Display all new top level changes */
-		logger.addCallback(function (change) {
-			if (_Popup.isOpen(thisPopup.id))
-				appendChange(change);
-		});
-		
+			
 		/* Log that this was opened */
 		logger.log(changeTypes.add, objectTypes.history, thisPopup.id);
 		
