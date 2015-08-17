@@ -43,7 +43,6 @@ requirejs.config({
 			"StateReverter":                 "data/stateReverter",
 			"UndoHandler":                   "data/undoHandler",
 			"ChangeLogger":                  "data/changeLogger",
-			"SmartChangeLogger":             "data/smartChangeLogger",
 			
 			/* Reporting */
 			"reportTypes":                   "reporting/reportTypes",
