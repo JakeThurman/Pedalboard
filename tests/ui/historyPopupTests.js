@@ -68,13 +68,10 @@ define([ "historyPopup", "ChangeLogger", "jquery", "_Popup" ], function ( histor
 			it("should be able to collapse/expanded (show/hidden)", function () {
 				var popup = historyPopup.create(logger);
 				
-				/* Expand the smart batch */
-				popup.el.find(".batch").click();
+				var batch = popup.el.find(".batch").first();
+				var batchExpand = batch.children(":first");
 				
-				var batch = popup.el.find(".batch > .batch").first();
-				var batchExpand = batch.children("i");
-				
-				var batchChanges = function () { return batch.find(".change"); };
+				var batchChanges = function () { return batch.children(".change"); };
 				var visibleBatchChanges = function () { return batchChanges().filter(":visible"); };
 
 				/* batch changes should be hidden by default */
@@ -221,7 +218,7 @@ define([ "historyPopup", "ChangeLogger", "jquery", "_Popup" ], function ( histor
 				var before = getChildren().last();
 				var countBefore = getChildren().length;
 				
-				logger.log(5, 2 ,2) 
+				logger.log(5, 2 ,2);
 				
 				var after = getChildren().last();
 				var countAfter = getChildren().length;

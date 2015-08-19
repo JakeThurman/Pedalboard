@@ -37,7 +37,7 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 			return content.children().last().hasClass("batch");
 		};
 		
-		function renderChange(change) {
+		function renderChange(change, isSmartBatchChange) {
 			var changeDiv = $("<div>");
 			
 			var description = $("<div>", { "class": "description" })
@@ -45,7 +45,7 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 			
 			if (change.isBatch) {
 				/* The text is the provided description */
-				description.text(genBatchText(change));
+				description.text(genBatchText(change, isSmartBatchChange));
 				
 				/* So we can lazily render batch changes we need, but not multiple times */
 				var renderedSubChanges = false;
@@ -61,7 +61,7 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 						/* Lazily render sub changes */
 						if (!renderedSubChanges) {
 							helpers.forEach(change.changes, function (subChange) {
-								changeDiv.append(renderChange(subChange));
+								changeDiv.append(renderChange(subChange, /*isSmartBatchChange: */ isSmartBatchChange || change.batchType === batchTypes.smartBatch));
 							});
 							
 							renderedSubChanges = true;
@@ -76,7 +76,7 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 			}
 			else {
 				/* Generate the resource for this change based */
-				description.text(genChangeText(change));
+				description.text(genChangeText(change, isSmartBatchChange));
 			
 				changeDiv.addClass("change");
 				
@@ -108,7 +108,8 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 			if (!lastRendered)
 				return render(change);
 			
-			var isForSameObj = lastRendered.objId === change.objId;
+			var isForSameObj = lastRendered.objId === change.objId 
+				&& lastRendered.objName === change.objName;
 			
 			/* If the last change was a smart batch for the same object */
 			if (lastRenderedIsBatch() && lastRenderedBatch.batchType == batchTypes.smartBatch && isForSameObj) {
@@ -190,16 +191,18 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 		return thisPopup;
 	};
 	
-	function genBatchText(batch) {
+	function genBatchText(batch, isSmartBatchChange) {
 		switch (batch.batchType) {
 			case batchTypes.firstLoad:
 				return resources.batch_firstStartup;
 			
 			case batchTypes.deleteAll:
-				return resources.change_DeleteAllBoards;
+				return resources.batch_DeleteAllBoards;
 			
 			case batchTypes.clearBoard:
-				return replacer.replace(resources.change_ClearedBoard, batch.objName);
+				return isSmartBatchChange
+					? resources.batch_NoBoardName_ClearedBoard
+					: replacer.replace(resources.batch_ClearedBoard, batch.objName);
 				
 			case batchTypes.smartBatch:
 				return replacer.replace(resources.batch_mixedChanges_pedalboard, batch.objName);
@@ -208,24 +211,33 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 				throw new TypeError("@batch.batchType is invalid. Expected to be a batchType \"enum\" value. Was: " + batch.batchType);
 		}
 	}
-	function genChangeText(change) {
+	
+	function genChangeText(change, isSmartBatchChange) {		
 		switch (change.objType) {
 			case objectTypes.pedalboard:
 				switch (change.changeType) {
 					case changeTypes.add: 
-						return replacer.replace(resources.change_AddBoard, change.objName);
+						return isSmartBatchChange 
+							? resources.change_NoBoardName_AddBoard 
+							: replacer.replace(resources.change_AddBoard, change.objName);
 					
 					case changeTypes.rename:
 						return replacer.replace(resources.change_RenamedBoard, [ change.otherName, change.objName ]);
 						
 					case changeTypes.remove:
-						return replacer.replace(resources.change_DeleteBoard, change.objName);
+						return isSmartBatchChange
+							? resources.change_NoBoardName_DeleteBoard
+							: replacer.replace(resources.change_DeleteBoard, change.objName);
 						
 					case changeTypes.move:
-						return replacer.replace(resources.change_MoveBoard, change.objName);
+						return isSmartBatchChange
+							? resources.change_NoBoardName_MoveBoard
+							: replacer.replace(resources.change_MoveBoard, change.objName);
 						
 					case changeTypes.resize:
-						return replacer.replace(resources.change_ResizeBoard, change.objName);
+						return isSmartBatchChange
+							? resources.change_NoBoardName_ResizeBoard
+							: replacer.replace(resources.change_ResizeBoard, change.objName);
 					
 					default:
 						throw new TypeError("@change.changeType is invalid, was: " + change.changeType);
@@ -235,19 +247,34 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 			case objectTypes.pedal:
 				switch (change.changeType) {
 					case changeTypes.add: 
-						return replacer.replace(resources.change_AddPedal, [ change.otherName, change.objName ]);
+						return isSmartBatchChange
+							? replacer.replace(resources.change_NoBoardName_AddPedal, change.otherName)
+							: replacer.replace(resources.change_AddPedal, [ change.otherName, change.objName ]);
 						
 					case changeTypes.remove:
-						return replacer.replace(resources.change_RemovedPedal, [ change.otherName, change.objName ]);
+						return isSmartBatchChange
+							? replacer.replace(resources.change_NoBoardName_RemovedPedal, change.otherName)
+							: replacer.replace(resources.change_RemovedPedal, [ change.otherName, change.objName ]);
 						
 					case changeTypes.move:
-						var resource = change.newValue === 0
-							? resources.change_MovePedalToTop /* To Top */
-							: change.oldValue > change.newValue
-								? resources.change_MovePedalUp /* Up */
-								: resources.change_MovePedalDown; /* Down */
-						return replacer.replace(resource, [ change.otherName, change.objName ]);
-					
+					{
+						if (isSmartBatchChange) {
+							var resource = change.newValue === 0
+								? resources.change_NoBoardName_MovePedalToTop /* To Top */
+								: change.oldValue > change.newValue
+									? resources.change_NoBoardName_MovePedalUp /* Up */
+									: resources.change_NoBoardName_MovePedalDown; /* Down */
+							return replacer.replace(resource, change.otherName);
+						}
+						else {
+							var resource = change.newValue === 0
+								? resources.change_MovePedalToTop /* To Top */
+								: change.oldValue > change.newValue
+									? resources.change_MovePedalUp /* Up */
+									: resources.change_MovePedalDown; /* Down */
+							return replacer.replace(resource, [ change.otherName, change.objName ]);
+						}
+					}
 					default:
 						throw new TypeError("@change.changeType is invalid, was: " + change.changeType);
 				}
