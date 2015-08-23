@@ -2,6 +2,9 @@ define([ "_Popup", "textResources", "jquery", "helperMethods", "moment", "change
 function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objectTypes, replacer, ChangeLogger, async ) {
 	"use strict";
 	
+	/* Map of change/batch id to rendered change */
+	var renderCache = {};
+		
 	var methods = {};
 	
 	/* This can be overriden for the sake of simple unit testing */
@@ -33,11 +36,12 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 		var lastRender;
 		var lastRenderedBatch;
 		var lastBatchRender;
-		var lastRenderedIsBatch = function () {
-			return content.children().last().hasClass("batch");
-		};
 		
 		function renderChange(change, isSmartBatchChange) {
+			/* If we already rendered it, use that. */
+			if (!change.isBatch && renderCache[change.id])
+				return renderCache[change.id];
+			
 			var changeDiv = $("<div>");
 			
 			var description = $("<div>", { "class": "description" })
@@ -90,8 +94,14 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 				}, 60000)); /*60,000ms = 1min*/
 			}
 			
+			/* Save what we just did for the sake of smart batching */
 			lastRendered = change;
 			lastRender = changeDiv;
+			
+			/* Cache it! */
+			if (!change.isBatch)
+				renderCache[change.id] = changeDiv;
+					
 			return changeDiv;
 		}
 		
@@ -108,18 +118,19 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 			if (!lastRendered)
 				return render(change);
 			
+			var lastIsBatch = content.children().last().hasClass("batch");
 			var isForSameObj = lastRendered.objId === change.objId 
 				&& lastRendered.objName === change.objName;
 			
 			/* If the last change was a smart batch for the same object */
-			if (lastRenderedIsBatch() && lastRenderedBatch.batchType == batchTypes.smartBatch && isForSameObj) {
+			if (lastIsBatch && lastRenderedBatch.batchType == batchTypes.smartBatch && isForSameObj) {
 				
 				lastBatchRender.append(renderChange(change));
 			
 			/* If the last change rendered was for the same object */
-			} else if (isForSameObj) {
+			} else if (isForSameObj && !lastIsBatch) {
 				
-				lastRender.remove();
+				lastRender.detach();
 				render({
 					isBatch: true,
 					batchType: batchTypes.smartBatch,
@@ -138,11 +149,7 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 			helpers.forEach(changes, appendChange);
 		};
 		
-		if (methods.RENDER_ASYNC)
-			async.run(renderAll, logger.changes);
-		else 
-			renderAll(logger.changes);
-		
+		var killCallback;
 		function init(popup) {
 			var oldRect = popup.el.get(0).getBoundingClientRect();
 			
@@ -159,12 +166,20 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 						oldRect = newRect;
 					},
 				});
+				
+			if (methods.RENDER_ASYNC)
+				async.run(renderAll, logger.changes);
+			else 
+				renderAll(logger.changes);
+			
+			/* Display all new top level changes */
+			killCallback = logger.addCallback(function (change) {
+				appendChange(change);
+			});
+			
+			/* Log that this was opened */
+			logger.log(changeTypes.add, objectTypes.history, popup.id);
 		}
-		
-		/* Display all new top level changes */
-		var killCallback = logger.addCallback(function (change) {
-			appendChange(change);
-		});
 		
 		var close = function () {
 			killCallback();
@@ -184,9 +199,6 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 			init: init,
 			close: close,
 		});
-			
-		/* Log that this was opened */
-		logger.log(changeTypes.add, objectTypes.history, thisPopup.id);
 		
 		return thisPopup;
 	};
