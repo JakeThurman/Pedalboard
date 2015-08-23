@@ -49,7 +49,7 @@ function (_Popup, $, resources, pedalboardPopupOptionsHandler, reporter, addPeda
 		popup.el.draggable({ 
 				handle: ".header",
 				stop: function () {
-					manager.Move(popup.id, popup.el.get(0).getBoundingClientRect());
+					manager.Move(popup.id, popup.el.get(0).getBoundingClientRect(), /* setCss: */ false);
 				}
 			})
 			.resizable({ 
@@ -59,7 +59,7 @@ function (_Popup, $, resources, pedalboardPopupOptionsHandler, reporter, addPeda
 				maxHeight: 900,
 				maxWidth: 900,
 				stop: function () {
-					manager.Resize(popup.id, popup.el.get(0).getBoundingClientRect());
+					manager.Resize(popup.id, popup.el.get(0).getBoundingClientRect(), /* setCss: */ false);
 				}
 			});
 		var justDeleted = false;

@@ -218,9 +218,10 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 		 *
 		 * @boardId:    The id of the pedalboard to record as moved
 		 * @clientRect: The javascript client rect object received from ([VANILLA JS DOM ELEMENT].getBoundingClientRect()) where the dom element is the pedalboard
+		 * @setCss:     [DEFAULT=true] Should this set the client rect to the css of the dom?
 		 */
-		manager.Move = function (boardId, clientRect) {
-			changeVisual(boardId, clientRect, changeTypes.move);
+		manager.Move = function (boardId, clientRect, setCss) {
+			changeVisual(boardId, clientRect, setCss, changeTypes.move);
 		};
 		
 		/*
@@ -228,13 +229,14 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 		 *
 		 * @boardId:    The id of the pedalboard to record as resized
 		 * @clientRect: The javascript client rect object recieved from ([VANILLA JS DOM ELEMENT].getBoundingClientRect()) where the dom element is the pedalboard
+		 * @setCss:     [DEFAULT=true] Should this set the client rect to the css of the dom?
 		 */
-		manager.Resize = function (boardId, clientRect) {
-			changeVisual(boardId, clientRect, changeTypes.resize);
+		manager.Resize = function (boardId, clientRect, setCss) {
+			changeVisual(boardId, clientRect, setCss, changeTypes.resize);
 		};
 		
-		/* Helper, facoring out .Move and .Resize shared code. */
-		function changeVisual(boardId, clientRect, changeType) {
+		/* Helper, factoring out .Move and .Resize shared code. */
+		function changeVisual(boardId, clientRect, setCss, changeType) {
 			assertBoardIdExists(boardId);
 			assertClientRectIsValid(clientRect);
 			
@@ -242,7 +244,9 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 			var oldValue = manager.GetBoard(boardId).clientRect;
 			
 			boards[boardId].clientRect = getClientRect(clientRect);
-			boards[boardId].dom.el.css(boards[boardId].clientRect); /* Force make this true */
+			
+			if (setCss !== false) /* We default to true, so just check against false */
+				boards[boardId].dom.el.css(boards[boardId].clientRect); /* Force make this true */
 			
 			logger.log(changeType, objectTypes.pedalboard, boardId, oldValue, boards[boardId].clientRect, boards[boardId].data.Name);
 		}
@@ -297,10 +301,6 @@ function (classes, pedalBoardPopup, pedalRenderer, resources, helpers, changeTyp
 		
 		/*
 		 * Remove a pedal with id of @pedal id from the board with id of @boardId.
-		 *
-		 *   NOTE: this function breaks convention and DOES NOT handle the dom. This
-		 *         is because choosing which instance of a pedal that is on the same board
-		 *         is not yet implemented.
 		 *
 		 * @index:   The index of the pedal to remove from the board
 		 * @boardId: The id of the pedalboard to remove the pedal from
