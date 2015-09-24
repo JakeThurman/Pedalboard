@@ -10,6 +10,7 @@ define("objectTypes", {
 	pedalboard   : 0,
 	pedal        : 1,
 	history      : 2,
+	tutorial     : 3,
 });
 
 define("batchTypes", {

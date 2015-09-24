@@ -28,6 +28,7 @@ requirejs.config({
 			"reportTypeMenu":                "ui/reportTypeMenu",
 			"compareToMenu":                 "ui/compareToMenu", 
 			"priceRenderer":                 "ui/priceRenderer",
+			"tutorial":                      "ui/tutorial",
 			
 			/* Data */
 			"pedalBoardClasses":             "data/pedalBoardClasses",

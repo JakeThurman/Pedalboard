@@ -5,8 +5,8 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 	
 	methods.SOTORAGE_NAME_PREFIX = "";
 	
-	var HISTORY_STORAGE_NAME = "pedalboardChangeHistory";
-	var UNDONE_STACK_STORAGE_NAME = "pedalboardUndoneChangeStack";
+	var HISTORY_STORAGE_NAME      = "pedalboardChangeHistory",
+	    UNDONE_STACK_STORAGE_NAME = "pedalboardUndoneChangeStack";
 	
 	function supportsHtml5Storage() {
         try { 
@@ -58,9 +58,6 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 		if (!helpers.isArray(history))
 			throw new TypeError("@history param to pedalBoardStorage.Save() must be an array of batches/changes.");
 	
-	    if (!supportsHtml5Storage())
-			return;
-		
 		setStoredData(HISTORY_STORAGE_NAME, history);
 		setStoredData(UNDONE_STACK_STORAGE_NAME, undoneStack);
 	};

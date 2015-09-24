@@ -1,13 +1,14 @@
-define(["textResources", "_OptionMenu", "historyPopup", "jquery"], function (resources, _OptionMenu, historyPopup, $) {
+define(["textResources", "_OptionMenu", "jquery"], function (resources, _OptionMenu, $) {
 	"use strict";
     var methods = {};
 		
 	/*
-	 * @manager: The pedalBoardManager.js object to manage pedal boards with
-	 * @logger:  The change logger instance used with the manager
-	 * @undoer:  An undoHandler instance
+	 * @manager:          The pedalBoardManager.js object to manage pedal boards with
+	 * @logger:           The change logger instance used with the manager
+	 * @undoer:           An undoHandler instance
+	 * @openHistoryPopup: Function that should open the historyPopup (or close it if it is open)
 	 */
-	methods.handle = function(manager, logger, undoer) {
+	methods.handle = function(manager, logger, undoer, openHistoryPopup) {
 		var addBoardButton = $("<div>")
 			.text(resources.addPedalBoardButtonText)
 			.click(function () {
@@ -50,9 +51,7 @@ define(["textResources", "_OptionMenu", "historyPopup", "jquery"], function (res
 			
 		var historyButton = $("<div>")
 			.text(resources.historyPopupTitle)
-			.click(function () {
-				historyPopup.create(logger);
-			});
+			.click(openHistoryPopup);
 		
 		var historySection = $("<div>", { "class": "section" })
 			.append(historyButton);

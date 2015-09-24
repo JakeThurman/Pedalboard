@@ -1,23 +1,32 @@
-require(["PedalBoardManager", "defaults", "jquery", "mainPageMenuHandler", "pedalBoardStorage", "StateReverter", "UndoHandler", "ChangeLogger", "batchTypes", "objectTypes", "domReady!"], 
-function (PedalBoardManager, defaults, $, mainPageMenuHandler, pedalBoardStorage, StateReverter, UndoHandler, ChangeLogger, batchTypes, objectTypes) {
+require(["PedalBoardManager", "historyPopup", "tutorial", "defaults", "jquery", "mainPageMenuHandler", "pedalBoardStorage", "StateReverter", "UndoHandler", "ChangeLogger", "batchTypes", "objectTypes", "domReady!"], 
+function (PedalBoardManager, historyPopup, tutorial, defaults, $, mainPageMenuHandler, pedalBoardStorage, StateReverter, UndoHandler, ChangeLogger, batchTypes, objectTypes) {
     "use strict";
 	
 	/* DOM variables */
    	var mainContentContainer = $("#content-container");
-   	var pageMenuButton = $("#page-main-menu");
+   	var pageMenuButton       = $("#page-main-menu");
+	var historyParentNode    = document.body;
+	var tutorialParentNode   = document.body;
 	
 	/* Reload from last save */
 	var lastSaveData = pedalBoardStorage.Load();
 	
+	function openHistory() {
+		historyPopup.create(logger, historyParentNode);
+	}
+	function openTutorial() {
+		tutorial.create(logger, tutorialParentNode);
+	}
+	
 	/* Data variables */
-	var logger   = new ChangeLogger();
-	var manager  = new PedalBoardManager(logger, mainContentContainer);
-	var reverter = new StateReverter(manager, logger);
+	var logger       = new ChangeLogger();
+	var manager      = new PedalBoardManager(logger, mainContentContainer);
+	var reverter     = new StateReverter(manager, logger, openTutorial, openHistory);
 	
 	/* Restore save data */	
 	/* Temporarily disable calling back async for the restore calls so we can avoid errors like the redo stack getting cleared */
 	logger.CALLBACK_ASYNC = false;
-	reverter.replay(lastSaveData.history);
+	reverter.replay(lastSaveData.history || defaults.changes); /* If there was no history load the default */
 	logger.CALLBACK_ASYNC = true;
 	
 	/* Setup the undo handler AFTER replay to avoid clearing the redo stack */
@@ -37,7 +46,7 @@ function (PedalBoardManager, defaults, $, mainPageMenuHandler, pedalBoardStorage
 	
 	/* Setup the main page menu click handler */
    	pageMenuButton.click(function () {
-   	    mainPageMenuHandler.handle(manager, logger, undoer);
+   	    mainPageMenuHandler.handle(manager, logger, undoer, openHistory);
     });
 	
 	/* Setup ctrl+z undo/ctrl+y redo handler*/

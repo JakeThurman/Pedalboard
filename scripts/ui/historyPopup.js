@@ -14,11 +14,12 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 	 * Creates a history popup
 	 *
 	 * PARAMS:
-	 *   @logger: The that these changes have to do with
+	 *   @logger:     The that these changes have to do with
+	 *   @parentNode: The node of the dom to append to the popup to
 	 *
 	 * @returns: The _Popup object for this popup: { id: ..., el: $(...) };
 	 */
-	methods.create = function(logger) {
+	methods.create = function(logger, parentNode) {
 		
 		if (!(logger instanceof ChangeLogger))
 			throw new TypeError("@logger is required. Please pass in a valid ChangeLogger object to display changes from");
@@ -110,8 +111,11 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 		}
 		
 		function appendChange(change) {
-			/* Don't render changes about this popup! */
-			if (change.objType === objectTypes.history)
+			/* 
+			 * Don't render changes about this popup!
+			 * Also don't render changes about the tutorial popup.
+			 */
+			if (change.objType === objectTypes.history || change.objType === objectTypes.tutorial)
 				return;
 			
 			/* The first change rendered will have not set this yet, so just render this change */
@@ -153,7 +157,7 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 		function init(popup) {
 			var oldRect = popup.el.get(0).getBoundingClientRect();
 			
-			popup.el.appendTo(document.body)
+			popup.el.appendTo(parentNode)
 				.addClass("history-popup-outer")
 				.draggable({ 
 					handle: ".header",
@@ -291,7 +295,7 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 						throw new TypeError("@change.changeType is invalid, was: " + change.changeType);
 				}
 				break;
-				
+					
 			default:
 				throw new TypeError("@change.objType is invalid, was: " + change.objType);
 		}

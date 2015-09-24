@@ -18,6 +18,7 @@ define({
 	pedalboardNoPedalsHelpText: "Add The First Pedal To This Board!",
 	undoLastChange: "Undo",
 	redoLastUndo: "Redo",
+	tutorialTitle: "Welcome to the pedalboard designer...",
 	
 	/* change log resources */
 	change_AddBoard: "Created pedalboard \"{0}\"",

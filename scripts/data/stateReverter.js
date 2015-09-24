@@ -4,10 +4,13 @@ define([ "helperMethods", "changeTypes", "objectTypes" ], function (helpers, cha
 	/*
 	 * A "class" for the state reveter. Handles replaying and reverting changes as needed.
 	 *
-	 * @manager:     The pedalBoardManager instance to replay onto
-	 * @logger:      The changeLogger instance used with @manager
+	 * @manager:        The pedalBoardManager instance to replay onto
+	 * @logger:         The changeLogger instance used with @manager
+	 * @popupManager:   PopupManager instance for managing popups
+	 * @startTutorial:  function that should start a tutorial
+	 * @openHistory:    function that should open the history popup
 	 */
-	return function (manager, logger) {
+	return function (manager, logger, startTutorial, openHistory) {
 		var methods = this;
 	
 		var replayOldToNewIdCache = {}; /* Used for replay. */
@@ -77,7 +80,31 @@ define([ "helperMethods", "changeTypes", "objectTypes" ], function (helpers, cha
 						break;
 						
 					case objectTypes.history:
-						console.warn("TODO: objectTypes.historyPopup replay");
+						switch (change.changeType) {
+							case changeTypes.add:
+							case changeTypes.remove:
+								openHistory();
+								break;
+								
+							case changeTypes.move:
+								console.warn("Restortig move of the history popup not implemented");
+								break;
+								
+							default:
+								throw new TypeError("@change.changeType is invalid, was: " + change.changeType);
+						}
+						break;
+						
+					case objectTypes.tutorial:
+						switch (change.changeType) {
+							case changeTypes.add:
+							case changeTypes.remove:
+								startTutorial();
+								break;
+								
+							default:
+								throw new TypeError("@change.changeType is invalid, was: " + change.changeType);
+						}
 						break;
 						
 					default:
@@ -155,8 +182,33 @@ define([ "helperMethods", "changeTypes", "objectTypes" ], function (helpers, cha
 						}
 						break;
 					
+					
 					case objectTypes.history:
-						console.warn("TODO: objectTypes.historyPopup revert");
+						switch (change.changeType) {
+							case changeTypes.add:
+							case changeTypes.remove:
+								openHistory();
+								break;
+								
+							case changeTypes.move:
+								console.warn("Reverting move of the history popup not implemented");
+								break;
+							
+							default:
+								throw new TypeError("@change.changeType is invalid, was: " + change.changeType);
+						}
+						break;
+						
+					case objectTypes.tutorial:
+						switch (change.changeType) {
+							case changeTypes.add:
+							case changeTypes.remove:
+								startTutorial();
+								break;
+								
+							default:
+								throw new TypeError("@change.changeType is invalid, was: " + change.changeType);
+						}
 						break;
 						
 					default:

@@ -1,4 +1,4 @@
-define([ "textResources" ], function ( resources ) {
+define([ "textResources", "changeTypes", "objectTypes" ], function ( resources, changeTypes, objectTypes ) {
 	return {
 		boards: [{
 			data: {
@@ -10,6 +10,13 @@ define([ "textResources" ], function ( resources ) {
 				top: "49px",
 				width: "509px"
 			},
+		}],
+		changes: [{
+			changeType: changeTypes.add,
+			objId: "tutorial",
+			objType: objectTypes.tutorial,
+			id: "c--1",
+			timeStamp: new Date(),
 		}],
 	}
 });
