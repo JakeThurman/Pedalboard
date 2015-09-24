@@ -12,7 +12,7 @@
     z-index: 91;
 	margin: 1px;
 	min-width: 290px;
-	height: auto !important; /* firefox bug-fix */
+	height: auto; /* firefox bug-fix */
 }
 
 .output-box > .header > .fa-bars {
@@ -613,6 +613,13 @@ a, a:visited {
 	display: inline-block;
 }
 
+.tutorial-popup-outer {
+	left: 10%;
+	width: 80%;
+	top: 10%;
+	height: 80%;	
+}
+
 .pedal-placeholder {
 	height: 25px;
 	opacity: 0;
@@ -766,7 +773,7 @@ a, a:visited {
 @media (max-width: 900px) and (min-width: 475px) {
 	.report-total {
 		font-size: 0.7em;
-	}
+	}
 }
 
 

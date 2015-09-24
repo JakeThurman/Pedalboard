@@ -46,7 +46,7 @@ function (PedalBoardManager, historyPopup, tutorial, defaults, $, mainPageMenuHa
 	
 	/* Setup the main page menu click handler */
    	pageMenuButton.click(function () {
-   	    mainPageMenuHandler.handle(manager, logger, undoer, openHistory);
+   	    mainPageMenuHandler.handle(manager, logger, undoer, openTutorial, openHistory);
     });
 	
 	/* Setup ctrl+z undo/ctrl+y redo handler*/

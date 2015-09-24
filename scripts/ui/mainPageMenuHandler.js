@@ -6,9 +6,10 @@ define(["textResources", "_OptionMenu", "jquery"], function (resources, _OptionM
 	 * @manager:          The pedalBoardManager.js object to manage pedal boards with
 	 * @logger:           The change logger instance used with the manager
 	 * @undoer:           An undoHandler instance
+	 * @openTutorial:     Function that should open the tutorial popup (or close it if it is open)
 	 * @openHistoryPopup: Function that should open the historyPopup (or close it if it is open)
 	 */
-	methods.handle = function(manager, logger, undoer, openHistoryPopup) {
+	methods.handle = function(manager, logger, undoer, openTutorial, openHistoryPopup) {
 		var addBoardButton = $("<div>")
 			.text(resources.addPedalBoardButtonText)
 			.click(function () {

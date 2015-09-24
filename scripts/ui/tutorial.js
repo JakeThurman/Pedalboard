@@ -18,7 +18,9 @@ define([ "jquery", "_Popup", "textResources", "changeTypes", "objectTypes" ], fu
 				
 		var init = function (popup) {
 			
-			popup.el.appendTo(parentNode)
+			popup.el
+				.addClass("tutorial-popup-outer")
+				.appendTo(parentNode);
 			
 			logger.log(changeTypes.add, objectTypes.tutorial, popup.id);
 			
@@ -26,11 +28,11 @@ define([ "jquery", "_Popup", "textResources", "changeTypes", "objectTypes" ], fu
 		
 		var close = function (popup) {
 			
-			logger.log(changeTypes.remove, objectTypes.tutorial, popup.id);
+			logger.log(changeTypes.remove, objectTypes.tutorial, thisPopup.id);
 			
 		};
 		
-		return _Popup.create(content, {
+		var thisPopup = _Popup.create(content, {
 			
 			title: resources.tutorialTitle,
 			init: init,
@@ -38,6 +40,8 @@ define([ "jquery", "_Popup", "textResources", "changeTypes", "objectTypes" ], fu
 			id: "tutorial",
 			
 		});
+		
+		return thisPopup;
 	};
 	
 	
