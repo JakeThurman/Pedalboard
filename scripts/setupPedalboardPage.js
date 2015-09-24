@@ -1,5 +1,5 @@
-require(["PedalBoardManager", "jquery", "mainPageMenuHandler", "pedalBoardStorage", "StateReverter", "UndoHandler", "ChangeLogger", "batchTypes", "objectTypes", "domReady!"], 
-function (PedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, StateReverter, UndoHandler, ChangeLogger, batchTypes, objectTypes) {
+require(["PedalBoardManager", "defaults", "jquery", "mainPageMenuHandler", "pedalBoardStorage", "StateReverter", "UndoHandler", "ChangeLogger", "batchTypes", "objectTypes", "domReady!"], 
+function (PedalBoardManager, defaults, $, mainPageMenuHandler, pedalBoardStorage, StateReverter, UndoHandler, ChangeLogger, batchTypes, objectTypes) {
     "use strict";
 	
 	/* DOM variables */
@@ -26,7 +26,7 @@ function (PedalBoardManager, $, mainPageMenuHandler, pedalBoardStorage, StateRev
 	/* This is the first load */
 	if (!lastSaveData.history) {
 		logger.batch(batchTypes.firstLoad, objectTypes.pedalboard, function () {
-			manager.Import(pedalBoardStorage.GetDefaultBoard());
+			manager.Import(defaults.boards);
 		});
 	}
 	

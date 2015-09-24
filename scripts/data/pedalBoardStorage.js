@@ -8,7 +8,7 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 	var HISTORY_STORAGE_NAME = "pedalboardChangeHistory";
 	var UNDONE_STACK_STORAGE_NAME = "pedalboardUndoneChangeStack";
 	
-	function supports_html5_storage() {
+	function supportsHtml5Storage() {
         try { 
 			return 'localStorage' in window && !helpers.isUndefined(window.localStorage); 
 		}
@@ -17,11 +17,35 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 		}
     }
 	
+	function setStoredData(propName, value) {
+		
+		if (supportsHtml5Storage())
+			localStorage[methods.SOTORAGE_NAME_PREFIX + propName] = JSON.stringify(value);
+		
+	}
+	
+	function getStoredData(propName) {
+		
+		propName = methods.SOTORAGE_NAME_PREFIX + propName;
+		
+		if (supportsHtml5Storage() && localStorage[propName])
+			return JSON.parse(localStorage[propName]);
+		
+	}
+	
+	function deleteStoredData(propName) {
+		
+		if (supportsHtml5Storage())
+			delete localStorage[methods.SOTORAGE_NAME_PREFIX + propName];
+		
+	}
+	
 	/* 
 	 * Clears the currently saved history from the browser
 	 */
 	methods.Clear = function() {
-	    delete localStorage[HISTORY_STORAGE_NAME];
+	    deleteStoredData(HISTORY_STORAGE_NAME)
+		deleteStoredData(UNDONE_STACK_STORAGE_NAME);
 	};
 	
 	/*
@@ -34,11 +58,11 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 		if (!helpers.isArray(history))
 			throw new TypeError("@history param to pedalBoardStorage.Save() must be an array of batches/changes.");
 	
-	    if (!supports_html5_storage())
+	    if (!supportsHtml5Storage())
 			return;
 		
-		localStorage[methods.SOTORAGE_NAME_PREFIX + HISTORY_STORAGE_NAME]      = JSON.stringify(history);
-		localStorage[methods.SOTORAGE_NAME_PREFIX + UNDONE_STACK_STORAGE_NAME] = JSON.stringify(undoneStack);
+		setStoredData(HISTORY_STORAGE_NAME, history);
+		setStoredData(UNDONE_STACK_STORAGE_NAME, undoneStack);
 	};
 	
 	/*
@@ -47,30 +71,17 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 	 *         history: [ ... ],
 	 *         undo:    [ ... ],
 	 *     }
+	 *  If there is none, an empty object is returned: {}
 	 */
 	methods.Load = function () {
-		if (supports_html5_storage() && localStorage[methods.SOTORAGE_NAME_PREFIX + HISTORY_STORAGE_NAME] && localStorage[methods.SOTORAGE_NAME_PREFIX + UNDONE_STACK_STORAGE_NAME]) {
+		if (supportsHtml5Storage()) {
 			return {
-				history: JSON.parse(localStorage[methods.SOTORAGE_NAME_PREFIX + HISTORY_STORAGE_NAME]),
-				undo:    JSON.parse(localStorage[methods.SOTORAGE_NAME_PREFIX + UNDONE_STACK_STORAGE_NAME]),
+				history:  getStoredData(HISTORY_STORAGE_NAME),
+				undo:     getStoredData(UNDONE_STACK_STORAGE_NAME),
 			};
 		} else {
 			return {};
 		}
-	};
-	
-	methods.GetDefaultBoard = function () {
-		return {
-			data: {
-				Name: resources.defaultPedalBoardName,
-				pedals: [],
-			},
-			clientRect: {
-				left: "10px",
-				top: "49px",
-				width: "509px"
-			},
-		};
 	};
 		
 	return methods;
