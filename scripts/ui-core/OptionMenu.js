@@ -2,7 +2,7 @@ define(["jquery"], function ($) {
 	"use strict";
     var methods = {};
 	
-	methods.disabledClass = "disabled no-hover keep-padding";
+	methods.disabledClass = "disabled no-hover keep-padding cursor-help";
 	
 	/*
 	 * Creates an option menu 

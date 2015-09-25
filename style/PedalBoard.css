@@ -460,8 +460,8 @@ a, a:visited {
     text-decoration: none;
 }
 
-.options-menu .no-hover {
-	cursor: default;
+.cursor-help {
+	cursor: help;
 }
 
 .options-menu .no-hover.keep-padding {
