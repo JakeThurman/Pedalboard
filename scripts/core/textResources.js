@@ -28,6 +28,7 @@ define({
 	thereAreNoBoardsToDelete: "There are no boards to delete.",
 	noUndoneChangesToRedo: "There are no recently undone changes to redo.",
 	noChangesToUndo: "There are no changes to undo.",
+	helpButtonText: "Help",
 	
 	/* change log resources */
 	change_AddBoard: "Created pedalboard \"{0}\"",

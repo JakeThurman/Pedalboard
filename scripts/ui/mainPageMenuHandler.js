@@ -52,6 +52,13 @@ define(["textResources", "_OptionMenu", "jquery"], function (resources, _OptionM
 		var addBoardSection = $("<div>", { "class": "section" })
 			.append(addBoardButton);
 				
+		var helpButton = $("<div>")
+			.text(resources.helpButtonText)
+			.click(openTutorial);
+		
+		var helpSection = $("<div>", { "class": "section" })
+			.append(helpButton);
+				
 		var deleteAllBoards = $("<div>")
 			.toggleClass(_OptionMenu.disabledClass, !isAnyBoards)
 			.text(resources.clearAllBoards)
@@ -98,6 +105,7 @@ define(["textResources", "_OptionMenu", "jquery"], function (resources, _OptionM
 
 		var menuOptions = addBoardSection
 			.add(historySection)
+			.add(helpSection)
 			.add(deleteAllSection);
 		
 		return _OptionMenu.create(menuOptions)
