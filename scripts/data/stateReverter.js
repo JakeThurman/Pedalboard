@@ -4,13 +4,14 @@ define([ "helperMethods", "_Popup", "tutorial", "changeTypes", "objectTypes" ], 
 	/*
 	 * A "class" for the state reveter. Handles replaying and reverting changes as needed.
 	 *
-	 * @manager:            The pedalBoardManager instance to replay onto
-	 * @logger:             The changeLogger instance used with @manager
-	 * @popupManager:       PopupManager instance for managing popups
-	 * @tutorialParentNode: DOM node to attach tutorial popups to
-	 * @openHistory:        Function that should open the history popup
+	 * @manager:      The pedalBoardManager instance to replay onto
+	 * @logger:       The changeLogger instance used with @manager
+	 * @popupManager: PopupManager instance for managing popups
+	 * @tutorialInfo: Object with properties: .parent  -> DOM node to attach tutorial popups to
+	 *                                        .content -> The pre-generated jquery object for the content of the tutorial
+	 * @openHistory:  Function that should open the history popup
 	 */
-	return function (manager, logger, tutorialParentNode, openHistory) {
+	return function (manager, logger, tutorialInfo, openHistory) {
 		var methods = this;
 	
 		var replayOldToNewIdCache = {}; /* Used for replay. */
@@ -98,7 +99,7 @@ define([ "helperMethods", "_Popup", "tutorial", "changeTypes", "objectTypes" ], 
 					case objectTypes.tutorial:
 						switch (change.changeType) {
 							case changeTypes.add:
-								tutorial.create(logger, tutorialParentNode);
+								tutorial.create(logger, tutorialInfo);
 								break;
 							
 							case changeTypes.remove:
@@ -211,7 +212,7 @@ define([ "helperMethods", "_Popup", "tutorial", "changeTypes", "objectTypes" ], 
 								break;
 								
 							case changeTypes.remove:
-								tutorial.create(logger, tutorialParentNode);
+								tutorial.create(logger, tutorialInfo);
 								break;
 								
 							default:

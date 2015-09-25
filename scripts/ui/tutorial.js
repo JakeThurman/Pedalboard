@@ -9,20 +9,19 @@ define([ "jquery", "_Popup", "textResources", "changeTypes", "objectTypes" ], fu
 	 * Starts a tutorial
 	 * 
 	 * PARAMS: 
-	 *   @logger:     The logger instance to use for logging changes.
-	 *   @parentNode: The DOM node to append the popup to.
+	 *   @logger: The logger instance to use for logging changes.
+	 *   @info:   Object containing properties: .parent  -> The DOM node to append the popup to.
+	 *                                          .content -> The pre-generated jquery object for the tutorial content.
 	 *
 	 * @returns: _Popup object for the popup.
 	 */
-	methods.create = function (logger, parentNode) {
-		
-		var content = $("<div>");
-				
+	methods.create = function (logger, info) {
+						
 		var init = function (popup) {
 			
 			popup.el
 				.addClass("tutorial-popup-outer above-screen-block")
-				.appendTo(parentNode);
+				.appendTo(info.parent);
 			
 			logger.log(changeTypes.add, objectTypes.tutorial, popup.id);
 			
@@ -34,7 +33,7 @@ define([ "jquery", "_Popup", "textResources", "changeTypes", "objectTypes" ], fu
 			
 		};
 		
-		var thisPopup = _Popup.create(content, {
+		var thisPopup = _Popup.create(info.content, {
 			
 			title: resources.tutorialTitle,
 			init: init,

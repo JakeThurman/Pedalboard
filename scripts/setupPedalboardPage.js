@@ -6,7 +6,12 @@ function (PedalBoardManager, historyPopup, tutorial, defaults, $, mainPageMenuHa
    	var mainContentContainer = $("#content-container");
    	var pageMenuButton       = $("#page-main-menu");
 	var historyParentNode    = document.body;
-	var tutorialParentNode   = document.body;
+	var tutorialInfo = {
+		parent:  document.body,
+		content: $("tutorial-content")
+			.remove()
+			.removeClass("display"),
+	};
 	
 	/* Reload from last save */
 	var lastSaveData = pedalBoardStorage.Load();
@@ -15,13 +20,13 @@ function (PedalBoardManager, historyPopup, tutorial, defaults, $, mainPageMenuHa
 		historyPopup.create(logger, historyParentNode);
 	}
 	function openTutorial() {
-		tutorial.create(logger, tutorialParentNode);
+		tutorial.create(logger, tutorialInfo);
 	}
 	
 	/* Data variables */
 	var logger       = new ChangeLogger();
 	var manager      = new PedalBoardManager(logger, mainContentContainer);
-	var reverter     = new StateReverter(manager, logger, tutorialParentNode, openHistory);
+	var reverter     = new StateReverter(manager, logger, tutorialInfo, openHistory);
 	
 	/* Restore save data */	
 	/* Temporarily disable calling back async for the restore calls so we can avoid errors like the redo stack getting cleared */

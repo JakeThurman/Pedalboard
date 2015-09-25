@@ -645,13 +645,12 @@ a, a:visited {
 }
 
 .tutorial-popup-outer > .header {
-	background-color: #7FC3F5;
-	background-image: -webkit-linear-gradient(top,#8EC0FF,#5B95FF);
-	background-image: -ms-linear-gradient(top,#8EC0FF,#5B95FF);
-	background-image: linear-gradient(to bottom,#8EC0FF,#5B95FF);
+	background-color: #8FBCFF;
+	background-image: -webkit-linear-gradient(top,#9CC4F7,#83AFFF);
+	background-image: -ms-linear-gradient(top,#9CC4F7,#83AFFF);
+	background-image: linear-gradient(to bottom,#9CC4F7,#83AFFF);
     border-bottom-color: #888;
 }
-
 
 .history-popup-outer > .header {
 	background-color: #848484;
