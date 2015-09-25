@@ -489,7 +489,7 @@ define(function () {
 				}]
 			},
 			{
-				name: "Electo-Harmonix",
+				name: "Electro-Harmonix",
 				identifier: 0,
 				id: 12,
 				pedals: [{
