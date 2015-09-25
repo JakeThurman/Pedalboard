@@ -190,12 +190,8 @@ define([ "helperMethods", "_Popup", "tutorial", "changeTypes", "objectTypes" ], 
 					case objectTypes.history:
 						switch (change.changeType) {
 							case changeTypes.add:
-								if (_Popup.isOpen(tutorial.id))
-									_Popup.close(tutorial.id);
-								break;
-								
 							case changeTypes.remove:
-								tutorial.create(logger, tutorialParentNode);
+								openHistory();
 								break;
 								
 							case changeTypes.move:
@@ -210,8 +206,12 @@ define([ "helperMethods", "_Popup", "tutorial", "changeTypes", "objectTypes" ], 
 					case objectTypes.tutorial:
 						switch (change.changeType) {
 							case changeTypes.add:
+								if (_Popup.isOpen(tutorial.id))
+									_Popup.close(tutorial.id);
+								break;
+								
 							case changeTypes.remove:
-								startTutorial();
+								tutorial.create(logger, tutorialParentNode);
 								break;
 								
 							default:
