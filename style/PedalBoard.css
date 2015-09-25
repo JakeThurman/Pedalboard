@@ -51,6 +51,9 @@
 .output-box > .header {
 	margin: 0;
 	background-color: #C6EAB5;
+    background-image: linear-gradient(to bottom,#C6EAB5,#AFD49D);
+	background-image: -webkit-linear-gradient(top,#C6EAB5,#AFD49D);
+	background-image: -ms-linear-gradient(top,#C6EAB5,#AFD49D);
 	border-bottom: 1px solid #A2A2A2;
 	line-height: 1em;
 	color: black;
@@ -120,6 +123,9 @@ header.fixed {
 	left: 0;
 	width: 100%;
 	background-color: #5D804D;
+    background-image: linear-gradient(to bottom,#5D804D,#507141);
+	background-image: -webkit-linear-gradient(top,#5D804D,#507141);
+	background-image: -ms-linear-gradient(top,#5D804D,#507141);
 	transition: height .2s ease;
 	-webkit-transition: height .2s ease;
 	-moz-transition: height .2s ease;
@@ -636,6 +642,22 @@ a, a:visited {
 	width: 80%;
 	top: 10%;
 	height: 80%;	
+}
+
+.tutorial-popup-outer > .header {
+	background-color: #7FC3F5;
+	background-image: -webkit-linear-gradient(top,#8EC0FF,#5B95FF);
+	background-image: -ms-linear-gradient(top,#8EC0FF,#5B95FF);
+	background-image: linear-gradient(to bottom,#8EC0FF,#5B95FF);
+    border-bottom-color: #888;
+}
+
+
+.history-popup-outer > .header {
+	background-color: #848484;
+	background-image: -webkit-linear-gradient(top,#E4E4E4,#CECECE);
+	background-image: -ms-linear-gradient(top,#E4E4E4,#CECECE);
+	background-image: linear-gradient(to bottom,#E4E4E4,#CECECE);
 }
 
 .pedal-placeholder {
