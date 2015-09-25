@@ -18,7 +18,7 @@ define({
 	pedalboardNoPedalsHelpText: "Add The First Pedal To This Board!",
 	undoLastChange: "Undo",
 	redoLastUndo: "Redo",
-	tutorialTitle: "Welcome to the pedalboard designer...",
+	tutorialTitle: "Welcome to the pedalboard designer.",
 	boardHasNoPedals: "The pedalboard \"{0}\" has no pedals to compare to.",
 	compareThisBoardHasNoPedals: "This board has no pedals to compare.",
 	compareNoOtherBoards: "There are no other pedalboards to compare to.",
