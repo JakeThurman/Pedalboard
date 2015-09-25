@@ -116,6 +116,7 @@
 .output-box > .header > h2 {
 	display: inline;
     margin-right: 15px;
+    font-family: 'Open Sans', sans-serif;
 }
 
 h2 {
@@ -142,6 +143,7 @@ header.fixed {
 	-webkit-transition: height .2s ease;
 	-moz-transition: height .2s ease;
 	-o-transition: height .2s ease;
+	font-family: 'Comfortaa', 'Open Sans', sans-serif;
 }
 
 @media (min-width: 700px) {
