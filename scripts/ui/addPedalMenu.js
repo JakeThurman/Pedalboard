@@ -3,8 +3,17 @@ define([ "pedalDataAccess", "textResources", "helperMethods", "jquery", "jquery-
 	
 	var methods = {};
 	
+	/*
+	 * Creats a menu that will let users add pedals to there pedalboard
+	 *
+	 * PARAMS:
+	 *   @link:             (jQuery)   The link to append this after and position to
+	 *   @addPedalCallback: (function) Calling this function should add the pedal
+	 *
+	 * @returns: The loaded menu
+	 */
 	methods.create = function (link, addPedalCallback) {
-		var errorDisplay = $("<div>", { "class": "error-display" });
+		var errorDisplay = $("<div>", { "class": "no-hover keep-padding" });
 			
 		function error(msg) {
 			errorDisplay

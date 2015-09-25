@@ -57,11 +57,13 @@ function (PedalBoardManager, historyPopup, tutorial, defaults, $, mainPageMenuHa
 			return;
 		switch (e.keyCode) {
 			case zKey:
-				undoer.undo();
+				if (undoer.canUndo()) 
+					undoer.undo();
 				return false;
 				
 			case yKey:
-				undoer.redo();
+				if (undoer.canRedo()) 
+					undoer.redo();
 				return false;
 		}
 	});

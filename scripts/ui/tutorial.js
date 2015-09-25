@@ -19,7 +19,7 @@ define([ "jquery", "_Popup", "textResources", "changeTypes", "objectTypes" ], fu
 		var init = function (popup) {
 			
 			popup.el
-				.addClass("tutorial-popup-outer")
+				.addClass("tutorial-popup-outer above-screen-block")
 				.appendTo(parentNode);
 			
 			logger.log(changeTypes.add, objectTypes.tutorial, popup.id);

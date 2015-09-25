@@ -10,6 +10,16 @@ define([ "_OptionMenu", "jquery", "textResources", "reportTypes" ], function (_O
 		});
 	}
 	
+	/*
+	 * Creats a menu with options for differnt report types
+	 *
+	 * PARAMS: 
+	 *   @link:        (jQuery)   The link to position the menu byte
+	 *   @isCompare:   (boolean)  Is this for a compare? Otherwise a report.
+	 *   @startAction: (function) Calling this and passing in the report type should start the report 
+	 *
+	 * @returns: The loaded menu
+	 */
 	methods.create = function (link, isCompare, startAction) {
 		var options = $("<div>", { "class": "help-text no-hover" })
 			.text(resources.reportInWhatWayHelpText);

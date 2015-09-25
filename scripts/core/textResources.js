@@ -19,6 +19,15 @@ define({
 	undoLastChange: "Undo",
 	redoLastUndo: "Redo",
 	tutorialTitle: "Welcome to the pedalboard designer...",
+	boardHasNoPedals: "The pedalboard \"{0}\" has no pedals to compare to.",
+	compareThisBoardHasNoPedals: "This board has no pedals to compare.",
+	compareNoOtherBoards: "There are no other pedalboards to compare to.",
+	compareNoOtherBoardsWithPedals: "There are no other pedalboards with pedals to compare to.",
+	multiplePedalsToReport: "There must be multiple pedals on this board to report on its data.",
+	clearThisBoardHasNoPedals: "This board has no pedals to clear",
+	thereAreNoBoardsToDelete: "There are no boards to delete.",
+	noUndoneChangesToRedo: "There are no recently undone changes to redo.",
+	noChangesToUndo: "There are no changes to undo.",
 	
 	/* change log resources */
 	change_AddBoard: "Created pedalboard \"{0}\"",

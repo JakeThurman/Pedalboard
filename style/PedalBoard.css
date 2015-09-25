@@ -451,18 +451,36 @@ body {
 	padding-bottom: 5px;
 }
 
+.options-menu .disabled {
+	color: #bbb;
+}
+
 a, a:visited {
     color: #4183c4;
     text-decoration: none;
 }
 
+.options-menu .no-hover {
+	cursor: default;
+}
+
+.options-menu .no-hover.keep-padding {
+    font-size: 13px;
+    padding: 5px 15px;
+}
+
 .options-menu > *:not(.no-hover):not(.section), 
 .options-menu > .section > *:not(.no-hover) {
+	cursor: pointer;
+}
+
+.options-menu > .section > *,
+.options-menu > *:not(.section):not(.no-hover) {
     display: block;
     font-size: 13px;
     padding: 5px 15px;
-	cursor: pointer;
 }
+
 
 .options-menu > .error-display {
 	font-size: 1.1em !important;
