@@ -4,6 +4,18 @@
     box-sizing: border-box;
 }
 
+.text-content {
+	font-family: 'Open Sans', Verdana, Helvetica, Arial, sans-serif;
+}
+
+.text-content > p:first-child {
+    margin-top: 0;
+}
+
+.bold {
+	font-weight: bold;
+}
+
 .output-box {
 	background-color: #f8f8f8;
 	display: inline-block;
@@ -640,8 +652,11 @@ a, a:visited {
 .tutorial-popup-outer {
 	left: 10%;
 	width: 80%;
-	top: 10%;
-	height: 80%;	
+	top: 15%;
+}
+
+#tutorial-content {
+	overflow-y: auto;
 }
 
 .tutorial-popup-outer > .header {

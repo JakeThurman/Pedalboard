@@ -8,9 +8,9 @@ function (PedalBoardManager, historyPopup, tutorial, defaults, $, mainPageMenuHa
 	var historyParentNode    = document.body;
 	var tutorialInfo = {
 		parent:  document.body,
-		content: $("tutorial-content")
+		content: $("#tutorial-content")
 			.remove()
-			.removeClass("display"),
+			.removeClass("display-none"),
 	};
 	
 	/* Reload from last save */
