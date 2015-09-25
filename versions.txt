@@ -13,6 +13,12 @@ https://jqueryui.com/
 6/13/2015
 v1.11.4
 
+jQuery ui Touch Punch
+http://touchpunch.furf.com/
+9/25/2015
+v0.2.3
+
+
 jasmine
 https://github.com/jasmine/jasmine/releases
 6/22/2015
