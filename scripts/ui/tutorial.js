@@ -3,6 +3,8 @@ define([ "jquery", "_Popup", "textResources", "changeTypes", "objectTypes" ], fu
 
 	var methods = {};
 	
+	methods.id = "tutorial";
+	
 	/*
 	 * Starts a tutorial
 	 * 
@@ -37,7 +39,7 @@ define([ "jquery", "_Popup", "textResources", "changeTypes", "objectTypes" ], fu
 			title: resources.tutorialTitle,
 			init: init,
 			close: close,
-			id: "tutorial",
+			id: methods.id,
 			
 		});
 		

@@ -21,7 +21,7 @@ function (PedalBoardManager, historyPopup, tutorial, defaults, $, mainPageMenuHa
 	/* Data variables */
 	var logger       = new ChangeLogger();
 	var manager      = new PedalBoardManager(logger, mainContentContainer);
-	var reverter     = new StateReverter(manager, logger, openTutorial, openHistory);
+	var reverter     = new StateReverter(manager, logger, tutorialParentNode, openHistory);
 	
 	/* Restore save data */	
 	/* Temporarily disable calling back async for the restore calls so we can avoid errors like the redo stack getting cleared */

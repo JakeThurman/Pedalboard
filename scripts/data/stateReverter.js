@@ -1,16 +1,16 @@
-define([ "helperMethods", "changeTypes", "objectTypes" ], function (helpers, changeTypes, objectTypes) {
+define([ "helperMethods", "_Popup", "tutorial", "changeTypes", "objectTypes" ], function (helpers, _Popup, tutorial, changeTypes, objectTypes) {
 	"use strict";
 	
 	/*
 	 * A "class" for the state reveter. Handles replaying and reverting changes as needed.
 	 *
-	 * @manager:        The pedalBoardManager instance to replay onto
-	 * @logger:         The changeLogger instance used with @manager
-	 * @popupManager:   PopupManager instance for managing popups
-	 * @startTutorial:  function that should start a tutorial
-	 * @openHistory:    function that should open the history popup
+	 * @manager:            The pedalBoardManager instance to replay onto
+	 * @logger:             The changeLogger instance used with @manager
+	 * @popupManager:       PopupManager instance for managing popups
+	 * @tutorialParentNode: DOM node to attach tutorial popups to
+	 * @openHistory:        Function that should open the history popup
 	 */
-	return function (manager, logger, startTutorial, openHistory) {
+	return function (manager, logger, tutorialParentNode, openHistory) {
 		var methods = this;
 	
 		var replayOldToNewIdCache = {}; /* Used for replay. */
@@ -98,8 +98,12 @@ define([ "helperMethods", "changeTypes", "objectTypes" ], function (helpers, cha
 					case objectTypes.tutorial:
 						switch (change.changeType) {
 							case changeTypes.add:
+								tutorial.create(logger, tutorialParentNode);
+								break;
+							
 							case changeTypes.remove:
-								startTutorial();
+								if (_Popup.isOpen(tutorial.id))
+									_Popup.close(tutorial.id);
 								break;
 								
 							default:
@@ -186,8 +190,12 @@ define([ "helperMethods", "changeTypes", "objectTypes" ], function (helpers, cha
 					case objectTypes.history:
 						switch (change.changeType) {
 							case changeTypes.add:
+								if (_Popup.isOpen(tutorial.id))
+									_Popup.close(tutorial.id);
+								break;
+								
 							case changeTypes.remove:
-								openHistory();
+								tutorial.create(logger, tutorialParentNode);
 								break;
 								
 							case changeTypes.move:
