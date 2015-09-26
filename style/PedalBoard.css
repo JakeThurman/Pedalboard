@@ -732,6 +732,7 @@ a, a:visited {
     overflow-x: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .report-title.left-side {
