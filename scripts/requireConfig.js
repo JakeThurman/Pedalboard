@@ -39,6 +39,7 @@ requirejs.config({
 			"batchTypes":                    "data/changeInfo",
 			"objectTypes":                   "data/changeInfo",
 			"defaults":                      "data/defaults",
+			"upgrader":                      "data/upgrader",
 			
 			/* Data Classes */
 			"PedalBoardManager":             "data/pedalBoardManager",

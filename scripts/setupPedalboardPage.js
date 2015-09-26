@@ -1,6 +1,9 @@
-require(["PedalBoardManager", "historyPopup", "tutorial", "defaults", "jquery", "mainPageMenuHandler", "pedalBoardStorage", "StateReverter", "UndoHandler", "ChangeLogger", "batchTypes", "objectTypes", "domReady!"], 
-function (PedalBoardManager, historyPopup, tutorial, defaults, $, mainPageMenuHandler, pedalBoardStorage, StateReverter, UndoHandler, ChangeLogger, batchTypes, objectTypes) {
+require(["PedalBoardManager", "historyPopup", "upgrader", "tutorial", "defaults", "jquery", "mainPageMenuHandler", "pedalBoardStorage", "StateReverter", "UndoHandler", "ChangeLogger", "batchTypes", "objectTypes", "domReady!"], 
+function (PedalBoardManager, historyPopup, upgrader, tutorial, defaults, $, mainPageMenuHandler, pedalBoardStorage, StateReverter, UndoHandler, ChangeLogger, batchTypes, objectTypes) {
     "use strict";
+	
+	/* Before we do anything else start the upgrade */
+	upgrader.upgrade();
 	
 	/* DOM variables */
    	var mainContentContainer = $("#content-container");

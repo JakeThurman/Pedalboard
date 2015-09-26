@@ -6,7 +6,8 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 	methods.SOTORAGE_NAME_PREFIX = "";
 	
 	var HISTORY_STORAGE_NAME      = "pedalboardChangeHistory",
-	    UNDONE_STACK_STORAGE_NAME = "pedalboardUndoneChangeStack";
+	    UNDONE_STACK_STORAGE_NAME = "pedalboardUndoneChangeStack",
+		DATA_VERSION_STORAGE_NAME = "pedalboardDataVersion";
 	
 	function supportsHtml5Storage() {
         try { 
@@ -53,8 +54,18 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 	 *
 	 * @history:     [Array<Changes/Batches>] All of the changes made
 	 * @undoneStack: [Array<Changes/Batches>] All of the changes undone recently enough they can be redone still
+	 *
+	 * OR (overload)
+	 *
+	 * @data:        [Object] with properites @history & @undoneStack as described above
+	 *
 	 */	 
 	methods.Save = function(history, undoneStack) {
+		/* "Overload" conversion */
+		if (helpers.isObject(history) && helpers.isArray(history.history)) {
+			undoneStack = history.undoneStack;
+			history = history.history;			
+		}
 		if (!helpers.isArray(history))
 			throw new TypeError("@history param to pedalBoardStorage.Save() must be an array of batches/changes.");
 	
@@ -68,17 +79,20 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 	 *         history: [ ... ],
 	 *         undo:    [ ... ],
 	 *     }
-	 *  If there is none, an empty object is returned: {}
 	 */
 	methods.Load = function () {
-		if (supportsHtml5Storage()) {
-			return {
-				history:  getStoredData(HISTORY_STORAGE_NAME),
-				undo:     getStoredData(UNDONE_STACK_STORAGE_NAME),
-			};
-		} else {
-			return {};
-		}
+		return {
+			history:  getStoredData(HISTORY_STORAGE_NAME),
+			undo:     getStoredData(UNDONE_STACK_STORAGE_NAME),
+		};
+	};
+	
+	methods.getDataVersion = function () {
+		return getStoredData(DATA_VERSION_STORAGE_NAME);
+	};
+	
+	methods.setDataVersion = function (value) {
+		setStoredData(DATA_VERSION_STORAGE_NAME, value);
 	};
 		
 	return methods;
