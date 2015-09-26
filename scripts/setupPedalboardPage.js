@@ -16,23 +16,23 @@ function (PedalBoardManager, historyPopup, tutorial, defaults, $, mainPageMenuHa
 	/* Reload from last save */
 	var lastSaveData = pedalBoardStorage.Load();
 	
-	function openHistory() {
-		historyPopup.create(logger, historyParentNode);
-	}
-	function openTutorial() {
-		tutorial.create(logger, tutorialInfo);
-	}
-	
 	/* Data variables */
 	var logger       = new ChangeLogger();
 	var manager      = new PedalBoardManager(logger, mainContentContainer);
-	var reverter     = new StateReverter(manager, logger, tutorialInfo, openHistory);
+	var reverter     = new StateReverter(manager, logger, tutorialInfo, historyParentNode);
 	
-	/* Restore save data */	
-	/* Temporarily disable calling back async for the restore calls so we can avoid errors like the redo stack getting cleared */
-	logger.CALLBACK_ASYNC = false;
-	reverter.replay(lastSaveData.history || defaults.changes); /* If there was no history load the default */
-	logger.CALLBACK_ASYNC = true;
+	/* Try to restore. Do this so we can continue even if there is an error. */
+	try {
+		/* Restore save data */	
+		/* Temporarily disable calling back async for the restore calls so we can avoid errors like the redo stack getting cleared */
+		logger.CALLBACK_ASYNC = false;
+		reverter.replay(lastSaveData.history || defaults.changes); /* If there was no history load the default */
+		logger.CALLBACK_ASYNC = true;
+	}
+	catch (e) {
+		/* Log the error, we still need to know this! */
+		console.error(e);
+	}
 	
 	/* Setup the undo handler AFTER replay to avoid clearing the redo stack */
 	var undoer   = new UndoHandler(reverter, logger, lastSaveData.undo);
@@ -48,6 +48,13 @@ function (PedalBoardManager, historyPopup, tutorial, defaults, $, mainPageMenuHa
 	logger.addCallback(/* @waitForBatchCompletion: */ false, function () {
 		pedalBoardStorage.Save(logger.changes, undoer.getUndoneStack());
 	});
+	
+	function openHistory() {
+		historyPopup.create(logger, historyParentNode);
+	}
+	function openTutorial() {
+		tutorial.create(logger, tutorialInfo);
+	}
 	
 	/* Setup the main page menu click handler */
    	pageMenuButton.click(function () {

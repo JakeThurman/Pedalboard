@@ -10,6 +10,8 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 	/* This can be overriden for the sake of simple unit testing */
 	methods.RENDER_ASYNC = true;
 	
+	methods.id = "history";
+	
 	/*
 	 * Creates a history popup
 	 *
@@ -199,7 +201,7 @@ function ( _Popup, resources, $, helpers, Moment, changeTypes, batchTypes, objec
 				
 		var thisPopup = _Popup.create(content, {
 			title: resources.historyPopupTitle,
-			id: "history",
+			id: methods.id,
 			init: init,
 			close: close,
 		});

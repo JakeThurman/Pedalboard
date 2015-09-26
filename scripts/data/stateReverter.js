@@ -1,17 +1,17 @@
-define([ "helperMethods", "_Popup", "tutorial", "changeTypes", "objectTypes" ], function (helpers, _Popup, tutorial, changeTypes, objectTypes) {
+define([ "helperMethods", "_Popup", "tutorial", "historyPopup", "changeTypes", "objectTypes" ], function (helpers, _Popup, tutorial, historyPopup, changeTypes, objectTypes) {
 	"use strict";
 	
 	/*
 	 * A "class" for the state reveter. Handles replaying and reverting changes as needed.
 	 *
-	 * @manager:      The pedalBoardManager instance to replay onto
-	 * @logger:       The changeLogger instance used with @manager
-	 * @popupManager: PopupManager instance for managing popups
-	 * @tutorialInfo: Object with properties: .parent  -> DOM node to attach tutorial popups to
-	 *                                        .content -> The pre-generated jquery object for the content of the tutorial
-	 * @openHistory:  Function that should open the history popup
+	 * @manager:           The pedalBoardManager instance to replay onto
+	 * @logger:            The changeLogger instance used with @manager
+	 * @popupManager:      PopupManager instance for managing popups
+	 * @tutorialInfo:      Object with properties: .parent  -> DOM node to attach tutorial popups to
+	 *                                             .content -> The pre-generated jquery object for the content of the tutorial
+	 * @historyParentNode: DOM node to attach history popups to
 	 */
-	return function (manager, logger, tutorialInfo, openHistory) {
+	return function (manager, logger, tutorialInfo, historyParentNode) {
 		var methods = this;
 	
 		var replayOldToNewIdCache = {}; /* Used for replay. */
@@ -83,8 +83,12 @@ define([ "helperMethods", "_Popup", "tutorial", "changeTypes", "objectTypes" ], 
 					case objectTypes.history:
 						switch (change.changeType) {
 							case changeTypes.add:
+								historyPopup.create(logger, historyParentNode);
+								break;
+							
 							case changeTypes.remove:
-								openHistory();
+								if (_Popup.isOpen(historyPopup.id))
+									_Popup.close(historyPopup.id);
 								break;
 								
 							case changeTypes.move:
@@ -191,8 +195,12 @@ define([ "helperMethods", "_Popup", "tutorial", "changeTypes", "objectTypes" ], 
 					case objectTypes.history:
 						switch (change.changeType) {
 							case changeTypes.add:
+								if (_Popup.isOpen(historyPopup.id))
+									_Popup.close(historyPopup.id);
+								break;
+							
 							case changeTypes.remove:
-								openHistory();
+								historyPopup.create(logger, historyParentNode);
 								break;
 								
 							case changeTypes.move:
