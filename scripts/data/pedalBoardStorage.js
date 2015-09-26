@@ -29,7 +29,7 @@ define(["helperMethods", "textResources"], function (helpers, resources) {
 		
 		propName = methods.SOTORAGE_NAME_PREFIX + propName;
 		
-		if (supportsHtml5Storage() && localStorage[propName])
+		if (supportsHtml5Storage() && localStorage[propName] && localStorage[propName] !== "undefined")
 			return JSON.parse(localStorage[propName]);
 		
 	}
