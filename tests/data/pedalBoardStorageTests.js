@@ -40,18 +40,5 @@ define([ "pedalBoardStorage" ], function (storage) {
 				expect(storage.Load().undo).toEqual(["undo"]);
 			});
 		});
-		
-		describe("GetDefaultBoard", function () {
-			it("should get a board data object", function () {
-				var board = storage.GetDefaultBoard();
-			
-				expect(board.data).not.toBeUndefined();
-				expect(board.data.Name).not.toBeUndefined();
-				expect(board.clientRect).not.toBeUndefined();
-				expect(board.clientRect.left).not.toBeUndefined();
-				expect(board.clientRect.top).not.toBeUndefined();
-				expect(board.clientRect.width).not.toBeUndefined();
-			});
-		});
 	});
 });
