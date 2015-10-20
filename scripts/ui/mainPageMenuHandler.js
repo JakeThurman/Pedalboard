@@ -7,14 +7,13 @@ define(["textResources", "_OptionMenu", "jquery"], function (resources, _OptionM
 	 * 
 	 * PARAMS:
 	 *   @manager:          (PedalBoardManager) The pedalBoardManager instance to manage pedal boards with
-	 *   @logger:           (ChangeLogger)      The change logger instance used with the manager
 	 *   @undoer:           (UndoHandler)       An undoHandler instance
 	 *   @openTutorial:     (function)          Calling this should open the tutorial popup (or close it if it is open)
 	 *   @openHistoryPopup: (function)          Calling this should open the history popup (or close it if it is open)
 	 *
 	 * @returns: The loaded menu
 	 */
-	methods.handle = function(manager, logger, undoer, openTutorial, openHistoryPopup) {
+	methods.handle = function(manager, undoer, openTutorial, openHistoryPopup) {
 		
 		/* Gather data up front */
 		var isAnyBoards = manager.Any();
