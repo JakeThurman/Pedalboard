@@ -62,6 +62,10 @@ function (_Popup, $, resources, pedalboardPopupOptionsHandler, reporter, addPeda
 					manager.Resize(popup.id, popup.el.get(0).getBoundingClientRect(), /* setCss: */ false);
 				}
 			});
+		
+		// Remove the height property the resizable call adds for no reason.
+		popup.el.css("height", "");
+			
 		var justDeleted = false;
 		
 		var deleteAction  = function( event, ui ) {
